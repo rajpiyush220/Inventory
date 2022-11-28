@@ -25,7 +25,9 @@ public class CustomUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     com.touchblankspot.inventory.data.model.User user = userRepository.findByUserName(username);
-    if (user == null) throw new UsernameNotFoundException(username);
+    if (user == null) {
+      throw new UsernameNotFoundException(username);
+    }
     Set<GrantedAuthority> grantedAuthorities =
         user.getRoles().stream()
             .map(role -> new SimpleGrantedAuthority(role.getName()))
