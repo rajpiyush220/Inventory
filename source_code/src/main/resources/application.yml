@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    username: ${spring.datasource.db.user:root}
+    url: jdbc:mysql://${spring.datasource.db.host:localhost}:3306/${spring.datasource.default_schema:99mall_inventory}?createDatabaseIfNotExist=true
+    password: ${spring.datasource.db.password:Pikr@1991}
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  messages:
+    basename: validation
+logging:
+  level:
+    org:
+      hibernate:
+        type: TRACE
+        SQL: DEBUG
+server:
+  port: 8086
+
+

@@ -1,0 +1,3 @@
+rootProject.name = 'Inventory'
+include 'common'
+

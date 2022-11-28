@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id "com.diffplug.spotless" version "6.9.0"
+    id 'com.github.sherter.google-java-format' version '0.9'
+}
+
+group 'com.touchblankspot'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+spotless {
+    java {
+        importOrder()
+        removeUnusedImports()
+        googleJavaFormat()
+    }
+}

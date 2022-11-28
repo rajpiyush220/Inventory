@@ -1,0 +1,92 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.0'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id "com.diffplug.spotless" version "6.9.0"
+	id 'com.github.sherter.google-java-format' version '0.9'
+}
+
+group = 'com.touchblankspot'
+version = '1.0'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		url "https://repo.spring.io/milestone"
+		content {
+			// Thymeleaf uses 6.0.0-RC2 of Security's bom in its dependency management
+			includeModule("org.springframework.security", "spring-security-bom")
+		}
+	}
+}
+
+dependencies {
+	implementation project('common')
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	implementation 'commons-collections:commons-collections:3.2.2'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor(
+			'org.projectlombok:lombok',
+			'org.mapstruct:mapstruct-processor:1.5.3.Final'
+	)
+	testAnnotationProcessor(
+			'org.projectlombok:lombok',
+			'org.mapstruct:mapstruct-processor:1.5.3.Final',
+	)
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+
+task prefixNewMigrations {
+	fileTree(dir:'src/main/resources/db/migration').exclude({ isFileOldPrefix(it.file) || isFilePrefixed(it.file) }).each {file ->
+		doLast {
+			def timestamp = new Date().format('yyyyMMdddHHmmssSSSS', TimeZone.getTimeZone('GMT'))
+			def name = "${file.name}".replaceAll('(?:V1)?_\\d+__','')
+			file.renameTo("$file.parentFile.absolutePath$file.separator${'V2_' + timestamp}__${name}")
+			sleep(1000)
+		}
+	}
+}
+
+static def isFilePrefixed(file){
+	// return (file.name ==~ "^V(\\d+)_\\d{17}__.*\\.sql\$")
+	// this need to replaced with regex check
+	return file.name.startsWith("V")
+}
+
+static def isFileOldPrefix(file){
+	// return (file.name ==~ "^V1_(?:[0-9]|1[0-9]|2[0-8])__.*\\.sql\$")
+	// this need to replaced with regex check
+	return file.name.startsWith("V1__")
+}
+
+spotless {
+	java {
+		importOrder()
+		removeUnusedImports()
+		googleJavaFormat() // has its own section below
+	}
+}
