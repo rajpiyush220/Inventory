@@ -31,7 +31,7 @@ public class EqualFieldsValidator implements ConstraintValidator<EqualFields, Ob
     }
   }
 
-  private Object getFieldValue(Object object, String fieldName) throws Exception {
+  private Object getFieldValue(Object object, String fieldName) {
     try {
       Class<?> clazz = object.getClass();
       Field passwordField = clazz.getDeclaredField(fieldName);
@@ -39,7 +39,7 @@ public class EqualFieldsValidator implements ConstraintValidator<EqualFields, Ob
       return passwordField.get(object);
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
-      return null;
+      return object;
     }
   }
 }
