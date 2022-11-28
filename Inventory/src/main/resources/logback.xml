@@ -35,7 +35,7 @@
         <appender-ref ref="Console" />
     </root>
 
-    <logger name="com.touch.blankspot" level="trace" additivity="false">
+    <logger name="com.touchblankspot" level="trace" additivity="false">
         <appender-ref ref="RollingFile" />
     </logger>
 
