@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class LoginController {
 
   @NonNull private final UserService userService;
-
   @NonNull private final SecurityService securityService;
-
   @NonNull private final UserMapper userMapper;
 
   @GetMapping("/registration")
@@ -33,7 +31,7 @@ public class LoginController {
       return "redirect:/";
     }
     model.addAttribute("registrationForm", new UserRequest());
-    return "registration";
+    return "login/registration";
   }
 
   @PostMapping("/registration")
@@ -41,7 +39,7 @@ public class LoginController {
       @Valid @ModelAttribute("registrationForm") UserRequest userRequest,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
-      return "registration";
+      return "login/registration";
     }
     userService.save(userMapper.toEntity(userRequest));
     securityService.autoLogin(userRequest.getUserName(), userRequest.getPasswordConfirm());
@@ -56,7 +54,7 @@ public class LoginController {
     if (error != null) model.addAttribute("error", "Your username and password is invalid.");
 
     if (logout != null) model.addAttribute("message", "You have been logged out successfully.");
-    return "login";
+    return "login/login";
   }
 
   @GetMapping({"/", "/welcome"})

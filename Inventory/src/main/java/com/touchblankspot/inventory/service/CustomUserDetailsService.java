@@ -30,6 +30,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         user.getRoles().stream()
             .map(role -> new SimpleGrantedAuthority(role.getName()))
             .collect(Collectors.toSet());
-    return new User(user.getUserName(), user.getPassword(), grantedAuthorities);
+    try {
+      return new User(user.getUserName(), user.getPassword(), grantedAuthorities);
+    } catch (Exception ex) {
+      throw new UsernameNotFoundException(username);
+    }
   }
 }

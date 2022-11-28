@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <title>Create an account</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div sec:authorize="isAuthenticated()">
+        <form id="logoutForm" method="POST" th:action="@{/logout}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+
+        <h2>Welcome <span sec:authentication="name"></span> | <a
+                onclick="document.forms['logoutForm'].submit()">Logout</a></h2>
+        <br/><br/><br/>
+        <div sec:authorize="hasRole('ADMIN')">
+            This content is only shown to administrators.§§
+        </div>
+
+        <div sec:authorize="hasRole('USER')">
+            This content is only shown to users.
+        </div>
+
+    </div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+</body>
+</html>
