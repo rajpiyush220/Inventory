@@ -1,6 +1,6 @@
 package com.touchblankspot.inventory.data.model;
 
-import com.touchblankspot.common.model.embedded.Mutable;
+import com.touchblankspot.common.data.model.embedded.Mutable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;

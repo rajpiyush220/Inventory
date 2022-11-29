@@ -20,10 +20,13 @@
             <input name="password" type="password" class="form-control" placeholder="Password"/>
             <span class="has-error" th:text="${error}"></span>
 
+            Remember Me: &nbsp;<input type="checkbox" name="remember-me" />
+
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
             <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
             <h4 class="text-center"><a href="/registration">Create an account</a></h4>
+            <h4 class="text-center"><a href="/resetPassword">Reset Password</a></h4>
         </div>
     </form>
 </div>

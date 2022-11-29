@@ -13,15 +13,32 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
-  messages:
-    basename: validation
-logging:
-  level:
-    org:
-      hibernate:
-        type: TRACE
-        SQL: DEBUG
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    host: smtp.gmail.com
+    username: null
+    password: null
+    port: '587'
 server:
   port: 8086
-
+encryption:
+  remember_me:
+    key: 3fZVNzasApraF509fhHT
+    token:
+      validity: 86400
+  attribute:
+    key: KdqZ01i0U7WF2J4OQqVjVCUIOCVrPoXh
+    algorithm: AES
+password:
+  reset:
+    token:
+      validity_in_minute: 15
+application:
+  email:
+    sender: touchblankspot@gmail.com
 
