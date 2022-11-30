@@ -26,7 +26,7 @@ spring:
           auth: 'true'
     host: smtp-relay.sendinblue.com
     username: touchblankspot@gmail.com
-    password: xsmtpsib-7958b9bf8d6713f7256512974352b190eab5f6e7699e9e81f72098749d7181cc-A7ZDmMU31CJNGX60
+    password: 
     port: '587'
 server:
   port: 8086
@@ -34,7 +34,7 @@ encryption:
   remember_me:
     key: 3fZVNzasApraF509fhHT
     token:
-      validity: 86400
+      validity: 0
   attribute:
     key: KdqZ01i0U7WF2J4OQqVjVCUIOCVrPoXh
     algorithm: AES
