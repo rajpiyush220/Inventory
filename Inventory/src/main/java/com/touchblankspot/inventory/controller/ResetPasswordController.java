@@ -5,6 +5,7 @@ import static com.touchblankspot.inventory.web.util.WebUtil.getPasswordResetUrl;
 
 import com.touchblankspot.inventory.data.model.User;
 import com.touchblankspot.inventory.mail.service.EmailService;
+import com.touchblankspot.inventory.mail.template.service.ThymeleafTemplateService;
 import com.touchblankspot.inventory.service.SecurityService;
 import com.touchblankspot.inventory.service.UserService;
 import com.touchblankspot.inventory.types.ChangePasswordRequest;
@@ -35,6 +36,8 @@ public class ResetPasswordController {
   @NonNull private final SecurityService securityService;
 
   @NonNull private final EmailService emailService;
+
+  @NonNull private final ThymeleafTemplateService thymeleafTemplateService;
 
   @GetMapping("/resetPassword")
   public String resetPassword(HttpServletRequest request, Model model) {
