@@ -1,6 +1,5 @@
 package com.touchblankspot.inventory.schedule.job.worker;
 
-
 import com.touchblankspot.inventory.data.repository.PasswordTokenRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class TokenPurgeWorkerService {
 
-  @NonNull
-  private final PasswordTokenRepository passwordTokenRepository;
+  @NonNull private final PasswordTokenRepository passwordTokenRepository;
 
   public void purgeExpired() {
     passwordTokenRepository.deleteAllExpired();

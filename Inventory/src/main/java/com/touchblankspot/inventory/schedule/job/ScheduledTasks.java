@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ScheduledTasks {
 
-  @NonNull
-  private final TokenPurgeWorkerService tokenPurgeWorkerService;
+  @NonNull private final TokenPurgeWorkerService tokenPurgeWorkerService;
 
   @Scheduled(cron = "${purge.cron.expression:0 0 5 * * ?}")
   public void deleteExpiredToken() {

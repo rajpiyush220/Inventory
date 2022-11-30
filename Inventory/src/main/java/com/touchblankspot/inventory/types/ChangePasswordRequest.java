@@ -1,6 +1,7 @@
 package com.touchblankspot.inventory.types;
 
 import com.touchblankspot.common.validator.FieldMatch;
+import com.touchblankspot.common.validator.ValidPassword;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -15,9 +16,9 @@ public class ChangePasswordRequest {
 
   private String token;
 
-  @Size(min = 8, max = 32, message = "Password must be between 8 and 32 character.")
+  @ValidPassword
   private String newPassword;
 
-  @Size(min = 8, max = 32, message = "Password Confirm must be between 8 and 32 character.")
+  @ValidPassword
   private String newPasswordConfirm;
 }

@@ -13,6 +13,10 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    locations: ['classpath:db/migration']
   mail:
     properties:
       mail:
@@ -20,9 +24,9 @@ spring:
           starttls:
             enable: 'true'
           auth: 'true'
-    host: smtp.gmail.com
-    username: null
-    password: null
+    host: smtp-relay.sendinblue.com
+    username: touchblankspot@gmail.com
+    password: xsmtpsib-7958b9bf8d6713f7256512974352b190eab5f6e7699e9e81f72098749d7181cc-A7ZDmMU31CJNGX60
     port: '587'
 server:
   port: 8086

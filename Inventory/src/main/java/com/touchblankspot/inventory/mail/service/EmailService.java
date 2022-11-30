@@ -1,10 +1,16 @@
 package com.touchblankspot.inventory.mail.service;
 
+import com.touchblankspot.inventory.mail.template.service.FreeMarkerTemplateService;
+import freemarker.template.TemplateException;
+import jakarta.mail.MessagingException;
+import java.io.IOException;
+import java.util.Map;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,17 +21,13 @@ public class EmailService {
   @Value("${application.email.sender:touchblankspot@gmail.com}")
   private String sender;
 
-  public SimpleMailMessage constructResetTokenEmail(String url, String recipient) {
-    String message = "Reset Password";
-    return constructEmail("Reset Password", message + " \r\n" + url, recipient);
-  }
+  @NonNull private final JavaMailSender mailSender;
 
-  private SimpleMailMessage constructEmail(String subject, String body, String recipient) {
-    SimpleMailMessage email = new SimpleMailMessage();
-    email.setSubject(subject);
-    email.setText(body);
-    email.setTo(recipient);
-    email.setFrom(sender);
-    return email;
+  @NonNull private final FreeMarkerTemplateService freeMarkerTemplateService;
+
+  public void sendPasswordResetEmail(Map<String, Object> dataMap)
+      throws MessagingException, TemplateException, IOException {
+    mailSender.send(
+        freeMarkerTemplateService.constructEmailContent(dataMap, "email/resetPasswordLinkEmail.ftlh"));
   }
 }

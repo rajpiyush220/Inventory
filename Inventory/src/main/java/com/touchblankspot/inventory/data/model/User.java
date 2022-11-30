@@ -52,4 +52,9 @@ public class User extends Mutable {
     }
     return authorities;
   }
+
+  @Transient
+  public String getFullName() {
+    return this.firstName.concat(this.lastName != null ? " " + this.lastName : "");
+  }
 }

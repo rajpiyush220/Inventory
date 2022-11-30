@@ -3,7 +3,7 @@ package com.touchblankspot.inventory.controller;
 import com.touchblankspot.inventory.service.SecurityService;
 import com.touchblankspot.inventory.service.UserService;
 import com.touchblankspot.inventory.types.mapper.UserMapper;
-import com.touchblankspot.inventory.types.user.UserRequest;
+import com.touchblankspot.inventory.types.user.UserRegistrationRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +30,13 @@ public class LoginController {
     if (securityService.isAuthenticated()) {
       return "redirect:/";
     }
-    model.addAttribute("registrationForm", new UserRequest());
+    model.addAttribute("registrationForm", new UserRegistrationRequest());
     return "login/registration";
   }
 
   @PostMapping("/registration")
   public String registration(
-      @Valid @ModelAttribute("registrationForm") UserRequest userRequest,
+      @Valid @ModelAttribute("registrationForm") UserRegistrationRequest userRequest,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       return "login/registration";
