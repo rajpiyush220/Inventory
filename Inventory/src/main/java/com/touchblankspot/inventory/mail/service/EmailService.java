@@ -1,9 +1,6 @@
 package com.touchblankspot.inventory.mail.service;
 
 import com.touchblankspot.inventory.mail.template.service.FreeMarkerTemplateService;
-import freemarker.template.TemplateException;
-import jakarta.mail.MessagingException;
-import java.io.IOException;
 import java.util.Map;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +22,9 @@ public class EmailService {
 
   @NonNull private final FreeMarkerTemplateService freeMarkerTemplateService;
 
-  public void sendPasswordResetEmail(Map<String, Object> dataMap)
-      throws MessagingException, TemplateException, IOException {
+  public void sendPasswordResetEmail(Map<String, Object> dataMap) {
     mailSender.send(
-        freeMarkerTemplateService.constructEmailContent(dataMap, "email/resetPasswordLinkEmail.ftlh"));
+        freeMarkerTemplateService.constructEmailContent(
+            dataMap, "email/resetPasswordLinkEmail.ftlh"));
   }
 }

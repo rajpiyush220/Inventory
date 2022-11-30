@@ -33,9 +33,7 @@ public class UserRegistrationRequest {
       message = "Selected Username already taken.")
   private String userName;
 
-  @ValidPassword
-  private String password;
+  @ValidPassword private String password;
 
-  @ValidPassword
-  private String passwordConfirm;
+  @ValidPassword private String passwordConfirm;
 }

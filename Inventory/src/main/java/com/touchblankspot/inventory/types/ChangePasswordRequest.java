@@ -2,7 +2,6 @@ package com.touchblankspot.inventory.types;
 
 import com.touchblankspot.common.validator.FieldMatch;
 import com.touchblankspot.common.validator.ValidPassword;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -16,9 +15,7 @@ public class ChangePasswordRequest {
 
   private String token;
 
-  @ValidPassword
-  private String newPassword;
+  @ValidPassword private String newPassword;
 
-  @ValidPassword
-  private String newPasswordConfirm;
+  @ValidPassword private String newPasswordConfirm;
 }
