@@ -6,11 +6,9 @@
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/library/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
-
 <div class="container">
-    <form method="POST" class="form-signin" th:object="${registrationForm}" th:action="@{/registration}">
+    <form method="POST" class="form-signin" th:object="${registrationForm}" th:action="@{/register/super/admin}">
         <h2 class="form-signin-heading">Create your account</h2>
         <div class="form-group">
             <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name"

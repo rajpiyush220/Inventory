@@ -1,7 +1,8 @@
 package com.touchblankspot.inventory.types.mapper;
 
 import com.touchblankspot.inventory.data.model.User;
-import com.touchblankspot.inventory.types.user.UserRegistrationRequest;
+import com.touchblankspot.inventory.types.user.RegisterAdminRequest;
+import com.touchblankspot.inventory.types.user.RegisterUserRequest;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -12,5 +13,7 @@ import org.mapstruct.ReportingPolicy;
     unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-  User toEntity(UserRegistrationRequest request);
+  User toEntity(RegisterAdminRequest request);
+
+  User toEntity(RegisterUserRequest request);
 }

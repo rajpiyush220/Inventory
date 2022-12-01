@@ -1,9 +1,10 @@
 package com.touchblankspot.inventory.controller;
 
+import com.touchblankspot.inventory.constant.RoleEnum;
 import com.touchblankspot.inventory.service.SecurityService;
 import com.touchblankspot.inventory.service.UserService;
 import com.touchblankspot.inventory.types.mapper.UserMapper;
-import com.touchblankspot.inventory.types.user.UserRegistrationRequest;
+import com.touchblankspot.inventory.types.user.RegisterAdminRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,27 +22,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class LoginController {
 
-  @NonNull private final UserService userService;
-  @NonNull private final SecurityService securityService;
-  @NonNull private final UserMapper userMapper;
+  @NonNull
+  private final UserService userService;
+  @NonNull
+  private final SecurityService securityService;
+  @NonNull
+  private final UserMapper userMapper;
 
-  @GetMapping("/registration")
+  @GetMapping("/register/super/admin")
   public String registration(Model model) {
-    if (securityService.isAuthenticated()) {
-      return "redirect:/";
-    }
-    model.addAttribute("registrationForm", new UserRegistrationRequest());
+    model.addAttribute("registrationForm", new RegisterAdminRequest());
     return "login/registration";
   }
 
-  @PostMapping("/registration")
+  @PostMapping("/register/super/admin")
   public String registration(
-      @Valid @ModelAttribute("registrationForm") UserRegistrationRequest userRequest,
+      @Valid @ModelAttribute("registrationForm") RegisterAdminRequest userRequest,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       return "login/registration";
     }
-    userService.save(userMapper.toEntity(userRequest));
+    userService.save(userMapper.toEntity(userRequest), RoleEnum.SUPER_ADMIN.name());
     securityService.autoLogin(userRequest.getUserName(), userRequest.getPasswordConfirm());
     return "redirect:/welcome";
   }
@@ -58,7 +59,7 @@ public class LoginController {
     if (logout != null || message != null) {
       model.addAttribute("message", "You have been logged out successfully.");
     }
-
+    model.addAttribute("isSuperAdminExists", !userService.isSuperAdminExists());
     return "login/login";
   }
 

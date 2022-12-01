@@ -25,14 +25,14 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
             <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
-            <h4 class="text-center"><a href="/registration">Create an account</a></h4>
+            <h4 class="text-center" th:if="${isSuperAdminExists}"><a href="/register/super/admin">Register Yourself</a></h4>
             <h4 class="text-center"><a href="/resetPassword">Reset Password</a></h4>
         </div>
     </form>
 </div>
 
-<script src="/js/library/jquery.min.js"></script>
-<script src="/js/library/popper.min.js"></script>
-<script src="/js/library/bootstrap.min.js"></script>
+<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
 </body>
 </html>

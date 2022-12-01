@@ -1,5 +1,7 @@
 package com.touchblankspot.inventory.service;
 
+import com.touchblankspot.inventory.data.model.AuthenticatedUser;
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,9 +21,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class SecurityService {
 
-  @NonNull private final AuthenticationManager authenticationManager;
+  @NonNull
+  private final AuthenticationManager authenticationManager;
 
-  @NonNull private final UserDetailsService userDetailsService;
+  @NonNull
+  private final UserDetailsService userDetailsService;
 
   public Boolean isAuthenticated() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -43,5 +48,12 @@ public class SecurityService {
       SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
       log.debug(String.format("Auto login %s successfully!", username));
     }
+  }
+
+  public List<String> getCurrentUserRoles() {
+    isAuthenticated();
+    AuthenticatedUser authenticatedUser =
+        (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    return authenticatedUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
   }
 }

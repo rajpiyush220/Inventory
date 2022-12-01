@@ -5,6 +5,7 @@ import static com.touchblankspot.inventory.web.WebConstant.LOGIN_PAGE_ENDPOINT;
 import static com.touchblankspot.inventory.web.WebConstant.LOGIN_SUCCESS_ENDPOINT;
 import static com.touchblankspot.inventory.web.WebConstant.PERMIT_ALL_URL;
 
+import com.touchblankspot.inventory.security.handler.AppAuthenticationSuccessHandler;
 import com.touchblankspot.inventory.service.CustomUserDetailsService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +25,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(
+    securedEnabled = true,
+    jsr250Enabled = true)
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class SecurityConfig {
 
@@ -32,7 +37,11 @@ public class SecurityConfig {
   @Value("${encryption.remember_me.token.validity:86400}")
   private Integer rememberMeTokenValidity;
 
-  @NonNull private final CustomUserDetailsService userDetailsService;
+  @NonNull
+  private final CustomUserDetailsService userDetailsService;
+
+  @NonNull
+  private final AppAuthenticationSuccessHandler successHandler;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -50,7 +59,7 @@ public class SecurityConfig {
             form ->
                 form.loginPage(LOGIN_PAGE_ENDPOINT)
                     .permitAll()
-                    .defaultSuccessUrl(LOGIN_SUCCESS_ENDPOINT)
+                    .successHandler(successHandler)
                     .failureUrl(LOGIN_FAIL_ENDPOINT))
         .rememberMe()
         .key(rememberMeKey)

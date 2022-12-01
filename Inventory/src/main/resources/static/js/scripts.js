@@ -21,6 +21,3 @@
     });
 })(jQuery);
 
-function logout(){
-    $('#logoutForm').submit();
-}

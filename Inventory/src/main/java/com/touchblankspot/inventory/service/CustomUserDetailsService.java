@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class CustomUserDetailsService implements UserDetailsService {
 
-  @NonNull private final UserRepository userRepository;
+  @NonNull
+  private final UserRepository userRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
       throw new UsernameNotFoundException(username);
     }
     try {
-      return new AuthenticatedUser(user.getUserName(), user.getPassword(), user.getAuthorities());
+      return new AuthenticatedUser(user);
     } catch (Exception ex) {
       throw new UsernameNotFoundException(username);
     }

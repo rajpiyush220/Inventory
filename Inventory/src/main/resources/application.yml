@@ -10,13 +10,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: validate
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-    url: ${spring.datasource.url}
-    user: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    locations: ['classpath:db/migration']
   mail:
     properties:
       mail:
@@ -28,13 +21,15 @@ spring:
     username: touchblankspot@gmail.com
     password:
     port: '587'
+  thymeleaf:
+    cache: false
 server:
   port: 8086
 encryption:
   remember_me:
     key: 3fZVNzasApraF509fhHT
     token:
-      validity: 0
+      validity: 3600
   attribute:
     key: KdqZ01i0U7WF2J4OQqVjVCUIOCVrPoXh
     algorithm: AES

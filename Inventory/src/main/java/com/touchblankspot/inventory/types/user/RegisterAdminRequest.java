@@ -17,13 +17,13 @@ import lombok.NoArgsConstructor;
     first = "password",
     second = "passwordConfirm",
     message = "Password and confirm password doesn't match")
-public class UserRegistrationRequest {
+public class RegisterAdminRequest {
 
   @Size(min = 2, max = 30, message = "FirstName must be between 2 and 30 character.")
-  private String firstName;
+  protected String firstName;
 
   @Size(max = 30, message = "LastName must be less than 30 character.")
-  private String lastName;
+  protected String lastName;
 
   @Email(message = "Username should be a valid email address.")
   @Size(min = 6, max = 32, message = "Username must be between 6 and 32 character.")
@@ -31,9 +31,11 @@ public class UserRegistrationRequest {
       service = UserService.class,
       fieldName = "userName",
       message = "Selected Username already taken.")
-  private String userName;
+  protected String userName;
 
-  @ValidPassword private String password;
+  @ValidPassword
+  protected String password;
 
-  @ValidPassword private String passwordConfirm;
+  @ValidPassword
+  protected String passwordConfirm;
 }

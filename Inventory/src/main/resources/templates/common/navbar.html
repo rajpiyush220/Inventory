@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <body>
 <script src="/js/library/jquery.min.js"></script>
 
@@ -35,7 +36,7 @@
 							class="dropdown-item" href="#">Activity Log</a>
 						<div class="dropdown-divider"></div>
 						<div sec:authorize="isAuthenticated()">
-							<a class="dropdown-item" onclick="logout();">Logout</a>
+							<a class="dropdown-item" onclick="logoutUser();">Logout</a>
 						</div>
 					</div></li>
 			</ul>

@@ -1,20 +1,22 @@
 package com.touchblankspot.inventory.data.model;
 
-import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 @Getter
 @Setter
+@ToString
 public class AuthenticatedUser extends User {
 
   private String firstName;
 
   private String lastName;
+
+  private String fullName;
 
   private String password;
 
@@ -30,32 +32,13 @@ public class AuthenticatedUser extends User {
 
   private boolean enabled = true;
 
-  public AuthenticatedUser(
-      String username, String password, Collection<? extends GrantedAuthority> authorities) {
-    super(username, password, authorities);
-    this.username = username;
-    this.password = password;
-    this.authorities = authorities.stream().collect(Collectors.toSet());
-  }
-
-  public AuthenticatedUser(
-      String username,
-      String password,
-      boolean enabled,
-      boolean accountNonExpired,
-      boolean credentialsNonExpired,
-      boolean accountNonLocked,
-      Collection<? extends GrantedAuthority> authorities) {
-    super(
-        username,
-        password,
-        enabled,
-        accountNonExpired,
-        credentialsNonExpired,
-        accountNonLocked,
-        authorities);
-    this.username = username;
-    this.password = password;
-    this.authorities = authorities.stream().collect(Collectors.toSet());
+  public AuthenticatedUser(com.touchblankspot.inventory.data.model.User user) {
+    super(user.getUserName(), user.getPassword(), user.getAuthorities());
+    firstName = user.getFirstName();
+    lastName = user.getLastName();
+    fullName = user.getFullName();
+    username = user.getUserName();
+    password = user.getPassword();
+    authorities = user.getAuthorities();
   }
 }
