@@ -23,17 +23,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class LoginController {
 
-  @NonNull
-  private final UserService userService;
-  @NonNull
-  private final SecurityService securityService;
-  @NonNull
-  private final UserMapper userMapper;
+  @NonNull private final UserService userService;
+  @NonNull private final SecurityService securityService;
+  @NonNull private final UserMapper userMapper;
 
   @GetMapping("/register/super/admin")
   public String registration(Model model) {
     model.addAttribute("registrationForm", new RegisterAdminRequest());
-    return "login/registration";
+    return "auth/login/registration";
   }
 
   @PostMapping("/register/super/admin")
@@ -41,7 +38,7 @@ public class LoginController {
       @Valid @ModelAttribute("registrationForm") RegisterAdminRequest userRequest,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
-      return "login/registration";
+      return "auth/login/registration";
     }
     userService.save(userMapper.toEntity(userRequest), SUPER_ADMIN.name());
     securityService.autoLogin(userRequest.getUserName(), userRequest.getPasswordConfirm());
@@ -61,7 +58,7 @@ public class LoginController {
       model.addAttribute("message", "You have been logged out successfully.");
     }
     model.addAttribute("isSuperAdminExists", !userService.isSuperAdminExists());
-    return "login/login";
+    return "auth/login/login";
   }
 
   @GetMapping({"/", "/welcome"})

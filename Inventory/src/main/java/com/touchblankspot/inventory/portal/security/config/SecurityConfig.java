@@ -24,9 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(
-    securedEnabled = true,
-    jsr250Enabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class SecurityConfig {
 
@@ -36,11 +34,9 @@ public class SecurityConfig {
   @Value("${encryption.remember_me.token.validity:86400}")
   private Integer rememberMeTokenValidity;
 
-  @NonNull
-  private final CustomUserDetailsService userDetailsService;
+  @NonNull private final CustomUserDetailsService userDetailsService;
 
-  @NonNull
-  private final AppAuthenticationSuccessHandler successHandler;
+  @NonNull private final AppAuthenticationSuccessHandler successHandler;
 
   @Bean
   public PasswordEncoder passwordEncoder() {

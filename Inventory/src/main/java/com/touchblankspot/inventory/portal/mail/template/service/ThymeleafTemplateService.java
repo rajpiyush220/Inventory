@@ -25,11 +25,9 @@ public class ThymeleafTemplateService {
   @Value("${application.email.sender}")
   private String sender;
 
-  @NonNull
-  private final TemplateEngine templateEngine;
+  @NonNull private final TemplateEngine templateEngine;
 
-  @NonNull
-  private final JavaMailSender mailSender;
+  @NonNull private final JavaMailSender mailSender;
 
   public String sendMail(User user) throws MessagingException {
     Context context = new Context();
@@ -45,21 +43,18 @@ public class ThymeleafTemplateService {
     return "Sent";
   }
 
-  public void sendEmail(
-      Map<String, Object> dataMap, String templateName) {
-    mailSender.send(prepareEmail(
-        dataMap, templateName));
+  public void sendEmail(Map<String, Object> dataMap, String templateName) {
+    mailSender.send(prepareEmail(dataMap, templateName));
   }
 
-  public MimeMessagePreparator prepareEmail(
-      Map<String, Object> dataMap, String templateName) {
+  public MimeMessagePreparator prepareEmail(Map<String, Object> dataMap, String templateName) {
     return mimeMessage -> {
       MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
       message.setTo(dataMap.get("email").toString());
       message.setFrom(sender);
       message.setSubject(dataMap.get("subject").toString());
-      message.setText(templateEngine.process(templateName,
-          new Context(Locale.getDefault(), dataMap)), true);
+      message.setText(
+          templateEngine.process(templateName, new Context(Locale.getDefault(), dataMap)), true);
     };
   }
 }

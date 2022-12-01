@@ -5,13 +5,13 @@ public interface WebConstant {
   String PASSWORD_RESET_ENDPOINT = "/changePassword";
 
   String[] PERMIT_ALL_URL = {
-      "/css/**",
-      "/js/**",
-      "/register/super/admin",
-      "/resetPassword",
-      "/changePassword",
-      "/savePassword",
-      "/download"
+    "/css/**",
+    "/js/**",
+    "/register/super/admin",
+    "/resetPassword",
+    "/changePassword",
+    "/savePassword",
+    "/download"
   };
 
   String LOGIN_PAGE_ENDPOINT = "/login";

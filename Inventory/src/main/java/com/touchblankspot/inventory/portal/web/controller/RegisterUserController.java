@@ -26,12 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class RegisterUserController {
 
-  @NonNull
-  private final UserService userService;
-  @NonNull
-  private final SecurityService securityService;
-  @NonNull
-  private final UserMapper userMapper;
+  @NonNull private final UserService userService;
+  @NonNull private final SecurityService securityService;
+  @NonNull private final UserMapper userMapper;
 
   @GetMapping("/user/register")
   @CanCreateUser
@@ -39,7 +36,7 @@ public class RegisterUserController {
     model.addAttribute("selectedRole", RoleEnum.getRoleSelectTypes().get(0).name());
     model.addAttribute("roleSelectTypes", RoleEnum.getRoleSelectTypes());
     model.addAttribute("registrationForm", new RegisterUserRequest());
-    return "register/registration";
+    return "auth/register/registration";
   }
 
   @PostMapping("/user/register")
@@ -48,12 +45,12 @@ public class RegisterUserController {
       @Valid @ModelAttribute("registrationForm") RegisterUserRequest userRequest,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
-      return "register/registration";
+      return "auth/register/registration";
     }
     String roleName =
-        securityService.getCurrentUserRoles().contains(SUPER_ADMIN.name()) ?
-            ADMIN.name() :
-            userRequest.getRoleName();
+        securityService.getCurrentUserRoles().contains(SUPER_ADMIN.name())
+            ? ADMIN.name()
+            : userRequest.getRoleName();
     userService.save(userMapper.toEntity(userRequest), roleName);
     return "redirect:/welcome";
   }

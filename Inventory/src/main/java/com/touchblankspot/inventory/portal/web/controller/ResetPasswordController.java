@@ -30,19 +30,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ResetPasswordController {
 
-  @NonNull private final UserService userService;
+  @NonNull
+  private final UserService userService;
 
-  @NonNull private final SecurityService securityService;
+  @NonNull
+  private final SecurityService securityService;
 
-  @NonNull private final EmailService emailService;
+  @NonNull
+  private final EmailService emailService;
+
+  private final String RESET_PWD_FAIL_FORMAT = "auth/reset/forgotPassword?error=%s";
+  private final String RESET_PWD_SUCCESS_FORMAT = "auth/reset/forgotPassword?error=%s";
+
 
   @GetMapping("/resetPassword")
-  public String resetPassword(HttpServletRequest request, Model model) {
+  public String resetPassword(HttpServletRequest request, Model model, String error,
+                              String message) {
     if (securityService.isAuthenticated()) {
       return "redirect:/";
     }
     model.addAttribute("resetPwdForm", new ResetPasswordRequest());
-    return "reset/forgotPassword";
+    return "auth/reset/forgotPassword";
   }
 
   @PostMapping("/resetPassword")
@@ -50,19 +58,18 @@ public class ResetPasswordController {
       HttpServletRequest request,
       @Valid @ModelAttribute("resetPwdForm") ResetPasswordRequest passwordRequest,
       BindingResult bindingResult) {
-
     if (bindingResult.hasErrors()) {
-      return "reset/forgotPassword";
+      return "auth/reset/forgotPassword";
     }
-
     User user = userService.findByUserName(passwordRequest.getEmail());
     if (user == null) {
-      return "redirect:/login?error=" + "No user found with this email";
+      return "auth/reset/forgotPassword?error=" + "No user found with this email";
     }
     UUID token = UUID.randomUUID();
     userService.createPasswordResetTokenForUser(user, token);
     String url = getPasswordResetUrl(request, token);
     log.error(url);
+    System.out.println(url);
     try {
       Map<String, Object> dataMap =
           Map.of(
@@ -72,9 +79,11 @@ public class ResetPasswordController {
               "email", user.getUserName(),
               "subject", "99Mall Reset Password Link");
       emailService.sendPasswordResetEmail(dataMap);
-      return "redirect:/login?error=" + "You should receive an Password Reset Email shortly";
+
+      return "auth/reset/forgotPassword?error=" +
+          "You should receive an Password Reset Email shortly";
     } catch (Exception ex) {
-      return "redirect:/login?error=" + "Unable to send reset link email now.";
+      return "auth/reset/forgotPassword?error=" + "Unable to send reset link email now.";
     }
   }
 
@@ -87,7 +96,7 @@ public class ResetPasswordController {
       ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
       changePasswordRequest.setToken(token);
       model.addAttribute("changePasswordForm", changePasswordRequest);
-      return "reset/updatePassword";
+      return "auth/reset/updatePassword";
     }
   }
 
@@ -96,7 +105,7 @@ public class ResetPasswordController {
       @Valid @ModelAttribute("changePasswordForm") ChangePasswordRequest passwordRequest,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
-      return "reset/updatePassword";
+      return "auth/reset/updatePassword";
     }
     String result = userService.validatePasswordResetToken(passwordRequest.getToken());
     if (result != null) {

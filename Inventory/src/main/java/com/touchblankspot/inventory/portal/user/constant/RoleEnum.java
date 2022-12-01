@@ -8,7 +8,6 @@ import lombok.Getter;
 
 @Getter
 public enum RoleEnum {
-
   SUPER_ADMIN("super_admin", "Super Admin"),
   ADMIN("admin", "Admin"),
   MANAGER("manager", "Manager"),
@@ -27,12 +26,14 @@ public enum RoleEnum {
 
   public static List<RoleSelectType> getRoleSelectTypes() {
     if (roleSelectTypes == null) {
-      roleSelectTypes = Arrays.stream(RoleEnum.values())
-          .filter(
-              role -> !role.name().equals(SUPER_ADMIN.name()) && !role.name().equals(ADMIN.name()))
-          .map(roleEnum -> new RoleSelectType(roleEnum.name(), roleEnum.displayName))
-          .sorted(Comparator.comparing(RoleSelectType::displayName))
-          .toList();
+      roleSelectTypes =
+          Arrays.stream(RoleEnum.values())
+              .filter(
+                  role ->
+                      !role.name().equals(SUPER_ADMIN.name()) && !role.name().equals(ADMIN.name()))
+              .map(roleEnum -> new RoleSelectType(roleEnum.name(), roleEnum.displayName))
+              .sorted(Comparator.comparing(RoleSelectType::displayName))
+              .toList();
     }
     return roleSelectTypes;
   }

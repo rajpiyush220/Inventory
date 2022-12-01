@@ -26,17 +26,13 @@ public class UserService implements FieldValueExists {
   @Value("${password.reset.token.validity_in_minute:15}")
   private Integer resetTokenValidityPeriod;
 
-  @NonNull
-  private final UserRepository userRepository;
+  @NonNull private final UserRepository userRepository;
 
-  @NonNull
-  private final RoleRepository roleRepository;
+  @NonNull private final RoleRepository roleRepository;
 
-  @NonNull
-  private final PasswordTokenRepository passwordTokenRepository;
+  @NonNull private final PasswordTokenRepository passwordTokenRepository;
 
-  @NonNull
-  private final PasswordEncoder passwordEncoder;
+  @NonNull private final PasswordEncoder passwordEncoder;
 
   public User findByUserName(String username) {
     return userRepository.findByUserName(username);
@@ -70,8 +66,8 @@ public class UserService implements FieldValueExists {
     return passwordResetToken == null
         ? "Invalid token."
         : isTokenExpired(passwordResetToken)
-        ? "Your registration token has expired. Please register again."
-        : null;
+            ? "Your registration token has expired. Please register again."
+            : null;
   }
 
   public Optional<User> getUserByPasswordResetToken(final String token) {

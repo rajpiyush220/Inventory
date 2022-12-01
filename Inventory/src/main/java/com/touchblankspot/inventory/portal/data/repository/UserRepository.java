@@ -10,7 +10,10 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, UUID> {
   User findByUserName(String username);
 
-  @Query(nativeQuery = true, value = """
+  @Query(
+      nativeQuery = true,
+      value =
+          """
       select
       	case when count(*) > 0 then 'true' else 'false' end
       from user

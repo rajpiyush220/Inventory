@@ -29,43 +29,39 @@ public class AppAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
   private static RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-  private static final Map<String, String> roleTargetUrlMap = Map.of(
-      SUPER_ADMIN.name(), DEFAULT_SUCCESS_URL,
-      ADMIN.name(), DEFAULT_SUCCESS_URL,
-      MANAGER.name(), DEFAULT_SUCCESS_URL,
-      SUPERVISOR.name(), DEFAULT_SUCCESS_URL,
-      USER.name(), DEFAULT_SUCCESS_URL,
-      STAFF.name(), DEFAULT_SUCCESS_URL
-  );
+  private static final Map<String, String> roleTargetUrlMap =
+      Map.of(
+          SUPER_ADMIN.name(), DEFAULT_SUCCESS_URL,
+          ADMIN.name(), DEFAULT_SUCCESS_URL,
+          MANAGER.name(), DEFAULT_SUCCESS_URL,
+          SUPERVISOR.name(), DEFAULT_SUCCESS_URL,
+          USER.name(), DEFAULT_SUCCESS_URL,
+          STAFF.name(), DEFAULT_SUCCESS_URL);
 
   @Override
-  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                      Authentication authentication)
+  public void onAuthenticationSuccess(
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
     handle(request, response, authentication);
     clearAuthenticationAttributes(request);
   }
 
   protected void handle(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Authentication authentication
-  ) throws IOException {
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+      throws IOException {
 
     String targetUrl = determineTargetUrl(authentication);
 
     if (response.isCommitted()) {
-      log.debug(
-          "Response has already been committed. Unable to redirect to "
-              + targetUrl);
+      log.debug("Response has already been committed. Unable to redirect to " + targetUrl);
       return;
     }
     redirectStrategy.sendRedirect(request, response, targetUrl);
   }
 
   protected String determineTargetUrl(final Authentication authentication) {
-    for (String authorityName : authentication.getAuthorities().stream()
-        .map(GrantedAuthority::getAuthority).toList()) {
+    for (String authorityName :
+        authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()) {
       if (roleTargetUrlMap.containsKey(authorityName)) {
         return roleTargetUrlMap.get(authorityName);
       }

@@ -33,9 +33,7 @@ public class RegisterAdminRequest {
       message = "Selected Username already taken.")
   protected String userName;
 
-  @ValidPassword
-  protected String password;
+  @ValidPassword protected String password;
 
-  @ValidPassword
-  protected String passwordConfirm;
+  @ValidPassword protected String passwordConfirm;
 }

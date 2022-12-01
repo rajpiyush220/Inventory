@@ -19,25 +19,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class PdfDownloadController {
 
-  @NonNull
-  private final EmailService emailService;
+  @NonNull private final EmailService emailService;
 
-  @NonNull
-  private final ThymeleafTemplateService thymeleafTemplateService;
+  @NonNull private final ThymeleafTemplateService thymeleafTemplateService;
 
-  @NonNull
-  private final UserService userService;
+  @NonNull private final UserService userService;
 
   @GetMapping("/download")
   public String download(HttpServletRequest request) throws IOException {
 
     User user = userService.findByUserName("rajpiyush220@gmail.com");
-    thymeleafTemplateService.sendEmail(Map.of(
-        "firstName", user.getFullName(),
-        "userName", user.getUserName(),
-        "email", user.getUserName(),
-        "subject","Test thymleaf email"
-    ), "email/thymeleaf/welcome");
+    thymeleafTemplateService.sendEmail(
+        Map.of(
+            "firstName", user.getFullName(),
+            "userName", user.getUserName(),
+            "email", user.getUserName(),
+            "subject", "Test thymleaf email"),
+        "email/thymeleaf/welcome");
     log.error("Email sent");
     return "login/login";
   }

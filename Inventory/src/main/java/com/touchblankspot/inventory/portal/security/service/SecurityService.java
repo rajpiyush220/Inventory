@@ -21,11 +21,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class SecurityService {
 
-  @NonNull
-  private final AuthenticationManager authenticationManager;
+  @NonNull private final AuthenticationManager authenticationManager;
 
-  @NonNull
-  private final UserDetailsService userDetailsService;
+  @NonNull private final UserDetailsService userDetailsService;
 
   public Boolean isAuthenticated() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

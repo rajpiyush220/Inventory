@@ -2,7 +2,6 @@ package com.touchblankspot.inventory.portal.web.types.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -10,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class RegisterUserRequest extends RegisterAdminRequest{
+public class RegisterUserRequest extends RegisterAdminRequest {
   private String roleName;
 }
