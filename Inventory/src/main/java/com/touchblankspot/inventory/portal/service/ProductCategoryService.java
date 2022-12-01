@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ProductCategoryService {
-  @NonNull private final ProductCategoryRepository productCategoryRepository;
+  @NonNull
+  private final ProductCategoryRepository productCategoryRepository;
 
   public ProductCategory save(ProductCategory productCategory) {
     return productCategoryRepository.save(productCategory);
@@ -29,5 +30,9 @@ public class ProductCategoryService {
 
   public List<ProductCategory> findBySubCategory(String subCategory) {
     return productCategoryRepository.findBySubCategory(subCategory);
+  }
+
+  public List<ProductCategory> findAll() {
+    return productCategoryRepository.findAll();
   }
 }

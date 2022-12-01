@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link href="/css/main.css" rel="stylesheet">
+    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet" />
+    <div th:replace="~{common/header :: myHeader}"></div>
+</head>
+<form id="logoutForm" method="POST" th:action="@{/logout}">
+</form>
+<script  th:inline="javascript">
+	function logoutUser() {
+		$('#logoutForm').submit();
+	}
+</script>
+<body class="sb-nav-fixed">
+<div th:replace="~{common/navbar :: myNavbar}"></div>
+<div id="layoutSidenav">
+    <div th:replace="~{common/sidebar :: mySidebar}"></div>
+    <!-- Sidebar ends here -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <div class="container">
+                    <form method="POST" class="form-signin" th:object="${registrationForm}"
+                          th:action="@{/user/register}">
+                        <h2 class="form-signin-heading">Create your account</h2>
+                        <h6 style="text-align:center;">
+                            <span class="has-error" th:text="${errorMessage}"></span>
+                            <span th:text="${successMessage}"></span>
+                        </h6>
+                        <div class="form-group">
+                            <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name"
+                                   autofocus="true">
+                            <span class="has-error" th:if="${#fields.hasErrors('firstName')}"
+                                  th:errors="*{firstName}"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" th:field="*{lastName}" class="form-control" placeholder="Last Name"
+                                   autofocus="true">
+                            <span class="has-error" th:if="${#fields.hasErrors('lastName')}"
+                                  th:errors="*{lastName}"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" th:field="*{userName}" class="form-control" placeholder="Username"
+                                   autofocus="true">
+                            <span class="has-error" th:if="${#fields.hasErrors('userName')}"
+                                  th:errors="*{userName}"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="password" th:field="*{password}" class="form-control" placeholder="Password">
+                            <span class="has-error" th:if="${#fields.hasErrors('password')}"
+                                  th:errors="*{password}"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" th:field="*{passwordConfirm}" class="form-control"
+                                   placeholder="Confirm your password">
+                            <span class="has-error" th:if="${#fields.hasErrors('passwordConfirm')}"
+                                  th:errors="*{passwordConfirm}"></span>
+                        </div>
+                        <div class="form-group" sec:authorize="hasAuthority('ADMIN')">
+                            <select th:field="*{roleName}">
+                                <option th:each="role : ${roleSelectTypes}" th:value="${role.name}"
+                                        th:text="${role.displayName}"></option>
+                            </select>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                    </form>
+
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div
+                        class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; IMS 2021</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+                        &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+<script type="text/javascript" th:src="@{/js/chart/chart-area-demo.js}"></script>
+<script type="text/javascript" th:src="@{/js/chart/chart-bar-demo.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/chart/datatables-demo.js}"></script>
+</body>
+</html>
