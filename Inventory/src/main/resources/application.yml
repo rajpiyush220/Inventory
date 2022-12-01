@@ -19,7 +19,7 @@ spring:
           auth: 'true'
     host: smtp-relay.sendinblue.com
     username: touchblankspot@gmail.com
-    password:
+    password: 
     port: '587'
   thymeleaf:
     cache: false

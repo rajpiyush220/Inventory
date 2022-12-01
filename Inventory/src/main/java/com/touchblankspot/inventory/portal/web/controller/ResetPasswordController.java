@@ -57,13 +57,14 @@ public class ResetPasswordController {
   public String resetPassword(
       HttpServletRequest request,
       @Valid @ModelAttribute("resetPwdForm") ResetPasswordRequest passwordRequest,
-      BindingResult bindingResult) {
+      BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       return "auth/reset/forgotPassword";
     }
     User user = userService.findByUserName(passwordRequest.getEmail());
     if (user == null) {
-      return "auth/reset/forgotPassword?error=" + "No user found with this email";
+      model.addAttribute("errorMessage", "No user found with this email.");
+      return "auth/reset/forgotPassword";
     }
     UUID token = UUID.randomUUID();
     userService.createPasswordResetTokenForUser(user, token);
@@ -79,11 +80,12 @@ public class ResetPasswordController {
               "email", user.getUserName(),
               "subject", "99Mall Reset Password Link");
       emailService.sendPasswordResetEmail(dataMap);
-
-      return "auth/reset/forgotPassword?error=" +
-          "You should receive an Password Reset Email shortly";
+      model.addAttribute("successMessage", "You should receive an Password Reset Email shortly");
+      return "auth/reset/forgotPassword";
     } catch (Exception ex) {
-      return "auth/reset/forgotPassword?error=" + "Unable to send reset link email now.";
+      log.error("Email failure ",ex);
+      model.addAttribute("errorMessage", "Unable to send reset link email now.");
+      return "auth/reset/forgotPassword";
     }
   }
 
@@ -103,21 +105,22 @@ public class ResetPasswordController {
   @PostMapping("/savePassword")
   public String savePassword(
       @Valid @ModelAttribute("changePasswordForm") ChangePasswordRequest passwordRequest,
-      BindingResult bindingResult) {
+      BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       return "auth/reset/updatePassword";
     }
     String result = userService.validatePasswordResetToken(passwordRequest.getToken());
     if (result != null) {
-      return result;
+      model.addAttribute("errorMessage", result);
+      return "auth/reset/updatePassword";
     }
     Optional<User> user = userService.getUserByPasswordResetToken(passwordRequest.getToken());
     if (user.isPresent()) {
       userService.changeUserPassword(user.get(), passwordRequest.getNewPassword());
-      // TODO : Create successfull or fail page
-      return "Password reset successfully";
+      model.addAttribute("successMessage", "Password updated successfully");
     } else {
-      return "Invalid token.";
+      model.addAttribute("errorMessage", "Invalid token. Please try again.");
     }
+    return "auth/reset/updatePassword";
   }
 }

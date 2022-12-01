@@ -1,9 +1,7 @@
 package com.touchblankspot.inventory.portal.data.model;
 
-import com.touchblankspot.common.data.attribute.encryptor.AttributeEncryptor;
 import com.touchblankspot.common.data.model.embedded.Mutable;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
@@ -31,7 +29,7 @@ public class User extends Mutable {
   private String lastName;
 
   @Column(name = "username", unique = true, nullable = false)
-  @Convert(converter = AttributeEncryptor.class)
+  //@Convert(converter = AttributeEncryptor.class)
   private String userName;
 
   @Column(name = "password")

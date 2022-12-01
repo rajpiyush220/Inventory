@@ -10,6 +10,10 @@
 <div class="container">
     <form method="POST" class="form-signin" th:object="${registrationForm}" th:action="@{/register/super/admin}">
         <h2 class="form-signin-heading">Create your account</h2>
+        <h6 style="text-align:center;">
+            <span class="has-error" th:text="${errorMessage}"></span>
+            <span th:text="${successMessage}"></span>
+        </h6>
         <div class="form-group">
             <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name"
                    autofocus="true">
@@ -38,6 +42,7 @@
         </div>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+        <h4 class="text-center"><a href="/login">Login</a></h4>
     </form>
 
 </div>
