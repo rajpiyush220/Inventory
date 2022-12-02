@@ -1,5 +1,6 @@
 package com.touchblankspot.inventory.portal.web.controller.product;
 
+import com.touchblankspot.inventory.portal.data.model.ProductCategory;
 import com.touchblankspot.inventory.portal.security.annotations.HasProductAccess;
 import com.touchblankspot.inventory.portal.service.ProductCategoryService;
 import com.touchblankspot.inventory.portal.user.constant.RoleEnum;
@@ -9,16 +10,22 @@ import com.touchblankspot.inventory.portal.web.types.product.category.ProductCat
 import com.touchblankspot.inventory.portal.web.types.user.RegisterUserRequest;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 //@HasProductAccess
@@ -33,10 +40,26 @@ public class ProductCategoryController {
   private final ProductCategoryMapper productCategoryMapper;
 
   @GetMapping("/product/categories")
-  public String getAll(Model model) {
-    List<ProductCategoryResponseType> responseTypeList = productCategoryService.findAll().stream()
+  public String getAll(Model model,
+                       @RequestParam("page") Optional<Integer> page,
+                       @RequestParam("size") Optional<Integer> size) {
+    int currentPage = page.orElse(1);
+    int pageSize = size.orElse(5);
+
+    Page<ProductCategory> productCategoryPage =
+        productCategoryService.findAll(PageRequest.of(currentPage - 1, pageSize));
+    List<ProductCategoryResponseType> responseTypeList = productCategoryPage.stream()
         .map(productCategory -> productCategoryMapper.toResponse(productCategory)).toList();
+    int totalPages = productCategoryPage.getTotalPages();
+    if (totalPages > 0) {
+      List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+          .boxed()
+          .collect(Collectors.toList());
+      model.addAttribute("pageNumbers", pageNumbers);
+    }
+    model.addAttribute("ProductCategoriesPage", productCategoryPage);
     model.addAttribute("ProductCategories", responseTypeList);
+    model.addAttribute("currentPageNumber",currentPage);
     return "product/ShowCategories";
   }
 

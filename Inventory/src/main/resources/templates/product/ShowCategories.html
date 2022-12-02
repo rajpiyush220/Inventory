@@ -12,6 +12,10 @@
 		$('#logoutForm').submit();
 	}
 
+
+
+
+
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -22,25 +26,44 @@
         <main>
             <div class="container-fluid">
                 <div class="container">
-                    <table>
+                    <table class="table caption-top table-hover table-dark">
+                        <caption>List of product categories</caption>
                         <thead>
                         <tr>
-                            <th> Category</th>
-                            <th> SubCategory</th>
-                            <th> Product Size</th>
+                            <th scope="col">#</th>
+                            <th scope="col"> Category</th>
+                            <th scope="col"> SubCategory</th>
+                            <th scope="col"> Product Size</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:if="${ProductCategories.empty}">
-                            <td colspan="3"> No Records Available</td>
+                            <td colspan="5"> No Records Available</td>
                         </tr>
                         <tr th:each="productCategory : ${ProductCategories}">
+                            <td scope="row" th:text="${productCategoryStat.index+1}">#</td>
                             <td><span th:text="${productCategory.category}"> Category </span></td>
                             <td><span th:text="${productCategory.subCategory}"> SubCategory </span></td>
                             <td><span th:text="${productCategory.productSize}"> Product Size </span></td>
+                            <td>
+                                <a href="/register/super/admin">Edit</a> &nbsp;&nbsp;
+                                <a href="/resetPassword">View</a>&nbsp;&nbsp;
+                                <a href="/resetPassword">Delete</a>&nbsp;&nbsp;
+                            </td>
                         </tr>
                         </tbody>
                     </table>
+                    <div th:if="${ProductCategoriesPage.totalPages > 0}" class="pagination">
+                        Total Items [[${ProductCategoriesPage.totalPages}]] : Page [[${currentPageNumber}]] of
+                        [[${ProductCategoriesPage.totalPages}]] <br/>
+                        <span></span><br/>
+                        <span th:each="pageNumber : ${pageNumbers}">
+                            <a th:href="@{/product/categories(size=${ProductCategoriesPage.size}, page=${pageNumber})}"
+                               th:text="${pageNumber}" th:class="${pageNumber==currentPageNumber} ? active"></a>
+                            &nbsp; &nbsp;
+                        </span>
+                    </div>
                 </div>
             </div>
         </main>
