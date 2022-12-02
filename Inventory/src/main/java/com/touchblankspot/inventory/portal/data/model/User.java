@@ -29,7 +29,7 @@ public class User extends Mutable {
   private String lastName;
 
   @Column(name = "username", unique = true, nullable = false)
-  //@Convert(converter = AttributeEncryptor.class)
+  // @Convert(converter = AttributeEncryptor.class)
   private String userName;
 
   @Column(name = "password")

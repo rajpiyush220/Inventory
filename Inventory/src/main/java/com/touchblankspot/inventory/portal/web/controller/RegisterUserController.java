@@ -26,12 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class RegisterUserController {
 
-  @NonNull
-  private final UserService userService;
-  @NonNull
-  private final SecurityService securityService;
-  @NonNull
-  private final UserMapper userMapper;
+  @NonNull private final UserService userService;
+  @NonNull private final SecurityService securityService;
+  @NonNull private final UserMapper userMapper;
 
   @GetMapping("/user/register")
   @CanCreateUser
@@ -46,7 +43,8 @@ public class RegisterUserController {
   @CanCreateUser
   public String registration(
       @Valid @ModelAttribute("registrationForm") RegisterUserRequest userRequest,
-      BindingResult bindingResult, Model model) {
+      BindingResult bindingResult,
+      Model model) {
     if (bindingResult.hasErrors()) {
       return "auth/register/registration";
     }

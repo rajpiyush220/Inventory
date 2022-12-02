@@ -30,22 +30,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ResetPasswordController {
 
-  @NonNull
-  private final UserService userService;
+  @NonNull private final UserService userService;
 
-  @NonNull
-  private final SecurityService securityService;
+  @NonNull private final SecurityService securityService;
 
-  @NonNull
-  private final EmailService emailService;
+  @NonNull private final EmailService emailService;
 
   private final String RESET_PWD_FAIL_FORMAT = "auth/reset/forgotPassword?error=%s";
   private final String RESET_PWD_SUCCESS_FORMAT = "auth/reset/forgotPassword?error=%s";
 
-
   @GetMapping("/resetPassword")
-  public String resetPassword(HttpServletRequest request, Model model, String error,
-                              String message) {
+  public String resetPassword(
+      HttpServletRequest request, Model model, String error, String message) {
     if (securityService.isAuthenticated()) {
       return "redirect:/";
     }
@@ -57,7 +53,8 @@ public class ResetPasswordController {
   public String resetPassword(
       HttpServletRequest request,
       @Valid @ModelAttribute("resetPwdForm") ResetPasswordRequest passwordRequest,
-      BindingResult bindingResult, Model model) {
+      BindingResult bindingResult,
+      Model model) {
     if (bindingResult.hasErrors()) {
       return "auth/reset/forgotPassword";
     }
@@ -83,7 +80,7 @@ public class ResetPasswordController {
       model.addAttribute("successMessage", "You should receive an Password Reset Email shortly");
       return "auth/reset/forgotPassword";
     } catch (Exception ex) {
-      log.error("Email failure ",ex);
+      log.error("Email failure ", ex);
       model.addAttribute("errorMessage", "Unable to send reset link email now.");
       return "auth/reset/forgotPassword";
     }
@@ -105,7 +102,8 @@ public class ResetPasswordController {
   @PostMapping("/savePassword")
   public String savePassword(
       @Valid @ModelAttribute("changePasswordForm") ChangePasswordRequest passwordRequest,
-      BindingResult bindingResult, Model model) {
+      BindingResult bindingResult,
+      Model model) {
     if (bindingResult.hasErrors()) {
       return "auth/reset/updatePassword";
     }

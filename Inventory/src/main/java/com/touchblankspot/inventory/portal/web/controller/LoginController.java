@@ -36,16 +36,17 @@ public class LoginController {
   @PostMapping("/register/super/admin")
   public String registration(
       @Valid @ModelAttribute("registrationForm") RegisterAdminRequest userRequest,
-      BindingResult bindingResult, Model model) {
+      BindingResult bindingResult,
+      Model model) {
     if (bindingResult.hasErrors()) {
       return "auth/login/registration";
     }
-    try{
+    try {
       userService.save(userMapper.toEntity(userRequest), SUPER_ADMIN.name());
-      model.addAttribute("successMessage","User Created successfully. You can login now.");
-    }catch (Exception ex){
-      log.error("Unable to create super admin ",ex);
-      model.addAttribute("errorMessage","Unable to create user please contact administrator");
+      model.addAttribute("successMessage", "User Created successfully. You can login now.");
+    } catch (Exception ex) {
+      log.error("Unable to create super admin ", ex);
+      model.addAttribute("errorMessage", "Unable to create user please contact administrator");
     }
     return "auth/login/registration";
   }

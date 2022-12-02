@@ -5,6 +5,7 @@ spring:
     password: ${spring.datasource.db.password:Pikr@1991}
   jpa:
     open-in-view: false
+    show_sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -40,4 +41,6 @@ password:
 application:
   email:
     sender: touchblankspot@gmail.com
+  pagination:
+    pageSizeList: 10,15,20,25
 

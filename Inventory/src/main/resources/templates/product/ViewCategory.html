@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link href="/css/main.css" rel="stylesheet">
+    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
+    <div th:replace="~{common/header :: myHeader}"></div>
+</head>
+<form id="logoutForm" method="POST" th:action="@{/logout}">
+</form>
+<script th:inline="javascript">
+	function logoutUser() {
+		$('#logoutForm').submit();
+	}
+
+
+</script>
+<body class="sb-nav-fixed">
+<div th:replace="~{common/navbar :: myNavbar}"></div>
+<div id="layoutSidenav">
+    <div th:replace="~{common/sidebar :: mySidebar}"></div>
+    <!-- Sidebar ends here -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <div class="container">
+                    <h2 class="form-signin-heading"> Product Category</h2>
+                    <div th:if="${category == null}">
+                        <h4>No data Present</h4>
+                    </div>
+                    <div th:if="${category != null}">
+                        <div class="form-group">
+                            <label> Category : </label>
+                            <span th:text="${category.category}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label> Sub Category : </label>
+                            <span th:text="${category.subCategory}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label> product Size : </label>
+                            <span th:text="${category.productSize}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div
+                        class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; IMS 2021</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+                        &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+<script type="text/javascript" th:src="@{/js/chart/chart-area-demo.js}"></script>
+<script type="text/javascript" th:src="@{/js/chart/chart-bar-demo.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/chart/datatables-demo.js}"></script>
+</body>
+</html>

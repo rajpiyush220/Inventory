@@ -31,6 +31,9 @@ public class ProductCategory extends Mutable {
   @Size(max = 20, min = 1)
   private String productSize;
 
+  @Column(name = "is_deleted")
+  private Boolean isDeleted;
+
   @OneToMany(mappedBy = "productCategory")
   Set<Product> products = new HashSet<>(0);
 }
