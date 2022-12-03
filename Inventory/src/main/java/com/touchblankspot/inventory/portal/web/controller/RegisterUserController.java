@@ -56,9 +56,10 @@ public class RegisterUserController {
       userService.save(userMapper.toEntity(userRequest), roleName);
       model.addAttribute("successMessage", "User Created successfully.");
     } catch (Exception ex) {
-      log.error("Unable to create user ", ex);
+      log.error("User Registration failed {}", ex.getMessage());
       model.addAttribute("errorMessage", "Unable to create user please contact administrator");
+      return "auth/register/registration";
     }
-    return "auth/register/registration";
+    return "auth/login/login";
   }
 }

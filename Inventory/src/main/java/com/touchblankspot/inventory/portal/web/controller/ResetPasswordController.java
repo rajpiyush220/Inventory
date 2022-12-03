@@ -12,6 +12,7 @@ import com.touchblankspot.inventory.portal.web.types.ResetPasswordRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.NonNull;
@@ -63,12 +64,13 @@ public class ResetPasswordController {
       model.addAttribute("errorMessage", "No user found with this email.");
       return "auth/reset/forgotPassword";
     }
-    UUID token = UUID.randomUUID();
-    userService.createPasswordResetTokenForUser(user, token);
-    String url = getPasswordResetUrl(request, token);
-    log.error(url);
-    System.out.println(url);
     try {
+      UUID token = UUID.randomUUID();
+      userService.createPasswordResetTokenForUser(user, token);
+      String url = getPasswordResetUrl(request, token);
+      log.error(url);
+      System.out.println(url);
+
       Map<String, Object> dataMap =
           Map.of(
               "base_url", getAppUrl(request),
@@ -104,21 +106,27 @@ public class ResetPasswordController {
       @Valid @ModelAttribute("changePasswordForm") ChangePasswordRequest passwordRequest,
       BindingResult bindingResult,
       Model model) {
-    if (bindingResult.hasErrors()) {
+    if (bindingResult.hasErrors() || Objects.nonNull(passwordRequest)) {
       return "auth/reset/updatePassword";
     }
-    String result = userService.validatePasswordResetToken(passwordRequest.getToken());
-    if (result != null) {
-      model.addAttribute("errorMessage", result);
+    try {
+      String result = userService.validatePasswordResetToken(passwordRequest.getToken());
+      if (result != null) {
+        model.addAttribute("errorMessage", result);
+        return "auth/reset/updatePassword";
+      }
+      Optional<User> user = userService.getUserByPasswordResetToken(passwordRequest.getToken());
+      if (user.isPresent()) {
+        userService.changeUserPassword(user.get(), passwordRequest.getNewPassword());
+        model.addAttribute("successMessage", "Password updated successfully");
+        return "auth/login/login";
+      } else {
+        model.addAttribute("errorMessage", "Invalid token. Please try again.");
+        return "auth/reset/updatePassword";
+      }
+    } catch (Exception ex) {
+      log.error("Password update failed : {} ", ex.getMessage());
       return "auth/reset/updatePassword";
     }
-    Optional<User> user = userService.getUserByPasswordResetToken(passwordRequest.getToken());
-    if (user.isPresent()) {
-      userService.changeUserPassword(user.get(), passwordRequest.getNewPassword());
-      model.addAttribute("successMessage", "Password updated successfully");
-    } else {
-      model.addAttribute("errorMessage", "Invalid token. Please try again.");
-    }
-    return "auth/reset/updatePassword";
   }
 }

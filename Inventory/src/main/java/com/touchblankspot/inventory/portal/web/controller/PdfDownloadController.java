@@ -26,17 +26,20 @@ public class PdfDownloadController {
   @NonNull private final UserService userService;
 
   @GetMapping("/download")
-  public String download(HttpServletRequest request) throws IOException {
-
-    User user = userService.findByUserName("rajpiyush220@gmail.com");
-    thymeleafTemplateService.sendEmail(
-        Map.of(
-            "firstName", user.getFullName(),
-            "userName", user.getUserName(),
-            "email", user.getUserName(),
-            "subject", "Test thymleaf email"),
-        "email/thymeleaf/welcome");
-    log.error("Email sent");
-    return "login/login";
+  public String download(HttpServletRequest request) {
+   try {
+     User user = userService.findByUserName("rajpiyush220@gmail.com");
+     thymeleafTemplateService.sendEmail(
+             Map.of(
+                     "firstName", user.getFullName(),
+                     "userName", user.getUserName(),
+                     "email", user.getUserName(),
+                     "subject", "Test thymleaf email"),
+             "email/thymeleaf/welcome");
+     log.info("Email sent");
+   } catch (Exception ex) {
+     log.error("Email doesn't send {}" , ex.getMessage());
+   }
+   return "login/login";
   }
 }

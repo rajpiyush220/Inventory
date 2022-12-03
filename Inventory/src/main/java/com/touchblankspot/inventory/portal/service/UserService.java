@@ -7,6 +7,7 @@ import com.touchblankspot.inventory.portal.data.repository.PasswordTokenReposito
 import com.touchblankspot.inventory.portal.data.repository.RoleRepository;
 import com.touchblankspot.inventory.portal.data.repository.UserRepository;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -61,13 +62,16 @@ public class UserService implements FieldValueExists {
   }
 
   public String validatePasswordResetToken(String token) {
-    final PasswordResetToken passwordResetToken =
-        passwordTokenRepository.findByToken(UUID.fromString(token));
-    return passwordResetToken == null
-        ? "Invalid token."
-        : isTokenExpired(passwordResetToken)
-            ? "Your registration token has expired. Please register again."
-            : null;
+    if (Objects.nonNull(token)) {
+      final PasswordResetToken passwordResetToken =
+              passwordTokenRepository.findByToken(UUID.fromString(token));
+      return passwordResetToken == null
+              ? "Invalid token."
+              : isTokenExpired(passwordResetToken)
+              ? "Your registration token has expired. Please register again."
+              : null;
+    } else
+       return null;
   }
 
   public Optional<User> getUserByPasswordResetToken(final String token) {

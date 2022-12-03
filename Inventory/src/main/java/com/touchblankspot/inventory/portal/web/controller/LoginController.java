@@ -48,7 +48,7 @@ public class LoginController {
       log.error("Unable to create super admin ", ex);
       model.addAttribute("errorMessage", "Unable to create user please contact administrator");
     }
-    return "auth/login/registration";
+    return "auth/login/login";
   }
 
   @GetMapping("/login")
