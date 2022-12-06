@@ -12,7 +12,13 @@ public enum PortalRolePermission {
   PROD_CAT_CREATE("Create Product Category"),
   PROD_CAT_VIEW("View Product Category"),
   PROD_CAT_UPDATE("Update Product Category"),
-  PROD_CAT_DELETE("Delete Product Category");
+  PROD_CAT_DELETE("Delete Product Category"),
+  SUPER_ADMIN_CREATE("Create Super Admin"),
+  ADMIN_CREATE("Create Admin"),
+  MANAGER_CREATE("Create manager"),
+  SUPERVISOR_CREATE("Create Supervisor"),
+  USER_CREATE("Create User"),
+  STAFF_CREATE("Create Staff");
 
   private final String description;
 
