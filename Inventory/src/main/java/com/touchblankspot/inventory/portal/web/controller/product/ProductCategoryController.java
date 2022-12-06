@@ -6,7 +6,6 @@ import com.touchblankspot.inventory.portal.web.controller.BaseController;
 import com.touchblankspot.inventory.portal.web.types.mapper.ProductCategoryMapper;
 import com.touchblankspot.inventory.portal.web.types.product.category.ProductCategoryRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.category.ProductCategoryResponseType;
-import com.touchblankspot.inventory.portal.web.util.HtmlUtil;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 // @HasProductAccess
@@ -94,14 +93,14 @@ public class ProductCategoryController extends BaseController {
   }
 
   @GetMapping("/product/category/search")
-  public ResponseEntity<String> getSearchSuggestion(String searchKey, String type) {
-    List<String> result = switch (type.toLowerCase()) {
-      case "category" -> productCategoryService.findByCategoryContains(searchKey);
-      case "subcategory" -> productCategoryService.findBySubCategoryContains(searchKey);
-      case "productsize" -> productCategoryService.findByProductSizeContains(searchKey);
-      default -> new ArrayList<>();
-    };
-    return ResponseEntity.ok(HtmlUtil.buildListItem(result));
+  public @ResponseBody List<String> getSearchSuggestion(String searchKey, String type) {
+    return
+        switch (type.toLowerCase()) {
+          case "category" -> productCategoryService.findByCategoryContains(searchKey);
+          case "subcategory" -> productCategoryService.findBySubCategoryContains(searchKey);
+          case "productsize" -> productCategoryService.findByProductSizeContains(searchKey);
+          default -> new ArrayList<>();
+        };
   }
 
   @GetMapping("/product/category/delete")
@@ -127,8 +126,7 @@ public class ProductCategoryController extends BaseController {
 
   @GetMapping("/product/category/view")
   public String ViewCategory(String id, Model model) {
-    ProductCategory productCategory =
-        productCategoryService.findById(UUID.fromString(id));
+    ProductCategory productCategory = productCategoryService.findById(UUID.fromString(id));
     model.addAttribute("category", productCategoryMapper.toResponse(productCategory));
     return "product/ViewCategory";
   }

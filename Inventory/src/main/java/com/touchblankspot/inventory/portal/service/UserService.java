@@ -47,7 +47,7 @@ public class UserService implements FieldValueExists {
   @Override
   public boolean fieldValueExists(Object value, String fieldName)
       throws UnsupportedOperationException {
-    if ("username".equals(fieldName.toLowerCase())) {
+    if ("username".equalsIgnoreCase(fieldName)) {
       return userRepository.findByUserName(value.toString()) != null;
     }
     throw new UnsupportedOperationException("Operation not supported for " + fieldName);
@@ -85,6 +85,6 @@ public class UserService implements FieldValueExists {
   }
 
   private boolean isTokenExpired(PasswordResetToken passwordResetToken) {
-    return passwordResetToken.getExpirationTime().compareTo(OffsetDateTime.now()) < 0;
+    return passwordResetToken.getExpirationTime().isBefore(OffsetDateTime.now());
   }
 }
