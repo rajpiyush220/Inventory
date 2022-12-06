@@ -7,6 +7,7 @@ public interface WebConstant {
   String[] PERMIT_ALL_URL = {
     "/css/**",
     "/js/**",
+    "/images/**",
     "/register/super/admin",
     "/resetPassword",
     "/changePassword",
