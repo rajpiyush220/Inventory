@@ -34,11 +34,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ProductCategoryController extends BaseController {
 
-  @NonNull
-  private final ProductCategoryService productCategoryService;
+  @NonNull private final ProductCategoryService productCategoryService;
 
-  @NonNull
-  private final ProductCategoryMapper productCategoryMapper;
+  @NonNull private final ProductCategoryMapper productCategoryMapper;
 
   @GetMapping("/product/categories")
   public String getAll(
@@ -94,13 +92,12 @@ public class ProductCategoryController extends BaseController {
 
   @GetMapping("/product/category/search")
   public @ResponseBody List<String> getSearchSuggestion(String searchKey, String type) {
-    return
-        switch (type.toLowerCase()) {
-          case "category" -> productCategoryService.findByCategoryContains(searchKey);
-          case "subcategory" -> productCategoryService.findBySubCategoryContains(searchKey);
-          case "productsize" -> productCategoryService.findByProductSizeContains(searchKey);
-          default -> new ArrayList<>();
-        };
+    return switch (type.toLowerCase()) {
+      case "category" -> productCategoryService.findByCategoryContains(searchKey);
+      case "subcategory" -> productCategoryService.findBySubCategoryContains(searchKey);
+      case "productsize" -> productCategoryService.findByProductSizeContains(searchKey);
+      default -> new ArrayList<>();
+    };
   }
 
   @GetMapping("/product/category/delete")

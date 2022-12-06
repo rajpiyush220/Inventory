@@ -4,7 +4,6 @@ import com.touchblankspot.inventory.portal.data.model.ProductCategory;
 import com.touchblankspot.inventory.portal.data.repository.ProductCategoryRepository;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ProductCategoryService {
-  @NonNull
-  private final ProductCategoryRepository productCategoryRepository;
+  @NonNull private final ProductCategoryRepository productCategoryRepository;
 
   public ProductCategory save(ProductCategory productCategory) {
     return productCategoryRepository.save(productCategory);
@@ -63,8 +60,7 @@ public class ProductCategoryService {
   }
 
   public void deleteProductCategory(UUID id) {
-    ProductCategory productCategory =
-        productCategoryRepository.findByIdAndIsDeleted(id, false);
+    ProductCategory productCategory = productCategoryRepository.findByIdAndIsDeleted(id, false);
     if (productCategory != null) {
       productCategory.setIsDeleted(true);
       productCategory.setUpdated(OffsetDateTime.now());
