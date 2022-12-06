@@ -42,7 +42,8 @@
 								</div>
 								<a class="nav-link collapsed" href="#" data-toggle="collapse"
 									data-target="#pagesCollapseItem" aria-expanded="false"
-									aria-controls="pagesCollapseItem"> Product Category Management
+									aria-controls="pagesCollapseItem"
+								    th:if="${@permissionService.hasPermissions({'PROD_CAT_CREATE','PROD_CAT_VIEW'})}"> Product Category Management
 									<div class="sb-sidenav-collapse-arrow">
 										<i class="fas fa-angle-down"></i>
 									</div>
@@ -50,10 +51,10 @@
 								<div class="collapse" id="pagesCollapseItem"
 									aria-labelledby="headingOne"
 									data-parent="#sidenavAccordionPages">
-									<nav class="sb-sidenav-menu-nested nav">
+									<nav class="sb-sidenav-menu-nested nav" th:if="${@permissionService.hasPermission({'PROD_CAT_CREATE'})}">
 										<a class="nav-link" href="/product/category">Add Product Category</a>
 									</nav>
-									<nav class="sb-sidenav-menu-nested nav">
+									<nav class="sb-sidenav-menu-nested nav" th:if="${@permissionService.hasPermission({'PROD_CAT_VIEW'})}">
 										<a class="nav-link" href="/product/categories">Product Category List</a>
 									</nav>
 								</div>

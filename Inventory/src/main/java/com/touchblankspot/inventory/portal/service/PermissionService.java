@@ -2,6 +2,7 @@ package com.touchblankspot.inventory.portal.service;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -31,6 +32,14 @@ public class PermissionService {
             ? (Collection) permissions
             : Collections.singleton(permissions);
     return CollectionUtils.containsAny(permissionsToCheck, userPermissionSet);
+  }
+
+  public Boolean hasPermissions(List<String> permissionsToCheck) {
+    Authentication authentication = getAuthentication();
+    if (!authentication.isAuthenticated()) {
+      return false;
+    }
+    return getCurrentUserPermissions().containsAll(permissionsToCheck);
   }
 
   public Set<String> getCurrentUserPermissions() {

@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ public class ProductCategoryController extends BaseController {
   @NonNull private final ProductCategoryMapper productCategoryMapper;
 
   @GetMapping("/product/categories")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   public String getAll(
       Model model,
       @RequestParam("page") Optional<Integer> page,
@@ -64,14 +66,14 @@ public class ProductCategoryController extends BaseController {
   }
 
   @GetMapping("/product/category")
-  // @HasProductAccess
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_CREATE'})")
   public String createProductCategory(Model model) {
     model.addAttribute("categoryForm", new ProductCategoryRequestType());
     return "product/CreateCategory";
   }
 
   @PostMapping("/product/category")
-  // @HasProductAccess
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_CREATE'})")
   public String createProductCategory(
       @Valid @ModelAttribute("categoryForm") ProductCategoryRequestType requestType,
       BindingResult bindingResult,
@@ -91,6 +93,7 @@ public class ProductCategoryController extends BaseController {
   }
 
   @GetMapping("/product/category/search")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   public @ResponseBody List<String> getSearchSuggestion(String searchKey, String type) {
     return switch (type.toLowerCase()) {
       case "category" -> productCategoryService.findByCategoryContains(searchKey);
@@ -101,6 +104,7 @@ public class ProductCategoryController extends BaseController {
   }
 
   @GetMapping("/product/category/delete")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_DELETE'})")
   public String deleteCategory(String id) {
     productCategoryService.deleteProductCategory(UUID.fromString(id));
     log.warn("Product category with id {} deleted successfully.", id);
@@ -108,6 +112,7 @@ public class ProductCategoryController extends BaseController {
   }
 
   @GetMapping("/product/category/edit")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_UPDATE'})")
   public String editCategory(String id) {
     productCategoryService.deleteProductCategory(UUID.fromString(id));
     log.warn("Product category with id {} deleted successfully.", id);
@@ -115,6 +120,7 @@ public class ProductCategoryController extends BaseController {
   }
 
   @PostMapping("/product/category/update")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_UPDATE'})")
   public String updateCategory(String id) {
     productCategoryService.deleteProductCategory(UUID.fromString(id));
     log.warn("Product category with id {} deleted successfully.", id);
@@ -122,6 +128,7 @@ public class ProductCategoryController extends BaseController {
   }
 
   @GetMapping("/product/category/view")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   public String ViewCategory(String id, Model model) {
     ProductCategory productCategory = productCategoryService.findById(UUID.fromString(id));
     model.addAttribute("category", productCategoryMapper.toResponse(productCategory));
