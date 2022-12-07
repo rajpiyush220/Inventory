@@ -1,5 +1,6 @@
 package com.touchblankspot.inventory.portal.service;
 
+import com.touchblankspot.inventory.portal.data.enums.PortalRolePermission;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -18,19 +19,25 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class PermissionService {
 
-  @NonNull private final RoleCacheService roleCacheService;
+  @NonNull
+  private final RoleCacheService roleCacheService;
+
 
   public Boolean hasPermission(Object permissions) {
     Authentication authentication = getAuthentication();
     if (!authentication.isAuthenticated()) {
       return false;
     }
-    Set<String> userPermissionSet = getCurrentUserPermissions();
     Collection permissionsToCheck =
         permissions instanceof Collection
             ? (Collection) permissions
             : Collections.singleton(permissions);
-    return CollectionUtils.containsAny(permissionsToCheck, userPermissionSet);
+    return CollectionUtils.containsAny(permissionsToCheck, getCurrentUserPermissions());
+  }
+
+  public Boolean hasAddUserPermission() {
+    return hasPermission("ADMIN_CREATE") ||
+        hasPermission(PortalRolePermission.getAddUserPermission());
   }
 
   public Set<String> getCurrentUserPermissions() {

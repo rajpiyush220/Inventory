@@ -3,7 +3,7 @@ package com.touchblankspot.inventory.portal.web.controller;
 import static com.touchblankspot.inventory.portal.user.constant.RoleEnum.ADMIN;
 import static com.touchblankspot.inventory.portal.user.constant.RoleEnum.SUPER_ADMIN;
 
-import com.touchblankspot.inventory.portal.security.annotations.CanCreateUser;
+import com.touchblankspot.inventory.portal.security.annotations.HasAddUserPermission;
 import com.touchblankspot.inventory.portal.security.service.SecurityService;
 import com.touchblankspot.inventory.portal.service.UserService;
 import com.touchblankspot.inventory.portal.user.constant.RoleEnum;
@@ -24,14 +24,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@HasAddUserPermission
 public class RegisterUserController {
 
-  @NonNull private final UserService userService;
-  @NonNull private final SecurityService securityService;
-  @NonNull private final UserMapper userMapper;
+  @NonNull
+  private final UserService userService;
+  @NonNull
+  private final SecurityService securityService;
+  @NonNull
+  private final UserMapper userMapper;
 
   @GetMapping("/user/register")
-  @CanCreateUser
   public String registration(Model model) {
     model.addAttribute("selectedRole", RoleEnum.getRoleSelectTypes().get(0).name());
     model.addAttribute("roleSelectTypes", RoleEnum.getRoleSelectTypes());
@@ -40,7 +43,6 @@ public class RegisterUserController {
   }
 
   @PostMapping("/user/register")
-  @CanCreateUser
   public String registration(
       @Valid @ModelAttribute("registrationForm") RegisterUserRequest userRequest,
       BindingResult bindingResult,
