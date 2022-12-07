@@ -1,53 +1,9 @@
-<!--<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <title>Log in with your account</title>
-    <link href="/css/main.css" rel="stylesheet">
-    <link href="/css/library/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body>
-<div class="container">
-    <form class="form-signin" method="POST" th:action="@{/login}">
-        <h2 class="form-heading">Log in</h2>
-
-        <div class="form-group">
-            <span th:text="${message}"></span>
-            <input name="username" type="text" class="form-control" placeholder="Username"
-                   autofocus="true"/>
-
-            <input name="password" type="password" class="form-control" placeholder="Password"/>
-            <span class="has-error" th:text="${error}"></span>
-
-            Remember Me: &nbsp;<input type="checkbox" name="remember-me" />
-
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
-            <h4 class="text-center" th:if="${isSuperAdminExists}"><a href="/register/super/admin">Register Yourself</a></h4>
-            <h4 class="text-center"><a href="/resetPassword">Reset Password</a></h4>
-        </div>
-    </form>
-</div>
-
-<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-</body>
-</html>-->
-
-
-
-
-
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Login User</title>
-
     <!-- Favicon -->
     <link href="/css/library/backend.css" rel="stylesheet">
     <link href="/css/library/backend-plugin.min.css" rel="stylesheet">
@@ -75,10 +31,11 @@
                                         <p>Login to stay connected.</p>
                                         <form>
                                             <div class="row">
+                                                <span th:text="${message}"></span>
+                                                <span style="color: red;" th:text="${error}"></span>
+                                                <span><br/><br/></span>
                                                 <div class="col-lg-12">
                                                     <div class="floating-label form-group">
-                                                        <span th:text="${message}"></span>
-
                                                         <input class="floating-input form-control" name="username" type="email"  placeholder=""
                                                                autofocus="true"/>
                                                         <label>Email</label>
@@ -98,14 +55,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
-                                                    <a href="auth-recoverpw.html" class="text-primary float-right">Forgot Password?</a>
+                                                    <a href="/resetPassword" class="text-primary float-right">Forgot Password?</a>
                                                 </div>
                                             </div>
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                             <button type="submit" class="btn btn-primary">Sign In</button>
                                             <p class="mt-3">
-                                                <h4 class="text-center" th:if="${isSuperAdminExists}"><a href="/register/super/admin">Register Yourself</a></h4>
-                                                <h4 class="text-center"><a href="/resetPassword">Reset Password</a></h4>
+                                                <h4 class="text-center" th:if="${isSuperAdminExists}"><a href="/register/super/admin">Register Super Admin</a></h4>
                                             </p>
                                         </form>
                                     </div>
