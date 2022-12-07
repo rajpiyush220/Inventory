@@ -3,6 +3,7 @@ package com.touchblankspot.inventory.portal.web.controller;
 import static com.touchblankspot.inventory.portal.user.constant.RoleEnum.ADMIN;
 import static com.touchblankspot.inventory.portal.user.constant.RoleEnum.SUPER_ADMIN;
 
+import com.touchblankspot.inventory.portal.security.annotations.HasAddUserPermission;
 import com.touchblankspot.inventory.portal.security.service.SecurityService;
 import com.touchblankspot.inventory.portal.service.UserService;
 import com.touchblankspot.inventory.portal.user.constant.RoleEnum;
@@ -13,7 +14,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
+@HasAddUserPermission
 public class RegisterUserController {
 
   @NonNull
@@ -34,7 +35,6 @@ public class RegisterUserController {
   private final UserMapper userMapper;
 
   @GetMapping("/user/register")
-  @PreAuthorize("@permissionService.hasPermissions({'ADMIN_CREATE'}) or @permissionService.hasPermissions({'MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})")
   public String registration(Model model) {
     model.addAttribute("selectedRole", RoleEnum.getRoleSelectTypes().get(0).name());
     model.addAttribute("roleSelectTypes", RoleEnum.getRoleSelectTypes());
@@ -43,7 +43,6 @@ public class RegisterUserController {
   }
 
   @PostMapping("/user/register")
-  @PreAuthorize("@permissionService.hasPermissions({'ADMIN_CREATE'}) or @permissionService.hasPermissions({'MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})")
   public String registration(
       @Valid @ModelAttribute("registrationForm") RegisterUserRequest userRequest,
       BindingResult bindingResult,

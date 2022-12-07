@@ -28,7 +28,7 @@
 								id="sidenavAccordionPages">
 								<a class="nav-link collapsed" href="#" data-toggle="collapse"
 									data-target="#pagesCollapseAuth" aria-expanded="false"
-									aria-controls="pagesCollapseAuth" th:if="${@permissionService.hasPermissions({'ADMIN_CREATE'}) or @permissionService.hasPermissions({'MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}"> Authentication
+									aria-controls="pagesCollapseAuth" th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}"> Authentication
 									<div class="sb-sidenav-collapse-arrow">
 										<i class="fas fa-angle-down"></i>
 									</div>
@@ -36,7 +36,7 @@
 								<div class="collapse" id="pagesCollapseAuth"
 									aria-labelledby="headingOne"
 									data-parent="#sidenavAccordionPages"
-									 th:if="${@permissionService.hasPermissions({'ADMIN_CREATE'}) or @permissionService.hasPermissions({'ADMIN_CREATE','MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}">
+									 th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'ADMIN_CREATE','MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}">
 									<nav class="sb-sidenav-menu-nested nav" >
 										<a href="/user/register">Register User</a>
 									</nav>
@@ -44,7 +44,7 @@
 								<a class="nav-link collapsed" href="#" data-toggle="collapse"
 									data-target="#pagesCollapseItem" aria-expanded="false"
 									aria-controls="pagesCollapseItem"
-								    th:if="${@permissionService.hasPermissions({'PROD_CAT_CREATE','PROD_CAT_VIEW'})}"> Product Category Management
+								    th:if="${@permissionService.hasPermission({'PROD_CAT_CREATE','PROD_CAT_VIEW'})}"> Product Category Management
 									<div class="sb-sidenav-collapse-arrow">
 										<i class="fas fa-angle-down"></i>
 									</div>

@@ -2,6 +2,7 @@ package com.touchblankspot.inventory.portal.data.enums;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -29,5 +30,15 @@ public enum PortalRolePermission {
 
   public static PortalRolePermission fromString(String permission) {
     return enumMap.get(permission);
+  }
+
+  public static List<String> getAddUserPermission() {
+    return List.of(
+        PortalRolePermission.ADMIN_CREATE.name(),
+        PortalRolePermission.MANAGER_CREATE.name(),
+        PortalRolePermission.SUPERVISOR_CREATE.name(),
+        PortalRolePermission.USER_CREATE.name(),
+        PortalRolePermission.STAFF_CREATE.name()
+    );
   }
 }
