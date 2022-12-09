@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <link href="/css/main.css" rel="stylesheet">
-    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
     <div th:replace="~{common/header :: myHeader}"></div>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
-<script  th:inline="javascript">
+<script th:inline="javascript">
 	function logoutUser() {
 		$('#logoutForm').submit();
 	}
@@ -22,11 +22,11 @@
             <div class="container-fluid">
                 <div class="container">
                     <div class="col-xl-6 col-lg-7">
-                    <form method="POST" class="form-signin-category" th:object="${registrationForm}"
-                          th:action="@{/user/register}">
+                    <form method="POST" class="form-signin-category" th:object="${categoryForm}"
+                          th:action="@{/product/category}">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Create your account</h4>
+                                <h4 class="card-title">Create Product Category</h4>
                             </div>
                         </div>
 
@@ -35,51 +35,30 @@
                             <span th:text="${successMessage}"></span>
                         </h6>
                         <div class="form-group">
-                            <label for="firstName">First Name:</label>
-                            <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name"
+                            <input size="50" type="text" th:field="*{category}" class="form-control"
+                                   placeholder="Enter Category"
                                    autofocus="true">
-                            <span class="has-error" th:if="${#fields.hasErrors('firstName')}"
-                                  th:errors="*{firstName}"></span>
+                            <span class="has-error" th:if="${#fields.hasErrors('category')}"
+                                  th:errors="*{category}"></span>
                         </div>
                         <div class="form-group">
-                            <label for="lastName">Last Name:</label>
-                            <input type="text" th:field="*{lastName}" class="form-control" placeholder="Last Name"
+                            <input type="text" th:field="*{subCategory}" class="form-control"
+                                   placeholder="Enter SubCategory"
                                    autofocus="true">
-                            <span class="has-error" th:if="${#fields.hasErrors('lastName')}"
-                                  th:errors="*{lastName}"></span>
+                            <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
+                                  th:errors="*{subCategory}"></span>
                         </div>
                         <div class="form-group">
-                            <label for="userName">User Name:</label>
-                            <input type="text" th:field="*{userName}" class="form-control" placeholder="Username"
+                            <input type="text" th:field="*{productSize}" class="form-control" placeholder="Product Size"
                                    autofocus="true">
-                            <span class="has-error" th:if="${#fields.hasErrors('userName')}"
-                                  th:errors="*{userName}"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password">Password:</label>
-                            <input type="password" th:field="*{password}" class="form-control" placeholder="Password">
-                            <span class="has-error" th:if="${#fields.hasErrors('password')}"
-                                  th:errors="*{password}"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="passwordConfirm">Password Confirm:</label>
-                            <input type="password" th:field="*{passwordConfirm}" class="form-control"
-                                   placeholder="Confirm your password">
-                            <span class="has-error" th:if="${#fields.hasErrors('passwordConfirm')}"
-                                  th:errors="*{passwordConfirm}"></span>
-                        </div>
-                        <div class="form-group" sec:authorize="hasAuthority('ADMIN')">
-                            <select th:field="*{roleName}">
-                                <option th:each="role : ${roleSelectTypes}" th:value="${role.name}"
-                                        th:text="${role.displayName}"></option>
-                            </select>
+                            <span class="has-error" th:if="${#fields.hasErrors('productSize')}"
+                                  th:errors="*{productSize}"></span>
                         </div>
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
                     </form>
 
                 </div>
-              </div>
+                </div>
             </div>
         </main>
         <footer class="py-4 bg-light mt-auto">

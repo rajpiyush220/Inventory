@@ -95,4 +95,3 @@ spotless {
 		googleJavaFormat() // has its own section below
 	}
 }
-prefixNewMigrations.dependsOn classes

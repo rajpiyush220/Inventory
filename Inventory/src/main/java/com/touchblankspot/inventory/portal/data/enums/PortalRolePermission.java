@@ -38,7 +38,6 @@ public enum PortalRolePermission {
         PortalRolePermission.MANAGER_CREATE.name(),
         PortalRolePermission.SUPERVISOR_CREATE.name(),
         PortalRolePermission.USER_CREATE.name(),
-        PortalRolePermission.STAFF_CREATE.name()
-    );
+        PortalRolePermission.STAFF_CREATE.name());
   }
 }

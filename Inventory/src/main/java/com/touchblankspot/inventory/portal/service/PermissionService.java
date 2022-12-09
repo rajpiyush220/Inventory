@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class PermissionService {
 
-  @NonNull
-  private final RoleCacheService roleCacheService;
-
+  @NonNull private final RoleCacheService roleCacheService;
 
   public Boolean hasPermission(Object permissions) {
     Authentication authentication = getAuthentication();
@@ -36,8 +34,8 @@ public class PermissionService {
   }
 
   public Boolean hasAddUserPermission() {
-    return hasPermission("ADMIN_CREATE") ||
-        hasPermission(PortalRolePermission.getAddUserPermission());
+    return hasPermission("ADMIN_CREATE")
+        || hasPermission(PortalRolePermission.getAddUserPermission());
   }
 
   public Set<String> getCurrentUserPermissions() {

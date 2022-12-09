@@ -24,15 +24,13 @@ public class ProductCategory extends Mutable {
   private String category;
 
   @Column(name = "sub_category")
-  @Size(max = 255, min = 1)
   private String subCategory;
 
   @Column(name = "product_size")
-  @Size(max = 20, min = 1)
   private String productSize;
 
   @Column(name = "is_deleted")
-  private Boolean isDeleted;
+  private Boolean isDeleted = false;
 
   @OneToMany(mappedBy = "productCategory")
   Set<Product> products = new HashSet<>(0);

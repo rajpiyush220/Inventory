@@ -1,5 +1,6 @@
 package com.touchblankspot.inventory.portal.service;
 
+import com.touchblankspot.common.validator.FieldValueExists;
 import com.touchblankspot.inventory.portal.data.model.ProductCategory;
 import com.touchblankspot.inventory.portal.data.repository.ProductCategoryRepository;
 import java.time.OffsetDateTime;
@@ -12,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
-public class ProductCategoryService {
+public class ProductCategoryService implements FieldValueExists {
   @NonNull private final ProductCategoryRepository productCategoryRepository;
 
   public ProductCategory save(ProductCategory productCategory) {
@@ -66,5 +68,20 @@ public class ProductCategoryService {
       productCategory.setUpdated(OffsetDateTime.now());
       productCategoryRepository.save(productCategory);
     }
+  }
+
+  @Override
+  public boolean fieldValueExists(Object value, String fieldName)
+      throws UnsupportedOperationException {
+    if ("category".equalsIgnoreCase(fieldName)) {
+      // Ignoring check if value is empty or its not matching min length criteria
+      if (ObjectUtils.isEmpty(value) || value.toString().length() < 2) {
+        return false;
+      }
+      List<ProductCategory> productCategories =
+          productCategoryRepository.findByCategoryAndIsDeleted(value.toString(), false);
+      return productCategories != null && productCategories.size() > 0;
+    }
+    throw new UnsupportedOperationException("Operation not supported for " + fieldName);
   }
 }
