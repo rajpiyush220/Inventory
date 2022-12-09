@@ -8,11 +8,13 @@
     <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-    <script type="text/javascript" th:src="@{/js/chart/chart-area-demo.js}"></script>
-    <script type="text/javascript" th:src="@{/js/chart/chart-bar-demo.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/chart/datatables-demo.js}"></script>
+    <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
+    <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
+    <link type="text/css" rel="stylesheet"
+          th:href="@{/css/library/materialize.min.css}" media="screen,projection"/>
     <div th:replace="~{common/header :: myHeader}"></div>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
@@ -25,30 +27,14 @@
         currentPageSize = $('#pageSize').val();
         alert("Change page number on, yet to be developed.");
     }
-
-    $(document).ready(function(){
-        $("#searchCategory").keyup(function(){
-            var search = $(this).val();
-            if(search != ""){
-                $.ajax({
-                    url: '/product/category/search?type=category&searchKey='+search,
-                    type: 'get',
-                    dataType: 'json',
-                    async: false,
-                    cache: false,
-                    success:function(response){
-                    alert(response)
-                        var len = response.length;
-                        $("#searchResult").empty();
-                        $("#searchResult").append(response)
-                        $("#searchResult li").bind("click",function(){
-                            setText(this);
-                        });
-                    }
-                });
-            }
-        });
+    $(document).ready(function() {
+      $('#searchKey').devbridgeAutocomplete({
+          serviceUrl: '/product/category/search?type=category',
+          paramName: 'searchKey',
+          minChars: 1,
+      });
     });
+
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -63,14 +49,14 @@
                         <h4>Product Category List</h4>
                     </div>
                     <div class="form-group" style="text-align:right;">
-                        <input type="text" name="searchCategory" id="searchCategory" placeholder="Search Category">
-                        <ul id="searchResult"></ul>
+                        <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
+                               class="autocomplete" style="width: 120px;">
                         <label>Select Page Size: </label>
                         <select class="form-select form-select-lg" style="width:50px;" onchange="submitPageSizeChange()"
                                 name="pageSize" id="pageSize">
                             <option th:each="index : ${PageSizeList}" th:value="${index}"
                                     th:text="${index}"
-                                    th:selected="(${index} == ${ProductCategoriesPage.size})"></option>
+                                    th:selected="(${index} == ${selectedPageSize})"></option>
                         </select>
                     </div>
                     <table class="table caption-top table-hover table-dark">

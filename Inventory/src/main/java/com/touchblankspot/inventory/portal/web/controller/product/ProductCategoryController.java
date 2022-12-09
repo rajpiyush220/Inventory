@@ -3,6 +3,7 @@ package com.touchblankspot.inventory.portal.web.controller.product;
 import com.touchblankspot.inventory.portal.data.model.ProductCategory;
 import com.touchblankspot.inventory.portal.service.ProductCategoryService;
 import com.touchblankspot.inventory.portal.web.controller.BaseController;
+import com.touchblankspot.inventory.portal.web.types.AutoCompleteWrapper;
 import com.touchblankspot.inventory.portal.web.types.mapper.ProductCategoryMapper;
 import com.touchblankspot.inventory.portal.web.types.product.category.ProductCategoryRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.category.ProductCategoryResponseType;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,6 +64,7 @@ public class ProductCategoryController extends BaseController {
     model.addAttribute("ProductCategories", responseTypeList);
     model.addAttribute("currentPageNumber", currentPage);
     model.addAttribute("PageSizeList", pageSizeList);
+    model.addAttribute("selectedPageSize", pageSizeList.get(0));
     return "product/ShowCategories";
   }
 
@@ -92,15 +95,17 @@ public class ProductCategoryController extends BaseController {
     return "product/CreateCategory";
   }
 
-  @GetMapping("/product/category/search")
+  @GetMapping(value = "/product/category/search", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
-  public @ResponseBody List<String> getSearchSuggestion(String searchKey, String type) {
-    return switch (type.toLowerCase()) {
-      case "category" -> productCategoryService.findByCategoryContains(searchKey);
-      case "subcategory" -> productCategoryService.findBySubCategoryContains(searchKey);
-      case "productsize" -> productCategoryService.findByProductSizeContains(searchKey);
-      default -> new ArrayList<>();
-    };
+  @ResponseBody
+  public AutoCompleteWrapper getSearchSuggestion(String searchKey, String type) {
+    return new AutoCompleteWrapper(
+        switch (type.toLowerCase()) {
+          case "category" -> productCategoryService.findByCategoryContains(searchKey);
+          case "subcategory" -> productCategoryService.findBySubCategoryContains(searchKey);
+          case "productsize" -> productCategoryService.findByProductSizeContains(searchKey);
+          default -> new ArrayList<>();
+        });
   }
 
   @GetMapping("/product/category/delete")
@@ -113,9 +118,7 @@ public class ProductCategoryController extends BaseController {
 
   @GetMapping("/product/category/edit")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_UPDATE'})")
-  public String editCategory(String id) {
-    productCategoryService.deleteProductCategory(UUID.fromString(id));
-    log.warn("Product category with id {} deleted successfully.", id);
+  public String editCategory(String id, Model model) {
     return "product/ViewCategory";
   }
 

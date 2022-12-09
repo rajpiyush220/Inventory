@@ -27,12 +27,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 @HasAddUserPermission
 public class RegisterUserController {
 
-  @NonNull
-  private final UserService userService;
-  @NonNull
-  private final SecurityService securityService;
-  @NonNull
-  private final UserMapper userMapper;
+  @NonNull private final UserService userService;
+  @NonNull private final SecurityService securityService;
+  @NonNull private final UserMapper userMapper;
 
   @GetMapping("/user/register")
   public String registration(Model model) {
