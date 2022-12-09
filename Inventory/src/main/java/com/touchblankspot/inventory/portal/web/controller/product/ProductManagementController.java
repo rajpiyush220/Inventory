@@ -35,7 +35,7 @@ public class ProductManagementController {
       return "product/category/create";
     }
     try {
-      productCategoryService.save(productCategoryMapper.toEntity(requestType));
+      //productCategoryService.save(productCategoryMapper.toEntity(requestType));
       model.addAttribute("successMessage", "Product category Created successfully.");
     } catch (Exception ex) {
       log.error("Unable to create category", ex);
