@@ -39,6 +39,9 @@ public class Product extends Mutable {
   @Column(name = "max_discount_amount")
   private Long maxDiscountAmount = 0L;
 
+  @Column(name = "is_deleted")
+  private Boolean isDeleted = false;
+
   @ManyToOne(targetEntity = ProductCategory.class)
   @JoinColumn(name = "category_id")
   private ProductCategory productCategory;

@@ -3,7 +3,9 @@ package com.touchblankspot.inventory.portal.service;
 import com.touchblankspot.common.validator.FieldValueExists;
 import com.touchblankspot.inventory.portal.data.model.ProductCategory;
 import com.touchblankspot.inventory.portal.data.repository.ProductCategoryRepository;
+import com.touchblankspot.inventory.portal.web.types.SelectType;
 import java.time.OffsetDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import lombok.NonNull;
@@ -68,6 +70,15 @@ public class ProductCategoryService implements FieldValueExists {
       productCategory.setUpdated(OffsetDateTime.now());
       productCategoryRepository.save(productCategory);
     }
+  }
+
+  public List<SelectType> getCategorySelectList() {
+    return findAll().stream()
+        .sorted(Comparator.comparing(ProductCategory::getCategory))
+        .map(
+            productCategory ->
+                new SelectType(productCategory.getId().toString(), productCategory.getCategory()))
+        .toList();
   }
 
   @Override

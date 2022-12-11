@@ -18,7 +18,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCategory extends Mutable {
-
   @Column(name = "category")
   @Size(max = 255, min = 1)
   private String category;
