@@ -10247,3 +10247,10 @@ body {
 .sb-sidenav-light .sb-sidenav-footer {
   background-color: #e9ecef;
 }
+
+.border-inset{
+    border: inset;
+}
+.border-groove{
+    border: groove;
+}
