@@ -5,6 +5,7 @@ spring:
     password: ${spring.datasource.db.password:Pikr@1991}
   jpa:
     open-in-view: false
+    show_sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -23,6 +24,13 @@ spring:
     port: '587'
   thymeleaf:
     cache: false
+    mode: HTML
+    encoding: UTF-8
+    prefix: file:src/main/resources/templates/
+    resources:
+      static-locations: file:src/main/resources/static/
+      cache:
+        period: 0
 server:
   port: 8086
 encryption:

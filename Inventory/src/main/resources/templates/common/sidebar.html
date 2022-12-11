@@ -1,154 +1,161 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-	<div th:fragment="mySidebar">
-		<div id="layoutSidenav_nav">
-			<nav class="sb-sidenav accordion sb-sidenav-dark"
-				id="sidenavAccordion">
-				<div class="sb-sidenav-menu">
-					<div class="nav">
-						<a class="nav-link" href="/">
-							<div class="sb-nav-link-icon">
-								<i class="fas fa-tachometer-alt"></i>
-							</div> Homepage
-						</a>
-						<div class="sb-sidenav-menu-heading">Modules</div>
-						<a class="nav-link collapsed" href="#" data-toggle="collapse"
-							data-target="#collapsePages" aria-expanded="false"
-							aria-controls="collapsePages">
-							<div class="sb-nav-link-icon">
-								<i class="fas fa-book-open"></i>
-							</div> Modules
-							<div class="sb-sidenav-collapse-arrow">
-								<i class="fas fa-angle-down"></i>
-							</div>
-						</a>
-						<div class="collapse" id="collapsePages"
-							aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
-							<nav class="sb-sidenav-menu-nested nav accordion"
-								id="sidenavAccordionPages">
-								<a class="nav-link collapsed" href="#" data-toggle="collapse"
-									data-target="#pagesCollapseAuth" aria-expanded="false"
-									aria-controls="pagesCollapseAuth" th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}"> Authentication
-									<div class="sb-sidenav-collapse-arrow">
-										<i class="fas fa-angle-down"></i>
-									</div>
-								</a>
-								<div class="collapse" id="pagesCollapseAuth"
-									aria-labelledby="headingOne"
-									data-parent="#sidenavAccordionPages"
-									 th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'ADMIN_CREATE','MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}">
-									<nav class="sb-sidenav-menu-nested nav" >
-										<a href="/user/register">Register User</a>
-									</nav>
-								</div>
-								<a class="nav-link collapsed" href="#" data-toggle="collapse"
-									data-target="#pagesCollapseItem" aria-expanded="false"
-									aria-controls="pagesCollapseItem"
-								    th:if="${@permissionService.hasPermission({'PROD_CAT_CREATE','PROD_CAT_VIEW'})}"> Product Category Management
-									<div class="sb-sidenav-collapse-arrow">
-										<i class="fas fa-angle-down"></i>
-									</div>
-								</a>
-								<div class="collapse" id="pagesCollapseItem"
-									aria-labelledby="headingOne"
-									data-parent="#sidenavAccordionPages">
-									<nav class="sb-sidenav-menu-nested nav" th:if="${@permissionService.hasPermission({'PROD_CAT_CREATE'})}">
-										<a class="nav-link" href="/product/category">Add Product Category</a>
-									</nav>
-									<a class="nav-link" href="/product/categories">Product Category List</a>
-									<!--<nav class="sb-sidenav-menu-nested nav" th:if="${@permissionService.hasPermission({'PROD_CAT_VIEW'})}">
+<div th:fragment="mySidebar">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark"
+             id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <a class="nav-link" href="/">
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        Homepage
+                    </a>
+                    <div class="sb-sidenav-menu-heading">Modules</div>
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                       data-target="#collapsePages" aria-expanded="false"
+                       aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        Modules
+                        <div class="sb-sidenav-collapse-arrow">
+                            <i class="fas fa-angle-down"></i>
+                        </div>
+                    </a>
+                    <div class="collapse" id="collapsePages"
+                         aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion"
+                             id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               data-target="#pagesCollapseAuth" aria-expanded="false"
+                               aria-controls="pagesCollapseAuth"
+                               th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}">
+                                Authentication
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth"
+                                 aria-labelledby="headingOne"
+                                 data-parent="#sidenavAccordionPages"
+                                 th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'ADMIN_CREATE','MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a href="/user/register">Register User</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               data-target="#pagesCollapseItem" aria-expanded="false"
+                               aria-controls="pagesCollapseItem"
+                               th:if="${@permissionService.hasPermission({'PROD_CAT_CREATE','PROD_CAT_VIEW'})}"> Product
+                                Category Management
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseItem"
+                                 aria-labelledby="headingOne"
+                                 data-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav"
+                                     th:if="${@permissionService.hasPermission({'PROD_CAT_CREATE'})}">
+                                    <a class="nav-link" href="/product/category">Add Product Category</a>
+                                </nav>
+                                <a class="nav-link" href="/product/categories">Product Category List</a>
+                                <!--<nav class="sb-sidenav-menu-nested nav" th:if="${@permissionService.hasPermission({'PROD_CAT_VIEW'})}">
 
-									</nav>-->
-								</div>
-								<a class="nav-link collapsed" href="#" data-toggle="collapse"
-									data-target="#pagesCollapseItemIssue" aria-expanded="false"
-									aria-controls="pagesCollapseItemIssue"> Product Management
-									<div class="sb-sidenav-collapse-arrow">
-										<i class="fas fa-angle-down"></i>
-									</div>
-								</a>
-								<div class="collapse" id="pagesCollapseItemIssue"
-									aria-labelledby="headingOne"
-									data-parent="#sidenavAccordionPages">
-									<nav class="sb-sidenav-menu-nested nav">
-										<a class="nav-link" href="./ItemIssuanceView"> Add Product </a>
-										<a class="nav-link" href="/ItemIssuanceCreate"> Product List</a>
-									</nav>
-								</div>
-								<a class="nav-link collapsed" href="#" data-toggle="collapse"
-									data-target="#pagesCollapseItemReturn" aria-expanded="false"
-									aria-controls="pagesCollapseItemReturn"> Item Return
-									<div class="sb-sidenav-collapse-arrow">
-										<i class="fas fa-angle-down"></i>
-									</div>
-								</a>
-								<div class="collapse" id="pagesCollapseItemReturn"
-									aria-labelledby="headingOne"
-									data-parent="#sidenavAccordionPages">
-									<nav class="sb-sidenav-menu-nested nav">
-										<a class="nav-link" href="/ItemReturnCreate">Check-in Item</a>
-									</nav>
-								</div>
-								<a class="nav-link collapsed" href="#" data-toggle="collapse"
-									data-target="#pagesCollapseFine" aria-expanded="false"
-									aria-controls="pagesCollapseFine"> Fine
-									<div class="sb-sidenav-collapse-arrow">
-										<i class="fas fa-angle-down"></i>
-									</div>
-								</a>
-								<div class="collapse" id="pagesCollapseFine"
-									aria-labelledby="headingOne"
-									data-parent="#sidenavAccordionPages">
-									<nav class="sb-sidenav-menu-nested nav">
-										<a class="nav-link" href="/FineCreate">Fine Calculation</a> <a
-											class="nav-link" href="/FineView">Fine Records</a>
-									</nav>
-								</div>
-								<a class="nav-link collapsed" href="#" data-toggle="collapse"
-									data-target="#pagesCollapseItemRepair" aria-expanded="false"
-									aria-controls="pagesCollapseItemRepair"> Item Repairing
-									<div class="sb-sidenav-collapse-arrow">
-										<i class="fas fa-angle-down"></i>
-									</div>
-								</a>
-								<div class="collapse" id="pagesCollapseItemRepair"
-									aria-labelledby="headingOne"
-									data-parent="#sidenavAccordionPages">
-									<nav class="sb-sidenav-menu-nested nav">
-										<a class="nav-link" href="/ItemRepairCreate">Repair
-											Item</a>
-									</nav>
-								</div>
-								<a class="nav-link collapsed" href="#" data-toggle="collapse"
-									data-target="#pagesCollapseUser" aria-expanded="false"
-									aria-controls="pagesCollapseUser"> User Management
-									<div class="sb-sidenav-collapse-arrow">
-										<i class="fas fa-angle-down"></i>
-									</div>
-								</a>
-								<div class="collapse" id="pagesCollapseUser"
-									aria-labelledby="headingOne"
-									data-parent="#sidenavAccordionPages">
-									<nav class="sb-sidenav-menu-nested nav">
-										<a class="nav-link"
-											href="../User Management/ManageUserAccount.html">User
-											Account Management</a> <a class="nav-link"
-											href="../User Management/AddNewUser.html">Add a new User</a>
-										<a class="nav-link"
-											href="../User Management/ForgotPassword.html">Change
-											Password</a>
-									</nav>
-								</div>
-							</nav>
-						</div>
-					</div>
-				</div>
-				<div class="sb-sidenav-footer">
-					<div class="small">Logged in as:</div>
-					<p sec:authentication="principal.fullName"></p>
-				</div>
-			</nav>
-		</div>
-	</div>
+                                </nav>-->
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               data-target="#pagesCollapseItemIssue" aria-expanded="false"
+                               aria-controls="pagesCollapseItemIssue"> Product Management
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseItemIssue"
+                                 aria-labelledby="headingOne"
+                                 data-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="./ItemIssuanceView"> Add Product </a>
+                                    <a class="nav-link" href="/ItemIssuanceCreate"> Product List</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               data-target="#pagesCollapseItemReturn" aria-expanded="false"
+                               aria-controls="pagesCollapseItemReturn"> Item Return
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseItemReturn"
+                                 aria-labelledby="headingOne"
+                                 data-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/ItemReturnCreate">Check-in Item</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               data-target="#pagesCollapseFine" aria-expanded="false"
+                               aria-controls="pagesCollapseFine"> Fine
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseFine"
+                                 aria-labelledby="headingOne"
+                                 data-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/FineCreate">Fine Calculation</a> <a
+                                        class="nav-link" href="/FineView">Fine Records</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               data-target="#pagesCollapseItemRepair" aria-expanded="false"
+                               aria-controls="pagesCollapseItemRepair"> Item Repairing
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseItemRepair"
+                                 aria-labelledby="headingOne"
+                                 data-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/ItemRepairCreate">Repair
+                                        Item</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               data-target="#pagesCollapseUser" aria-expanded="false"
+                               aria-controls="pagesCollapseUser"> User Management
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseUser"
+                                 aria-labelledby="headingOne"
+                                 data-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link"
+                                       href="../User Management/ManageUserAccount.html">User
+                                        Account Management</a> <a class="nav-link"
+                                                                  href="../User Management/AddNewUser.html">Add a new
+                                    User</a>
+                                    <a class="nav-link"
+                                       href="../User Management/ForgotPassword.html">Change
+                                        Password</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                <p sec:authentication="principal.fullName"></p>
+            </div>
+        </nav>
+    </div>
+</div>
 </body>
 </html>
