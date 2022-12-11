@@ -7,6 +7,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -34,5 +36,13 @@ public class ProductService implements FieldValueExists {
 
   public Product save(Product product) {
     return productRepository.save(product);
+  }
+
+  public Page<Product> findAll(Pageable pageable) {
+    return productRepository.findAll(pageable);
+  }
+
+  public Page<Object[]> getListData(Pageable pageable) {
+    return productRepository.getListData(pageable);
   }
 }
