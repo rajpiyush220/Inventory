@@ -55,9 +55,10 @@
 									<nav class="sb-sidenav-menu-nested nav" th:if="${@permissionService.hasPermission({'PROD_CAT_CREATE'})}">
 										<a class="nav-link" href="/product/category">Add Product Category</a>
 									</nav>
-									<nav class="sb-sidenav-menu-nested nav" th:if="${@permissionService.hasPermission({'PROD_CAT_VIEW'})}">
-										<a class="nav-link" href="/product/categories">Product Category List</a>
-									</nav>
+									<a class="nav-link" href="/product/categories">Product Category List</a>
+									<!--<nav class="sb-sidenav-menu-nested nav" th:if="${@permissionService.hasPermission({'PROD_CAT_VIEW'})}">
+
+									</nav>-->
 								</div>
 								<a class="nav-link collapsed" href="#" data-toggle="collapse"
 									data-target="#pagesCollapseItemIssue" aria-expanded="false"

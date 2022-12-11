@@ -8,6 +8,7 @@ public interface WebConstant {
     "/css/**",
     "/js/**",
     "/images/**",
+    "/vendor/**",
     "/register/super/admin",
     "/resetPassword",
     "/changePassword",
