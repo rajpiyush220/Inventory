@@ -35,6 +35,7 @@
       });
     });
 
+
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -87,14 +88,14 @@
                             <td><span th:text="${product.description}"></span></td>
                             <td><span th:text="${product.material}"></span></td>
                             <td><span th:text="${product.categoryName}"></span></td>
-                            <td><span th:text="${product.subCategory}"></span> </td>
+                            <td><span th:text="${product.subCategory}"></span></td>
                             <td><span th:text="${product.productSize}"></span></td>
                             <td><span th:text="${product.discountPercentage}"></span></td>
                             <td><span th:text="${product.maxDiscountAmount}"></span></td>
                             <td>
                                 <a th:href="@{/product/category/edit?(id=${product.id})}">Edit</a> &nbsp;&nbsp;
                                 <a th:href="@{/product/category/view?(id=${product.id})}">View</a>&nbsp;&nbsp;
-                                <a th:href="@{/product/category/delete?(id=${product.id})}">Delete</a>&nbsp;&nbsp;
+                                <a th:href="@{/product/management/delete?(id=${product.id})}">Delete</a>&nbsp;&nbsp;
                             </td>
                         </tr>
                         </tbody>

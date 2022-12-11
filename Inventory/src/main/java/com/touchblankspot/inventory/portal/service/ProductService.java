@@ -3,6 +3,8 @@ package com.touchblankspot.inventory.portal.service;
 import com.touchblankspot.common.validator.FieldValueExists;
 import com.touchblankspot.inventory.portal.data.model.Product;
 import com.touchblankspot.inventory.portal.data.repository.ProductRepository;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,5 +46,14 @@ public class ProductService implements FieldValueExists {
 
   public Page<Object[]> getListData(Pageable pageable) {
     return productRepository.getListData(pageable);
+  }
+
+  public void deleteProduct(UUID id) {
+    Product product = productRepository.findByIdAndIsDeleted(id, false);
+    if (product != null) {
+      product.setIsDeleted(true);
+      product.setUpdated(OffsetDateTime.now());
+      productRepository.save(product);
+    }
   }
 }

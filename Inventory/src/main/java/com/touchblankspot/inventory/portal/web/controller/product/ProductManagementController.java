@@ -11,6 +11,7 @@ import com.touchblankspot.inventory.portal.web.types.product.management.ProductM
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.NonNull;
@@ -98,5 +99,13 @@ public class ProductManagementController extends BaseController {
     model.addAttribute("PageSizeList", pageSizeList);
     model.addAttribute("selectedPageSize", pageSizeList.get(0));
     return "product/management/show";
+  }
+
+  @GetMapping("/management/delete")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_DELETE'})")
+  public String deleteCategory(String id) {
+    productService.deleteProduct(UUID.fromString(id));
+    log.warn("Product with id {} deleted successfully.", id);
+    return "redirect:/product/management/list";
   }
 }

@@ -14,6 +14,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
   Product findByShortNameAndIsDeleted(String shortName, Boolean isDeleted);
 
+  Product findByIdAndIsDeleted(UUID id, Boolean isDeleted);
+
   @Query(
       value =
           """
