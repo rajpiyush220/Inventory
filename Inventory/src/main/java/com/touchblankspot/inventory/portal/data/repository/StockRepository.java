@@ -16,8 +16,8 @@ public interface StockRepository extends JpaRepository<Stock, UUID> {
           """
             select
               stock.id,product.name,product.short_name as shortName,product.short_description as shortDescription,
-              product_category.product_size as productSize,product_category.category as categoryName,
-              product_category.sub_category as subCategory,stock.quantity
+              category.product_size as productSize,category.category as categoryName,
+              category.sub_category as subCategory,stock.quantity
             from
               stock inner join product on product.id = stock.product_id
                 inner join category on category.id = product.category_id
