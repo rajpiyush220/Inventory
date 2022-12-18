@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="/css/main.css" rel="stylesheet">
+    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
+    <div th:replace="~{common/header :: myHeader}"></div>
+</head>
+<form id="logoutForm" method="POST" th:action="@{/logout}">
+</form>
+<script th:inline="javascript">
+	function logoutUser() {
+		$('#logoutForm').submit();
+	}
+</script>
+<body class="sb-nav-fixed">
+<div th:replace="~{common/navbar :: myNavbar}"></div>
+<div id="layoutSidenav">
+    <div th:replace="~{common/sidebar :: mySidebar}"></div>
+    <!-- Sidebar ends here -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <div class="container">
+                    <div class="col-xl-6 col-lg-7">
+                    <form method="POST" class="form-signin-category" th:object="${managementForm}"
+                          th:action="@{/stock/management}">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-title">
+                                <h4 class="card-title">Create Stock</h4>
+                            </div>
+                        </div>
+
+                        <h6 style="text-align:center;">
+                            <span class="has-error" th:text="${errorMessage}"></span>
+                            <span th:text="${successMessage}"></span>
+                        </h6>
+                        <div class="form-group">
+                            <select th:field="*{productId}" class="form-control" name="productId">
+                                <option th:each="product : ${productSelectList}"
+                                        th:value="${product.id}"
+                                        th:text="${product.value}" th:selected="(${product.id} eq ${selectedProductId})" />
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select th:field="*{operationType}" class="form-control" name="operationType">
+                                <option th:each="stockOperation : ${stockOperations}"
+                                        th:value="${stockOperation.id}"
+                                        th:text="${stockOperation.value}" th:selected="(${stockOperation.id} eq ${selectedStockOperations})" />
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" th:field="*{quantity}" class="form-control" placeholder="Enter product quantity">
+                            <span class="has-error" th:if="${#fields.hasErrors('quantity')}"
+                                  th:errors="*{quantity}"></span>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                    </form>
+
+                </div>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div
+                        class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; IMS 2021</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+                        &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
+</body>
+</html>

@@ -1,8 +1,11 @@
 package com.touchblankspot.inventory.portal.data.model;
 
 import com.touchblankspot.common.data.model.embedded.Immutable;
+import com.touchblankspot.inventory.portal.data.enums.StockOperationEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.OffsetDateTime;
@@ -22,7 +25,8 @@ public class StockAudit extends Immutable {
   private Long quantity;
 
   @Column(name = "operation_type")
-  private String operationType;
+  @Enumerated(EnumType.STRING)
+  private StockOperationEnum operationType;
 
   @Column(name = "operated_by")
   private String operatedBy;
@@ -33,4 +37,8 @@ public class StockAudit extends Immutable {
   @ManyToOne(targetEntity = Product.class)
   @JoinColumn(name = "product_id")
   private Product product;
+
+  @ManyToOne(targetEntity = Stock.class)
+  @JoinColumn(name = "stock_id")
+  private Stock stock;
 }

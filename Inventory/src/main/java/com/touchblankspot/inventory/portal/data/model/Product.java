@@ -49,6 +49,7 @@ public class Product extends Mutable {
   @OneToOne(mappedBy = "product", targetEntity = ProductPrice.class)
   private ProductPrice productPrice;
 
-  @OneToOne(mappedBy = "product", targetEntity = Stock.class)
+  @OneToOne(targetEntity = Stock.class)
+  @JoinColumn(name = "id", referencedColumnName = "product_id")
   private Stock stock;
 }

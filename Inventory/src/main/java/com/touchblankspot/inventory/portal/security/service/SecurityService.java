@@ -49,9 +49,16 @@ public class SecurityService {
   }
 
   public List<String> getCurrentUserRoles() {
+    return getCurrentUser().getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+  }
+
+  public AuthenticatedUser getCurrentUser() {
     isAuthenticated();
-    AuthenticatedUser authenticatedUser =
-        (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return authenticatedUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+    return (AuthenticatedUser)
+        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  }
+
+  public String getCurrentUserName() {
+    return getCurrentUser().getFullName();
   }
 }
