@@ -3,10 +3,9 @@ package com.touchblankspot.inventory.portal.data.model;
 import com.touchblankspot.common.data.model.embedded.Immutable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,7 +42,6 @@ public class SalesDetails extends Immutable {
   @Column(name = "sold_at")
   private OffsetDateTime soldAt = OffsetDateTime.now();
 
-  @ManyToOne(targetEntity = Product.class)
-  @JoinColumn(name = "product_id")
-  private Product product;
+  @Column(name = "product_id")
+  private UUID productId;
 }

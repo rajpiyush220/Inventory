@@ -3,9 +3,8 @@ package com.touchblankspot.inventory.portal.data.model;
 import com.touchblankspot.common.data.model.embedded.Immutable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import java.math.BigDecimal;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,22 +17,18 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductPrice extends Immutable {
 
-  @Column(name = "cost_price")
-  private BigDecimal costPrice = BigDecimal.ZERO;
+  @Column(name = "product_id")
+  private UUID productId;
 
-  @Column(name = "logistic_expenses")
-  private BigDecimal logisticExpenses = BigDecimal.ZERO;
+  @Column(name = "product_size")
+  private String productSize;
 
-  @Column(name = "additional_cost")
-  private BigDecimal additionalCost = BigDecimal.ZERO;
+  @Column(name = "price")
+  private BigDecimal price = BigDecimal.ZERO;
 
-  @Column(name = "unit_price")
-  private BigDecimal unitPrice = BigDecimal.ZERO;
+  @Column(name = "discount_percentage")
+  private String discountPercentage;
 
-  @Column(name = "sell_price")
-  private BigDecimal sellPrice = BigDecimal.ZERO;
-
-  @OneToOne(targetEntity = Product.class, orphanRemoval = true)
-  @PrimaryKeyJoinColumn(name = "product_id")
-  private Product product;
+  @Column(name = "max_discount_amount")
+  private Long maxDiscountAmount = 0L;
 }

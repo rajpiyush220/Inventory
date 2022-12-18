@@ -1,6 +1,6 @@
 package com.touchblankspot.inventory.portal.web.controller.product;
 
-import com.touchblankspot.inventory.portal.service.ProductCategoryService;
+import com.touchblankspot.inventory.portal.service.CategoryService;
 import com.touchblankspot.inventory.portal.service.ProductService;
 import com.touchblankspot.inventory.portal.web.annotations.ProductController;
 import com.touchblankspot.inventory.portal.web.controller.BaseController;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ProductManagementController extends BaseController {
 
-  @NonNull private final ProductCategoryService productCategoryService;
+  @NonNull private final CategoryService productCategoryService;
 
   @NonNull private final ProductService productService;
   @NonNull private final ProductMapper productMapper;

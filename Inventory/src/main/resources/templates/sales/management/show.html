@@ -50,7 +50,6 @@
                         <h4>Product List</h4>
                     </div>
                     <div class="form-group" style="text-align:right;">
-                        <a th:href="@{/product/management}">Add Product</a>
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
                                class="autocomplete" style="width: 120px;">
                         <label>Select Page Size: </label>
@@ -72,6 +71,9 @@
                             <th scope="col">Material</th>
                             <th scope="col"> Category Name</th>
                             <th scope="col"> Sub Category</th>
+                            <th scope="col"> Product Size</th>
+                            <th scope="col">Discount Percentage</th>
+                            <th scope="col">Max Discount Amount</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -87,6 +89,9 @@
                             <td><span th:text="${product.material}"></span></td>
                             <td><span th:text="${product.categoryName}"></span></td>
                             <td><span th:text="${product.subCategory}"></span></td>
+                            <td><span th:text="${product.productSize}"></span></td>
+                            <td><span th:text="${product.discountPercentage}"></span></td>
+                            <td><span th:text="${product.maxDiscountAmount}"></span></td>
                             <td>
                                 <a th:href="@{/product/category/edit?(id=${product.id})}">Edit</a> &nbsp;&nbsp;
                                 <a th:href="@{/product/category/view?(id=${product.id})}">View</a>&nbsp;&nbsp;

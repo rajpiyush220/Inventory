@@ -1,1 +1,0 @@
-CALL `AddColumnIfNotExists`('99mall_inventory', 'product', 'is_deleted', 'boolean default false');
