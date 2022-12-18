@@ -72,7 +72,6 @@
                             <th scope="col"> Category Name</th>
                             <th scope="col"> Sub Category</th>
                             <th scope="col">Quantity</th>
-                            <th scope="col">Operation</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -88,11 +87,6 @@
                             <td><span th:text="${stock.categoryName}"></span></td>
                             <td><span th:text="${stock.subCategory}"></span></td>
                             <td><span th:text="${stock.quantity}"></span></td>
-                            <td>
-                                <a th:href="@{/product/category/edit?(id=${stock.id})}">Edit</a> &nbsp;&nbsp;
-                                <a th:href="@{/product/category/view?(id=${stock.id})}">View</a>&nbsp;&nbsp;
-                                <a th:href="@{/product/management/delete?(id=${stock.id})}">Delete</a>&nbsp;&nbsp;
-                            </td>
                         </tr>
                         </tbody>
                     </table>

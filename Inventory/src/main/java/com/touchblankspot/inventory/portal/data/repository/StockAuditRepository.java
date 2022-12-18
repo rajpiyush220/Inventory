@@ -21,6 +21,7 @@ public interface StockAuditRepository extends JpaRepository<StockAudit, UUID> {
             from
                 stock_audit inner join stock on stock.id = stock_audit.stock_id
                 inner join product on product.id = stock.product_id
+                inner join product_category on product_category.id = product.category_id
             order by stock_audit.created desc
           """,
       countQuery = "select count(*) from stock",
