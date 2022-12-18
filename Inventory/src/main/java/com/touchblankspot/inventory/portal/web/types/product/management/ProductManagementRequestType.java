@@ -38,8 +38,4 @@ public class ProductManagementRequestType {
 
   @Size(min = 2, max = 50, message = "Product material must be between 2 and 50 character.")
   private String material;
-
-  private String discountPercentage;
-
-  private Long maxDiscountAmount = 0L;
 }

@@ -23,12 +23,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
               product.id,product.short_name as shortName,
               product.name,product.short_description as shortDescription,
               product.description,product.material,
-              product.discount_percentage as discountPercentage,
-              product.max_discount_amount as maxDiscountAmount,
-              product_category.category as categoryName,
-              product_category.sub_category as subCategory,
-              product_category.product_size as productSize
-          from product inner join product_category on product.category_id = product_category.id
+              category.category as categoryName,
+              category.sub_category as subCategory
+          from product inner join category on product.category_id = category.id
           where product.is_deleted = false ORDER BY product.id
           """,
       countQuery = "select count(*) from product where is_deleted = false",

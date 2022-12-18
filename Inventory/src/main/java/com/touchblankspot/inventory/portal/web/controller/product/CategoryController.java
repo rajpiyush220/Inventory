@@ -1,13 +1,13 @@
 package com.touchblankspot.inventory.portal.web.controller.product;
 
-import com.touchblankspot.inventory.portal.data.model.ProductCategory;
-import com.touchblankspot.inventory.portal.service.ProductCategoryService;
+import com.touchblankspot.inventory.portal.data.model.Category;
+import com.touchblankspot.inventory.portal.service.CategoryService;
 import com.touchblankspot.inventory.portal.web.annotations.ProductController;
 import com.touchblankspot.inventory.portal.web.controller.BaseController;
 import com.touchblankspot.inventory.portal.web.types.AutoCompleteWrapper;
-import com.touchblankspot.inventory.portal.web.types.mapper.ProductCategoryMapper;
-import com.touchblankspot.inventory.portal.web.types.product.category.ProductCategoryRequestType;
-import com.touchblankspot.inventory.portal.web.types.product.category.ProductCategoryResponseType;
+import com.touchblankspot.inventory.portal.web.types.mapper.CategoryMapper;
+import com.touchblankspot.inventory.portal.web.types.product.category.CategoryRequestType;
+import com.touchblankspot.inventory.portal.web.types.product.category.CategoryResponseType;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +36,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class CategoryController extends BaseController {
 
-  @NonNull private final ProductCategoryService productCategoryService;
+  @NonNull private final CategoryService productCategoryService;
 
-  @NonNull private final ProductCategoryMapper productCategoryMapper;
+  @NonNull private final CategoryMapper categoryMapper;
 
   @GetMapping("/categories")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
@@ -49,10 +49,10 @@ public class CategoryController extends BaseController {
     int currentPage = page.orElse(1);
     int pageSize = size.orElse(pageSizeList.get(0));
 
-    Page<ProductCategory> productCategoryPage =
+    Page<Category> productCategoryPage =
         productCategoryService.findAll(PageRequest.of(currentPage - 1, pageSize));
-    List<ProductCategoryResponseType> responseTypeList =
-        productCategoryPage.stream().map(productCategoryMapper::toResponse).toList();
+    List<CategoryResponseType> responseTypeList =
+        productCategoryPage.stream().map(categoryMapper::toResponse).toList();
     int totalPages = productCategoryPage.getTotalPages();
     if (totalPages > 0) {
       List<Integer> pageNumbers =
@@ -70,21 +70,21 @@ public class CategoryController extends BaseController {
   @GetMapping("/category")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_CREATE'})")
   public String createProductCategory(Model model) {
-    model.addAttribute("categoryForm", new ProductCategoryRequestType());
+    model.addAttribute("categoryForm", new CategoryRequestType());
     return "product/category/create";
   }
 
   @PostMapping("/category")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_CREATE'})")
   public String createProductCategory(
-      @Valid @ModelAttribute("categoryForm") ProductCategoryRequestType requestType,
+      @Valid @ModelAttribute("categoryForm") CategoryRequestType requestType,
       BindingResult bindingResult,
       Model model) {
     if (bindingResult.hasErrors()) {
       return "product/category/create";
     }
     try {
-      productCategoryService.save(productCategoryMapper.toEntity(requestType));
+      productCategoryService.save(categoryMapper.toEntity(requestType));
       model.addAttribute("successMessage", "Product category Created successfully.");
     } catch (Exception ex) {
       log.error("Unable to create category", ex);
@@ -132,8 +132,9 @@ public class CategoryController extends BaseController {
   @GetMapping("/category/view")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   public String ViewCategory(String id, Model model) {
-    ProductCategory productCategory = productCategoryService.findById(UUID.fromString(id));
-    model.addAttribute("category", productCategoryMapper.toResponse(productCategory));
+    model.addAttribute(
+        "category",
+        categoryMapper.toResponse(productCategoryService.findById(UUID.fromString(id))));
     return "product/category/view";
   }
 }
