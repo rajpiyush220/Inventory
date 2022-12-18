@@ -62,10 +62,7 @@ public class ProductManagementResponseType {
     this.shortDescription = objects[3].toString();
     this.description = objects[4].toString();
     this.material = objects[5].toString();
-    this.discountPercentage = objects[6].toString();
-    this.maxDiscountAmount = objects[7].toString();
-    this.categoryName = objects[8].toString();
-    this.subCategory = objects[9].toString();
-    this.productSize = objects[10].toString();
+    this.categoryName = objects[6].toString();
+    this.subCategory = objects[7].toString();
   }
 }

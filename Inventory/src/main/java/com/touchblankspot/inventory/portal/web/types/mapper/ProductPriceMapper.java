@@ -1,7 +1,7 @@
 package com.touchblankspot.inventory.portal.web.types.mapper;
 
-import com.touchblankspot.inventory.portal.data.model.Product;
-import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementRequestType;
+import com.touchblankspot.inventory.portal.data.model.ProductPrice;
+import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceRequestType;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
     componentModel = "spring",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR,
     unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ProductMapper {
+public interface ProductPriceMapper {
 
-  Product toEntity(ProductManagementRequestType request);
+  ProductPrice toEntity(ProductPriceRequestType request);
 }

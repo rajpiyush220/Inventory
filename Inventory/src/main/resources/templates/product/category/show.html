@@ -2,9 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <link href="/css/main.css" rel="stylesheet">
-<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>-->
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
     <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
     <link th:href="@{/vendor/remixicon/fonts/remixicon.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
@@ -18,8 +15,6 @@
     <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
 
-    <!--<link type="text/css" rel="stylesheet"
-          th:href="@{/css/library/materialize.min.css}" media="screen,projection"/>-->
     <div th:replace="~{common/header :: myHeader}"></div>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
@@ -58,7 +53,6 @@
                             <option selected="selected">Select Search Type</option>
                             <option value="category">Category</option>
                             <option value="subcategory">Sub Category</option>
-                            <option value="productsize">Product Size</option>
                         </select>
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
                                class="autocomplete border-inset" style="width: 120px;">
@@ -76,7 +70,6 @@
                             <th scope="col">#</th>
                             <th scope="col"> Category</th>
                             <th scope="col"> SubCategory</th>
-                            <th scope="col"> Product Size</th>
                             <th scope="col"> Action</th>
                         </tr>
                         </thead>
@@ -88,7 +81,6 @@
                             <td scope="row" th:text="${productCategoryStat.index+1}">#</td>
                             <td><span th:text="${productCategory.category}"> Category </span></td>
                             <td><span th:text="${productCategory.subCategory}"> SubCategory </span></td>
-                            <td><span th:text="${productCategory.productSize}"> Product Size </span></td>
                             <td>
                                 <a th:href="@{/product/category/edit?(id=${productCategory.id})}">Edit</a> &nbsp;&nbsp;
                                 <a th:href="@{/product/category/view?(id=${productCategory.id})}">View</a>&nbsp;&nbsp;

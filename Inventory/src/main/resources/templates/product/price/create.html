@@ -11,6 +11,9 @@
 	function logoutUser() {
 		$('#logoutForm').submit();
 	}
+	function setTwoNumberDecimal(event) {
+        $('#price').val(parseFloat($('#price').val()).toFixed(2));
+    }
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -23,10 +26,10 @@
                 <div class="container">
                     <div class="col-xl-6 col-lg-7">
                     <form method="POST" class="form-signin-category" th:object="${managementForm}"
-                          th:action="@{/product/management}">
+                          th:action="@{/product/price}">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Create Product</h4>
+                                <h4 class="card-title">Create/Update Product Price</h4>
                             </div>
                         </div>
 
@@ -36,37 +39,35 @@
                         </h6>
                         <!-- Product Category -->
                         <div class="form-group">
-                            <label>Select Product Category</label>
-                            <select th:field="*{categoryId}" class="form-control" name="permission">
-                                <option th:each="category : ${categories}"
-                                        th:value="${category.id}"
-                                        th:text="${category.value}" th:selected="(${category.id} eq ${selectedCategoryId})" />
+                            <label>Select Product</label>
+                            <select th:field="*{productId}" class="form-control">
+                                <option th:each="productSelect : ${productSelectTypes}"
+                                        th:value="${productSelect.id}"
+                                        th:text="${productSelect.value}" th:selected="(${productSelect.id} eq ${selectedProductId})" />
                             </select>
                         </div>
                         <div class="form-group">
-                            <input size="50" type="text" th:field="*{name}" class="form-control" placeholder="Enter Product Name" autofocus="true">
-                            <span class="has-error" th:if="${#fields.hasErrors('name')}"
-                                  th:errors="*{name}"></span>
+                            <input size="50" type="text" th:field="*{productSize}" class="form-control" placeholder="Enter Product Size" autofocus="true">
+                            <span class="has-error" th:if="${#fields.hasErrors('productSize')}"
+                                  th:errors="*{productSize}"></span>
                         </div>
                         <div class="form-group">
-                            <input type="text" th:field="*{shortName}" class="form-control" placeholder="Enter product short name">
-                            <span class="has-error" th:if="${#fields.hasErrors('shortName')}"
-                                  th:errors="*{shortName}"></span>
+                            <input type="number" th:field="*{price}" class="form-control"
+                                   onchange="setTwoNumberDecimal()"  step="0.01" placeholder="Enter product price">
+                            <span class="has-error" th:if="${#fields.hasErrors('price')}"
+                                  th:errors="*{price}"></span>
                         </div>
                         <div class="form-group">
-                            <input type="text" th:field="*{shortDescription}" class="form-control" placeholder="Product Short Description">
-                            <span class="has-error" th:if="${#fields.hasErrors('shortDescription')}"
-                                  th:errors="*{shortDescription}"></span>
+                            <input type="number" th:field="*{discountPercentage}" class="form-control"
+                                   onchange="setTwoNumberDecimal()" min="0" max="100" step=".01" placeholder="Enter Discount Percentage">
+                            <span class="has-error" th:if="${#fields.hasErrors('discountPercentage')}"
+                                  th:errors="*{discountPercentage}"></span>
                         </div>
                         <div class="form-group">
-                            <input type="text" th:field="*{description}" class="form-control" placeholder="Product Description">
-                            <span class="has-error" th:if="${#fields.hasErrors('description')}"
-                                  th:errors="*{description}"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" th:field="*{material}" class="form-control" placeholder="Product material">
-                            <span class="has-error" th:if="${#fields.hasErrors('material')}"
-                                  th:errors="*{material}"></span>
+                            <input type="number" th:field="*{maxDiscountAmount}" class="form-control"
+                                   onchange="setTwoNumberDecimal()" min="0" step="0.01" placeholder="Enter max discount amount.">
+                            <span class="has-error" th:if="${#fields.hasErrors('maxDiscountAmount')}"
+                                  th:errors="*{maxDiscountAmount}"></span>
                         </div>
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
                     </form>
@@ -93,10 +94,7 @@
 <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-<script type="text/javascript" th:src="@{/js/chart/chart-area-demo.js}"></script>
-<script type="text/javascript" th:src="@{/js/chart/chart-bar-demo.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/chart/datatables-demo.js}"></script>
 </body>
 </html>
