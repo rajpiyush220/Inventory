@@ -1,6 +1,6 @@
 package com.touchblankspot.inventory.portal.data.model;
 
-import com.touchblankspot.common.data.model.embedded.Immutable;
+import com.touchblankspot.common.data.model.embedded.Mutable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.math.BigDecimal;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductPrice extends Immutable {
+public class ProductPrice extends Mutable {
 
   @Column(name = "product_id")
   private UUID productId;

@@ -82,6 +82,24 @@
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               data-target="#pagesCollapseItemPrice" aria-expanded="false"
+                               aria-controls="pagesCollapseItemIssue"> Product price Management
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseItemPrice"
+                                 aria-labelledby="headingOne"
+                                 th:if="${@permissionService.hasPermission({'PROD_PRICE_CREATE','PROD_PRICE_VIEW','PROD_PRICE_DELETE'})}"
+                                 data-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a th:if="${@permissionService.hasPermission({'PROD_PRICE_CREATE'})}"
+                                            class="nav-link" href="/product/price"> Add Product Price </a>
+                                    <a th:if="${@permissionService.hasPermission({'PROD_PRICE_VIEW','PROD_PRICE_DELETE'})}"
+                                            class="nav-link" href="/product/prices"> Product Price List</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                data-target="#pagesCollapseItemReturn" aria-expanded="false"
                                aria-controls="pagesCollapseItemReturn"> Stock
                                 <div class="sb-sidenav-collapse-arrow">
