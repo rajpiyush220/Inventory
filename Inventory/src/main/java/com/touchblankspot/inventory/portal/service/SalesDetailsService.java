@@ -1,5 +1,6 @@
 package com.touchblankspot.inventory.portal.service;
 
+import com.touchblankspot.inventory.portal.data.model.SalesDetails;
 import com.touchblankspot.inventory.portal.data.repository.SalesDetailsRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -11,5 +12,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class SalesDetailsService {
-  @NonNull private final SalesDetailsRepository salesDetailsRepository;
+  @NonNull
+  private final SalesDetailsRepository salesDetailsRepository;
+
+  public SalesDetails save(SalesDetails salesDetails) {
+    return salesDetailsRepository.save(salesDetails);
+  }
 }

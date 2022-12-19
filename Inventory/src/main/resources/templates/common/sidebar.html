@@ -82,6 +82,7 @@
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               th:if="${@permissionService.hasPermission({'PROD_PRICE_CREATE','PROD_PRICE_VIEW','PROD_PRICE_DELETE'})}"
                                data-target="#pagesCollapseItemPrice" aria-expanded="false"
                                aria-controls="pagesCollapseItemIssue"> Product price Management
                                 <div class="sb-sidenav-collapse-arrow">
@@ -116,18 +117,18 @@
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                               data-target="#pagesCollapseFine" aria-expanded="false"
-                               aria-controls="pagesCollapseFine"> Fine
+                               data-target="#pagesCollapseSales" aria-expanded="false"
+                               aria-controls="pagesCollapseFine"> Sales
                                 <div class="sb-sidenav-collapse-arrow">
                                     <i class="fas fa-angle-down"></i>
                                 </div>
                             </a>
-                            <div class="collapse" id="pagesCollapseFine"
+                            <div class="collapse" id="pagesCollapseSales"
                                  aria-labelledby="headingOne"
                                  data-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/FineCreate">Fine Calculation</a> <a
-                                        class="nav-link" href="/FineView">Fine Records</a>
+                                    <a class="nav-link" href="/sales/detail/create">Add Sales</a> <a
+                                        class="nav-link" href="/sales/details">Sales Details</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
