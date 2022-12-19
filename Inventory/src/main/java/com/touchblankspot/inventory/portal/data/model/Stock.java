@@ -21,11 +21,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Stock extends Mutable {
 
-  @Column(name = "quantity")
+  @Column(name = "quantity", nullable = false)
   private Long quantity;
 
-  @Column(name = "product_id")
+  @Column(name = "product_id", nullable = false)
   private UUID productId;
+
+  @Column(name = "product_size", nullable = false)
+  private String productSize;
 
   @OneToMany(targetEntity = StockAudit.class, fetch = FetchType.EAGER)
   @JoinColumn(name = "id")

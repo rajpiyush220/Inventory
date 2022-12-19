@@ -1,9 +1,7 @@
 package com.touchblankspot.inventory.portal.web.types.mapper;
 
 import com.touchblankspot.inventory.portal.data.model.SalesDetails;
-import com.touchblankspot.inventory.portal.data.model.Stock;
 import com.touchblankspot.inventory.portal.web.types.sales.SalesDetailRequestType;
-import com.touchblankspot.inventory.portal.web.types.stock.management.StockManagementRequestType;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

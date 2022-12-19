@@ -26,4 +26,5 @@ public class SalesDetailRequestType {
 
   private String transactionId;
 
+  private Long currentStock;
 }

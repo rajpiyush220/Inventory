@@ -19,8 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class ProductPriceService {
 
-  @NonNull
-  private final ProductPriceRepository productPriceRepository;
+  @NonNull private final ProductPriceRepository productPriceRepository;
 
   public ProductPrice save(ProductPrice productPrice) {
     return productPriceRepository.save(productPrice);
@@ -32,15 +31,17 @@ public class ProductPriceService {
 
   public List<String> getProductSize(UUID productId) {
     return productPriceRepository.findByProductId(productId).stream()
-        .map(ProductPrice::getProductSize).sorted()
+        .map(ProductPrice::getProductSize)
+        .sorted()
         .toList();
   }
 
   public BigDecimal getProductPrice(UUID productId, String productSize) {
     Optional<ProductPrice> optionalProductPrice =
         productPriceRepository.findByProductIdAndProductSize(productId, productSize);
-    return optionalProductPrice.isPresent() ? optionalProductPrice.get().getPrice() :
-        BigDecimal.ZERO;
+    return optionalProductPrice.isPresent()
+        ? optionalProductPrice.get().getPrice()
+        : BigDecimal.ZERO;
   }
 
   public Optional<ProductPrice> findByProductAndSize(UUID productId, String productSize) {
@@ -50,7 +51,6 @@ public class ProductPriceService {
   public Page<Object[]> getListData(Pageable pageable) {
     return productPriceRepository.getListData(pageable);
   }
-
 
   public void deleteProduct(UUID id) {
     productPriceRepository.deleteById(id);

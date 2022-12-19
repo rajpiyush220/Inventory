@@ -2,6 +2,8 @@ package com.touchblankspot.inventory.portal.service;
 
 import com.touchblankspot.inventory.portal.data.model.Stock;
 import com.touchblankspot.inventory.portal.data.repository.StockRepository;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,5 +24,14 @@ public class StockService {
 
   public Page<Object[]> getListData(Pageable pageable) {
     return stockRepository.getListData(pageable);
+  }
+
+  public Optional<Stock> findByProductIdAndProductSize(UUID productId, String size) {
+    return stockRepository.findByProductIdAndProductSize(productId, size);
+  }
+
+  public Long getCurrentStock(UUID productId, String size) {
+    Optional<Stock> optionalStock = findByProductIdAndProductSize(productId, size);
+    return optionalStock.isPresent() ? optionalStock.get().getQuantity() : 0L;
   }
 }
