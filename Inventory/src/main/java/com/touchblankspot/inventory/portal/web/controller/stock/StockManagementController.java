@@ -1,9 +1,9 @@
 package com.touchblankspot.inventory.portal.web.controller.stock;
 
-import com.touchblankspot.inventory.portal.data.enums.StockOperationEnum;
 import com.touchblankspot.inventory.portal.data.model.Stock;
 import com.touchblankspot.inventory.portal.data.model.StockAudit;
 import com.touchblankspot.inventory.portal.security.service.SecurityService;
+import com.touchblankspot.inventory.portal.service.ProductPriceService;
 import com.touchblankspot.inventory.portal.service.ProductService;
 import com.touchblankspot.inventory.portal.service.StockAuditService;
 import com.touchblankspot.inventory.portal.service.StockService;
@@ -17,7 +17,7 @@ import com.touchblankspot.inventory.portal.web.types.stock.management.StockManag
 import com.touchblankspot.inventory.portal.web.types.stock.management.StockManagementResponseType;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.NonNull;
@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @StockController
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
@@ -51,16 +53,14 @@ public class StockManagementController extends BaseController {
 
   @NonNull private final SecurityService securityService;
 
+  @NonNull private final ProductPriceService productPriceService;
+
   @GetMapping("/management")
   @PreAuthorize("@permissionService.hasPermission({'STOCK_CREATE'})")
   public String createStock(Model model) {
     model.addAttribute("managementForm", new StockManagementRequestType());
     List<SelectType> productSelectList = productService.getProductSelectList();
-    List<SelectType> stockOperations = StockOperationEnum.getSelectList();
     model.addAttribute("productSelectList", productSelectList);
-    model.addAttribute("selectedProductId", productSelectList.get(0).id());
-    model.addAttribute("stockOperations", stockOperations);
-    model.addAttribute("selectedStockOperations", stockOperations.get(0).id());
     return "stock/management/create";
   }
 
@@ -72,36 +72,47 @@ public class StockManagementController extends BaseController {
       Model model) {
     if (bindingResult.hasErrors()) {
       List<SelectType> productSelectList = productService.getProductSelectList();
-      List<SelectType> stockOperations = StockOperationEnum.getSelectList();
       model.addAttribute("productSelectList", productSelectList);
       model.addAttribute(
           "selectedProductId",
           requestType.getProductId() != null
               ? requestType.getProductId()
               : productSelectList.get(0).id());
-      model.addAttribute("stockOperations", stockOperations);
-      model.addAttribute(
-          "selectedStockOperations",
-          requestType.getOperationType() != null
-              ? requestType.getOperationType()
-              : stockOperations.get(0).id());
+      if (requestType.getProductId() != null) {
+        model.addAttribute(
+            "productSizes", productPriceService.getProductSize(requestType.getProductId()));
+        model.addAttribute("selectedSize", requestType.getProductSize());
+      }
       return "stock/management/create";
     }
     try {
-      Stock stock = stockService.save(stockMapper.toEntity(requestType));
+      Stock stock = null;
+      if (requestType.getCurrentStock() > 0) {
+        // update existing stock
+        stock =
+            stockService
+                .findByProductIdAndProductSize(
+                    requestType.getProductId(), requestType.getProductSize())
+                .orElse(null);
+        if (stock != null) {
+          stock.setQuantity(stock.getQuantity() + requestType.getQuantity());
+        }
+      }
+      stock = stockService.save(stock == null ? stockMapper.toEntity(requestType) : stock);
       StockAudit stockAudit = stockAuditMapper.toEntity(requestType);
       stockAudit.setOperatedBy(securityService.getCurrentUserName());
       stockAudit.setStock(stock);
       stockAudit = stockAuditService.save(stockAudit);
-      log.info("Stock created with id {}", stock.getId());
+      log.info("Stock created/updated with id {}", stock.getId());
       log.info("Stock audit created with id {}", stockAudit.getId());
       model.addAttribute("successMessage", "Stock Created/Updated successfully.");
-
     } catch (Exception ex) {
       log.error("Unable to create stock", ex);
       model.addAttribute("errorMessage", "Unable to create Stock. please contact administrator");
     }
     model.addAttribute("managementForm", new StockManagementRequestType());
+    List<SelectType> productSelectList = productService.getProductSelectList();
+    model.addAttribute("productSelectList", productSelectList);
     return "stock/management/create";
   }
 
@@ -109,10 +120,10 @@ public class StockManagementController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'STOCK_VIEW'})")
   public String getAll(
       Model model,
-      @RequestParam("page") Optional<Integer> page,
-      @RequestParam("size") Optional<Integer> size) {
-    int currentPage = page.orElse(1);
-    int pageSize = size.orElse(pageSizeList.get(0));
+      @RequestParam(value = "page", defaultValue = "0") Integer page,
+      @RequestParam(value = "size", defaultValue = "0") Integer size) {
+    int currentPage = page > 0 ? page : 1;
+    int pageSize = size > 0 ? size : pageSizeList.get(0);
 
     Page<Object[]> productPage =
         stockService.getListData(PageRequest.of(currentPage - 1, pageSize));
@@ -136,10 +147,10 @@ public class StockManagementController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'STOCK_AUDIT_VIEW'})")
   public String getStockAudits(
       Model model,
-      @RequestParam("page") Optional<Integer> page,
-      @RequestParam("size") Optional<Integer> size) {
-    int currentPage = page.orElse(1);
-    int pageSize = size.orElse(pageSizeList.get(0));
+      @RequestParam(value = "page", defaultValue = "0") Integer page,
+      @RequestParam(value = "size", defaultValue = "0") Integer size) {
+    int currentPage = page > 0 ? page : 1;
+    int pageSize = size > 0 ? size : pageSizeList.get(0);
 
     Page<Object[]> productPage =
         stockAuditService.getListData(PageRequest.of(currentPage - 1, pageSize));
@@ -157,5 +168,12 @@ public class StockManagementController extends BaseController {
     model.addAttribute("PageSizeList", pageSizeList);
     model.addAttribute("selectedPageSize", pageSizeList.get(0));
     return "stock/management/audit_show";
+  }
+
+  @GetMapping(value = "/status", produces = "application/json", consumes = "application/json")
+  @ResponseBody
+  public ResponseEntity<String> getProductStock(
+      @RequestParam UUID productId, @RequestParam String size) {
+    return ResponseEntity.ok(stockService.getCurrentStock(productId, size).toString());
   }
 }

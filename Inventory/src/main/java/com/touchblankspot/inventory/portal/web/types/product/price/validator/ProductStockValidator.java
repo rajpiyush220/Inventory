@@ -17,12 +17,9 @@ public class ProductStockValidator implements Validator {
   @Override
   public void validate(Object target, Errors errors) {
     SalesDetailRequestType request = (SalesDetailRequestType) target;
-    if (request.getProductId() != null && request.getSize() != null && request.getSize() != "" &&
-        request.getQuantity().longValue() > 0) {
-
-
-      
-
-    }
+    if (request.getProductId() != null
+        && request.getSize() != null
+        && request.getSize() != ""
+        && request.getQuantity().longValue() > 0) {}
   }
 }

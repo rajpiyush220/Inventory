@@ -1,0 +1,2 @@
+CALL `AddColumnIfNotExistsAfterColumn`('99mall_inventory', 'stock', 'product_size', 'varchar(20) NOT NULL', 'product_id');
+CALL `CreateConstraint`('99mall_inventory', 'stock', 'product_id_product_size_UK', 'product_id,product_size', true);

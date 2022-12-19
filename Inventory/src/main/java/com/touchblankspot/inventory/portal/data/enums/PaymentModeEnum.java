@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum PaymentModeEnum {
-
   CASH("Cash"),
   UPI("Upi"),
   CARD("Card");
@@ -24,5 +23,4 @@ public enum PaymentModeEnum {
   public static List<SelectType> getSelectList() {
     return selectTypes.stream().toList();
   }
-
 }
