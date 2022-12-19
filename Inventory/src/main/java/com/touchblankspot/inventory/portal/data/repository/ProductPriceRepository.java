@@ -1,6 +1,7 @@
 package com.touchblankspot.inventory.portal.data.repository;
 
 import com.touchblankspot.inventory.portal.data.model.ProductPrice;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Repository;
 public interface ProductPriceRepository extends JpaRepository<ProductPrice, UUID> {
 
   Optional<ProductPrice> findByProductIdAndProductSize(UUID productId, String productSize);
+
+  List<ProductPrice> findByProductId(UUID productId);
 
   @Query(
       value =

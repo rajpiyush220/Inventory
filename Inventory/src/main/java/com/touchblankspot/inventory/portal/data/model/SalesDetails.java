@@ -1,6 +1,6 @@
 package com.touchblankspot.inventory.portal.data.model;
 
-import com.touchblankspot.common.data.model.embedded.Immutable;
+import com.touchblankspot.common.data.model.embedded.Mutable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SalesDetails extends Immutable {
+public class SalesDetails extends Mutable {
 
   @Column(name = "quantity")
   private Long quantity;
