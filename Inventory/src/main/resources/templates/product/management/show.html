@@ -51,17 +51,17 @@
                     </div>
                     <div class="form-group" style="text-align:right;">
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
-                               class="autocomplete" style="width: 120px;">
+                               class="autocomplete border-inset" style="width: 120px;">
                         <label>Select Page Size: </label>
-                        <select class="form-select form-select-lg" onchange="submitPageSizeChange()"
+                        <select class="form-select form-select-lg border-inset" onchange="submitPageSizeChange()"
                                 name="pageSize" id="pageSize">
                             <option th:each="index : ${PageSizeList}" th:value="${index}"
                                     th:text="${index}"
                                     th:selected="(${index} == ${selectedPageSize})"></option>
                         </select>
                     </div>
-                    <table class="table caption-top table-hover table-dark">
-                        <thead>
+                    <table class="table caption-top table-hover">
+                        <thead class="table-dark">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Short Name</th>
@@ -74,6 +74,7 @@
                             <th scope="col"> Product Size</th>
                             <th scope="col">Discount Percentage</th>
                             <th scope="col">Max Discount Amount</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
