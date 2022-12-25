@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link href="/css/main.css" rel="stylesheet">
+    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
+    <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+    <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
+    <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
+    <div th:replace="~{common/header :: myHeader}"></div>
+</head>
+<form id="logoutForm" method="POST" th:action="@{/logout}">
+</form>
+<script th:inline="javascript">
+	function logoutUser() {
+		$('#logoutForm').submit();
+	}
+    function submitPageSizeChange(){
+        currentPageSize = $('#pageSize').val();
+        alert("Change page number on, yet to be developed.");
+    }
+    $(document).ready(function() {
+      $('#searchKey').devbridgeAutocomplete({
+          serviceUrl: '/product/category/search?type=category',
+          paramName: 'searchKey',
+          minChars: 1,
+      });
+    });
+
+
+</script>
+<body class="sb-nav-fixed">
+<div th:replace="~{common/navbar :: myNavbar}"></div>
+<div id="layoutSidenav">
+    <div th:replace="~{common/sidebar :: mySidebar}"></div>
+    <!-- Sidebar ends here -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <div class="container">
+                    <div class="form-group" style="text-align:left;">
+                        <h4>Sales Details</h4>
+                    </div>
+                    <div class="form-group" style="text-align:right;">
+                        <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
+                               class="autocomplete" style="width: 120px;">
+                        <label>Select Page Size: </label>
+                        <select class="form-select form-select-lg" onchange="submitPageSizeChange()"
+                                name="pageSize" id="pageSize">
+                            <option th:each="index : ${PageSizeList}" th:value="${index}"
+                                    th:text="${index}"
+                                    th:selected="(${index} == ${selectedPageSize})"></option>
+                        </select>
+                    </div>
+                    <table class="table caption-top table-hover table-dark">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Short Name</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Short Description</th>
+                            <th scope="col">Product Category</th>
+                            <th scope="col">Product Sub Category</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Discount Amount</th>
+                            <th scope="col">Total Sale Amount</th>
+                            <th scope="col">Payment Mode</th>
+                            <th scope="col">Transaction ID</th>
+                            <th scope="col">Operator</th>
+                            <th scope="col">Sold At</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${SaleDetails.empty}">
+                            <td colspan="5"> No Records Available</td>
+                        </tr>
+                        <tr th:each="saleDetail : ${SaleDetails}">
+                            <td scope="row" th:text="${saleDetailStat.index+1}">#</td>
+                            <td><span th:text="${saleDetail.shortName}"></span></td>
+                            <td><span th:text="${saleDetail.name}"></span></td>
+                            <td><span th:text="${saleDetail.shortDescription}"></span></td>
+                            <td><span th:text="${saleDetail.productCategory}"></span></td>
+                            <td><span th:text="${saleDetail.subCategory}"></span></td>
+                            <td><span th:text="${saleDetail.quantity}"></span></td>
+                            <td><span th:text="${saleDetail.unitPrice}"></span></td>
+                            <td><span th:text="${saleDetail.discountAmount}"></span></td>
+                            <td><span th:text="${saleDetail.totalPrice}"></span></td>
+                            <td><span th:text="${saleDetail.paymentMode}"></span></td>
+                            <td><span th:text="${saleDetail.transactionId}"></span></td>
+                            <td><span th:text="${saleDetail.operatorName}"></span></td>
+                            <td><span th:text="${saleDetail.soldAt}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <nav th:if="${SalePage.totalPages > 0}">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link"
+                                   th:href="@{/sales/details(size=${SalePage.size}, page=${currentPageNumber-1})}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <span th:each="pageNumber : ${pageNumbers}">
+                                <li class="page-item"><a class="page-link"
+                                                         th:href="@{/sales/details(size=${SalePage.size}, page=${pageNumber})}"
+                                                         th:text="${pageNumber}">1</a></li>
+                            </span>
+                            <li class="page-item" th:if="${currentPageNumber < SalePage.totalPages}">
+                                <a class="page-link"
+                                   th:href="@{/sales/details(size=${SalePage.size}, page=${currentPageNumber+1})}"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div
+                        class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; IMS 2021</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+                        &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+</body>
+</html>

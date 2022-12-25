@@ -34,6 +34,15 @@
                             <span class="has-error" th:text="${errorMessage}"></span>
                             <span th:text="${successMessage}"></span>
                         </h6>
+                        <!-- Product Category -->
+                        <div class="form-group">
+                            <label>Select Product Category</label>
+                            <select th:field="*{categoryId}" class="form-control" name="permission">
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.value}" th:selected="(${category.id} eq ${selectedCategoryId})" />
+                            </select>
+                        </div>
                         <div class="form-group">
                             <input size="50" type="text" th:field="*{name}" class="form-control" placeholder="Enter Product Name" autofocus="true">
                             <span class="has-error" th:if="${#fields.hasErrors('name')}"
@@ -59,27 +68,8 @@
                             <span class="has-error" th:if="${#fields.hasErrors('material')}"
                                   th:errors="*{material}"></span>
                         </div>
-                        <!-- Product Category -->
-                        <div class="form-group">
-                            <select th:field="*{categoryId}" class="form-control" name="permission">
-                            <option th:each="category : ${categories}"
-                                    th:value="${category.id}"
-                                    th:text="${category.value}" th:selected="(${category.id} eq ${selectedCategoryId})" />
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="number" th:field="*{discountPercentage}" class="form-control" placeholder="Discount Percentage">
-                            <span class="has-error" th:if="${#fields.hasErrors('discountPercentage')}"
-                                  th:errors="*{discountPercentage}"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="number" th:field="*{maxDiscountAmount}" class="form-control" placeholder="Max Discount Amount" min="0" max="100">
-                            <span class="has-error" th:if="${#fields.hasErrors('maxDiscountAmount')}"
-                                  th:errors="*{maxDiscountAmount}"></span>
-                        </div>
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
                     </form>
-
                 </div>
                 </div>
             </div>

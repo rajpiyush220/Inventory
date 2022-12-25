@@ -79,11 +79,33 @@
                                 <nav class="sb-sidenav-menu-nested nav">
 									<a class="nav-link" href="/product/management"> Add Product </a>
 									<a class="nav-link" href="/product/management/list"> Product List</a>
+<<<<<<< HEAD
+=======
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                               th:if="${@permissionService.hasPermission({'PROD_PRICE_CREATE','PROD_PRICE_VIEW','PROD_PRICE_DELETE'})}"
+                               data-target="#pagesCollapseItemPrice" aria-expanded="false"
+                               aria-controls="pagesCollapseItemIssue"> Product price Management
+                                <div class="sb-sidenav-collapse-arrow">
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseItemPrice"
+                                 aria-labelledby="headingOne"
+                                 th:if="${@permissionService.hasPermission({'PROD_PRICE_CREATE','PROD_PRICE_VIEW','PROD_PRICE_DELETE'})}"
+                                 data-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a th:if="${@permissionService.hasPermission({'PROD_PRICE_CREATE'})}"
+                                            class="nav-link" href="/product/price"> Add Product Price </a>
+                                    <a th:if="${@permissionService.hasPermission({'PROD_PRICE_VIEW','PROD_PRICE_DELETE'})}"
+                                            class="nav-link" href="/product/prices"> Product Price List</a>
+>>>>>>> b892b66edca55b70c935cc8c5b72a57cb0f6ab1a
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                data-target="#pagesCollapseItemReturn" aria-expanded="false"
-                               aria-controls="pagesCollapseItemReturn"> Item Return
+                               aria-controls="pagesCollapseItemReturn"> Stock
                                 <div class="sb-sidenav-collapse-arrow">
                                     <i class="fas fa-angle-down"></i>
                                 </div>
@@ -92,22 +114,24 @@
                                  aria-labelledby="headingOne"
                                  data-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/ItemReturnCreate">Check-in Item</a>
+                                    <a class="nav-link" href="/stock/management">Create Stock</a>
+                                    <a class="nav-link" href="/stock/management/list">Stock List</a>
+                                    <a class="nav-link" href="/stock/audit/list">Stock Audit List</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                               data-target="#pagesCollapseFine" aria-expanded="false"
-                               aria-controls="pagesCollapseFine"> Fine
+                               data-target="#pagesCollapseSales" aria-expanded="false"
+                               aria-controls="pagesCollapseFine"> Sales
                                 <div class="sb-sidenav-collapse-arrow">
                                     <i class="fas fa-angle-down"></i>
                                 </div>
                             </a>
-                            <div class="collapse" id="pagesCollapseFine"
+                            <div class="collapse" id="pagesCollapseSales"
                                  aria-labelledby="headingOne"
                                  data-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/FineCreate">Fine Calculation</a> <a
-                                        class="nav-link" href="/FineView">Fine Records</a>
+                                    <a class="nav-link" href="/sales/detail/create">Add Sales</a> <a
+                                        class="nav-link" href="/sales/details">Sales Details</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"

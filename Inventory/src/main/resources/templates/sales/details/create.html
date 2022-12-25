@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="/css/main.css" rel="stylesheet">
+    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
+    <div th:replace="~{common/header :: myHeader}"></div>
+</head>
+<form id="logoutForm" method="POST" th:action="@{/logout}">
+</form>
+<script th:inline="javascript">
+	function logoutUser() {
+		$('#logoutForm').submit();
+	}
+
+	function get_size(){
+      var productId = $('#productId').val();
+          if(productId === ''){
+           $('#size').html('<option value="">Select Product Size</option>')
+           $('#unitPrice').val('')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/sales/detail/size?productId="+productId,
+               dataType : 'json',
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Select Product Size</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i] + '">'
+                       + data[i]
+                       + '</option>';
+                    }
+                    html += '</option>';
+                    $('#size').html(html);
+                    $('#unitPrice').val('')
+               },
+               error : function(e) {
+                alert(e);
+               }
+              });
+          }
+    }
+
+    function get_price(){
+          var productId = $('#productId').val();
+          var size = $('#size').val();
+          if(size === ''){
+           $('#unitPrice').val('')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/sales/detail/price?productId="+productId+"&size="+size,
+               dataType : 'json',
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    $('#unitPrice').val(data)
+               },
+               error : function(e) {
+                alert(e);
+               }
+              });
+          }
+    }
+
+    function calculatePrice(){
+        var currentStock = $('#currentStock').val();
+        var unitPrice = $('#unitPrice').val()
+        var quantity = $('#quantity').val();
+        if(quantity > currentStock){
+            $('#oldQuantityError').html('');
+            $('#quantityError').html("Quantity can not be greater than current stock.")
+            $('#submitButton').prop('disabled', true);
+        }else{
+            $('#quantityError').html('');
+            $('#totalPrice').val(parseFloat((unitPrice * quantity)).toFixed(2))
+            $('#submitButton').prop('disabled', false);
+        }
+    }
+
+    function getStockStatus(){
+      var productId = $('#productId').val();
+      var size = $('#size').val();
+      if(size === ''){
+       $('#currentStock').val('0');
+      }else
+      {
+        $.ajax({
+           type : "GET",
+           contentType : "application/json",
+           url : "/stock/status?productId="+productId+"&size="+size,
+           dataType : 'json',
+           cache : false,
+           timeout : 600000,
+           success : function(data) {
+                $('#currentStock').val(data);
+           },
+           error : function(e) {
+            alert(e);
+           }
+          });
+      }
+    }
+
+</script>
+<body class="sb-nav-fixed">
+<div th:replace="~{common/navbar :: myNavbar}"></div>
+<div id="layoutSidenav">
+    <div th:replace="~{common/sidebar :: mySidebar}"></div>
+    <!-- Sidebar ends here -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <div class="container">
+                    <div class="col-xl-6 col-lg-7">
+                        <form method="POST" class="form-signin-category" th:object="${managementForm}"
+                              th:action="@{/sales/detail/create}">
+                            <div class="card-header d-flex justify-content-between">
+                                <div class="header-title">
+                                    <h4 class="card-title">Create Sales Details</h4>
+                                </div>
+                            </div>
+
+                            <h6 style="text-align:center;">
+                                <span class="has-error" th:text="${errorMessage}"></span>
+                                <span th:text="${successMessage}"></span>
+                            </h6>
+                            <div class="form-group">
+                                <select th:field="*{productId}" class="form-control" onchange="get_size();">
+                                    <option selected value="">Select Product</option>
+                                    <option th:each="productSelect : ${productSelectTypes}"
+                                            th:value="${productSelect.id}"
+                                            th:text="${productSelect.value}"
+                                            th:selected="(${productSelect.id} eq ${selectedProductId})" />
+                                </select>
+                                <span class="has-error" th:if="${#fields.hasErrors('productId')}"
+                                      th:errors="*{productId}"></span>
+                            </div>
+                            <div class="form-group">
+                                <select id="size" name="size" class="form-control" onchange="get_price();getStockStatus();">
+                                    <option value="">Select Product Size</option>
+                                    <option th:each="productSize : ${productSizes}"
+                                            th:value="${productSize}"
+                                            th:text="${productSize}"
+                                            th:selected="(${productSize} eq ${selectedSize})" />
+                                </select>
+                                <span class="has-error" th:if="${#fields.hasErrors('size')}"
+                                      th:errors="*{size}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Product Price</label>
+                                <input type="number" id="unitPrice" name="unitPrice" readonly class="form-control" th:value="${productPrice}">
+                            </div>
+                            <div class="form-group">
+                                <label>Current Stock</label>
+                                <input type="number" id="currentStock" name="currentStock" th:field="*{currentStock}"  readonly class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" th:field="*{quantity}" class="form-control"
+                                       placeholder="Enter product quantity" onfocusout="calculatePrice();">
+                                <span id="oldQuantityError" class="has-error" th:errors="*{quantity}"></span>
+                                <span id="quantityError" class="has-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Total Price</label>
+                                <input type="number" id="totalPrice" name="totalPrice" th:value="${totalPrice}" readonly class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <select th:field="*{paymentMode}" class="form-control">
+                                    <option selected value="">Select Payment Mode</option>
+                                    <option th:each="paymentMode : ${paymentModes}"
+                                            th:value="${paymentMode.id}"
+                                            th:text="${paymentMode.value}" />
+                                </select>
+                                <span class="has-error" th:if="${#fields.hasErrors('paymentMode')}"
+                                      th:errors="*{paymentMode}"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" th:field="*{transactionId}" class="form-control" placeholder="Enter Transaction Id">
+                                <span class="has-error" th:if="${#fields.hasErrors('transactionId')}"
+                                      th:errors="*{transactionId}"></span>
+                            </div>
+                            <button id="submitButton" class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div
+                        class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; IMS 2021</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+                        &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
+</body>
+</html>

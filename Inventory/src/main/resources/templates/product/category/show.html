@@ -18,8 +18,11 @@
     <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
 
+<<<<<<< HEAD
     <!--<link type="text/css" rel="stylesheet"
           th:href="@{/css/library/materialize.min.css}" media="screen,projection"/>-->
+=======
+>>>>>>> b892b66edca55b70c935cc8c5b72a57cb0f6ab1a
     <div th:replace="~{common/header :: myHeader}"></div>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
@@ -58,7 +61,6 @@
                             <option selected="selected">Select Search Type</option>
                             <option value="category">Category</option>
                             <option value="subcategory">Sub Category</option>
-                            <option value="productsize">Product Size</option>
                         </select>
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
                                class="autocomplete border-inset" style="width: 120px;">
@@ -76,7 +78,10 @@
                             <th scope="col">#</th>
                             <th scope="col"> Category</th>
                             <th scope="col"> SubCategory</th>
+<<<<<<< HEAD
                             <th scope="col"> Product Size</th>
+=======
+>>>>>>> b892b66edca55b70c935cc8c5b72a57cb0f6ab1a
                             <th scope="col"> Action</th>
                         </tr>
                         </thead>
@@ -88,7 +93,6 @@
                             <td scope="row" th:text="${productCategoryStat.index+1}">#</td>
                             <td><span th:text="${productCategory.category}"> Category </span></td>
                             <td><span th:text="${productCategory.subCategory}"> SubCategory </span></td>
-                            <td><span th:text="${productCategory.productSize}"> Product Size </span></td>
                             <td>
                                 <a th:href="@{/product/category/edit?(id=${productCategory.id})}">Edit</a> &nbsp;&nbsp;
                                 <a th:href="@{/product/category/view?(id=${productCategory.id})}">View</a>&nbsp;&nbsp;
