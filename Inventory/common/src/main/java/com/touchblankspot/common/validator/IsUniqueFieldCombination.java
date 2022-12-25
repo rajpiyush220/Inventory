@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = IsUniqueFieldCombinationValidator.class)
 @Documented
 public @interface IsUniqueFieldCombination {
-  String message() default "The fields must match";
+  String message() default "Selected fields must have unique rows";
 
   Class<?>[] groups() default {};
 

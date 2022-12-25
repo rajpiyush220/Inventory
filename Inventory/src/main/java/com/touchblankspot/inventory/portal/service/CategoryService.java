@@ -27,14 +27,6 @@ public class CategoryService implements IsUniqueRowExists {
     return productCategoryRepository.save(productCategory);
   }
 
-  public List<Category> findByCategory(String category) {
-    return productCategoryRepository.findByCategoryAndIsDeleted(category, false);
-  }
-
-  public List<Category> findBySubCategory(String subCategory) {
-    return productCategoryRepository.findBySubCategoryAndIsDeleted(subCategory, false);
-  }
-
   public List<Category> findAll() {
     return productCategoryRepository.findAllByIsDeleted(false);
   }

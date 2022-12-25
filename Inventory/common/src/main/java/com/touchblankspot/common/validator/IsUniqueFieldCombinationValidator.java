@@ -39,7 +39,7 @@ public class IsUniqueFieldCombinationValidator
 
   @Override
   public boolean isValid(Object value, ConstraintValidatorContext context) {
-    Boolean isValid = false;
+    boolean isValid = false;
     try {
       final Object firstObj = BeanUtils.getProperty(value, firstFieldName);
       final Object secondObj = BeanUtils.getProperty(value, secondFieldName);
