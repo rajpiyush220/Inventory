@@ -1,6 +1,6 @@
 package com.touchblankspot.inventory.portal.service;
 
-import com.touchblankspot.common.validator.FieldValueExists;
+import com.touchblankspot.common.validator.IsUniqueRowExists;
 import com.touchblankspot.inventory.portal.data.model.Category;
 import com.touchblankspot.inventory.portal.data.repository.CategoryRepository;
 import com.touchblankspot.inventory.portal.web.types.SelectType;
@@ -20,7 +20,7 @@ import org.springframework.util.ObjectUtils;
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
-public class CategoryService implements FieldValueExists {
+public class CategoryService implements IsUniqueRowExists {
   @NonNull private final CategoryRepository productCategoryRepository;
 
   public Category save(Category productCategory) {
@@ -78,17 +78,24 @@ public class CategoryService implements FieldValueExists {
   }
 
   @Override
-  public boolean fieldValueExists(Object value, String fieldName)
+  public boolean isUniqueRowCombination(
+      String firstField, Object firstFieldValue, String secondField, Object secondFieldValue)
       throws UnsupportedOperationException {
-    if ("category".equalsIgnoreCase(fieldName)) {
+    if ("category".equalsIgnoreCase(firstField) && "subCategory".equalsIgnoreCase(secondField)) {
       // Ignoring check if value is empty or its not matching min length criteria
-      if (ObjectUtils.isEmpty(value) || value.toString().length() < 2) {
+      if (ObjectUtils.isEmpty(firstFieldValue)
+          || firstFieldValue.toString().length() < 2
+          || ObjectUtils.isEmpty(secondFieldValue)
+          || secondFieldValue.toString().length() < 2) {
         return false;
       }
       List<Category> productCategories =
-          productCategoryRepository.findByCategoryAndIsDeleted(value.toString(), false);
+          productCategoryRepository.findByCategoryAndSubCategoryAndIsDeleted(
+              firstFieldValue.toString(), secondFieldValue.toString(), false);
       return productCategories != null && productCategories.size() > 0;
     }
-    throw new UnsupportedOperationException("Operation not supported for " + fieldName);
+    throw new UnsupportedOperationException(
+        String.format(
+            "Operation not supported for field combination %s and %s" + firstField, secondField));
   }
 }

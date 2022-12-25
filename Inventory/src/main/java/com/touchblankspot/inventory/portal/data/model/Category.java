@@ -20,7 +20,8 @@ public class Category extends Mutable {
   @Size(max = 255, min = 1)
   private String category;
 
-  @Column(name = "sub_category")
+  @Column(name = "sub_category", nullable = false)
+  @Size(min = 1, max = 255)
   private String subCategory;
 
   @Column(name = "is_deleted")
