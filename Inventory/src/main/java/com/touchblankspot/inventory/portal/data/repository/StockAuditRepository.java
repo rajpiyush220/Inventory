@@ -15,9 +15,9 @@ public interface StockAuditRepository extends JpaRepository<StockAudit, UUID> {
       value =
           """
             select
-                product.name,product.short_name as shortName,product.short_description as shortDescription,
+                stock_audit.id,product.name,product.short_name as shortName,product.short_description as shortDescription,
                 stock_audit.operation_type, stock_audit.quantity , stock_audit.operated_by,
-                DATE_FORMAT(stock_audit.transaction_time, '%D %M %Y %h:%i:%S %p') as transaction_time
+                DATE_FORMAT(stock_audit.transaction_time, '%d-%m-%Y %h:%i:%S %p') as transaction_time
             from
                 stock_audit inner join stock on stock.id = stock_audit.stock_id
                 inner join product on product.id = stock.product_id

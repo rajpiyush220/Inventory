@@ -32,6 +32,6 @@ public class StockAuditResponseType {
     this.operationType = objects[4].toString();
     this.quantity = Long.valueOf(objects[5].toString());
     this.operatedBy = objects[6].toString();
-    this.transactionTime = objects[7].toString();
+    this.transactionTime = objects[7] != null ? objects[7].toString() : "";
   }
 }

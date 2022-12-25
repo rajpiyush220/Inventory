@@ -71,7 +71,7 @@ public class ProductManagementController extends BaseController {
       log.error("Unable to create category", ex);
       model.addAttribute("errorMessage", "Unable to create Product. please contact administrator");
     }
-    return "product/management/create";
+    return "redirect:/product/management";
   }
 
   @GetMapping("/management/list")

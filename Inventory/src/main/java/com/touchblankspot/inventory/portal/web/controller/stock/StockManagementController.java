@@ -16,6 +16,7 @@ import com.touchblankspot.inventory.portal.web.types.stock.management.StockAudit
 import com.touchblankspot.inventory.portal.web.types.stock.management.StockManagementRequestType;
 import com.touchblankspot.inventory.portal.web.types.stock.management.StockManagementResponseType;
 import jakarta.validation.Valid;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -102,6 +103,7 @@ public class StockManagementController extends BaseController {
       StockAudit stockAudit = stockAuditMapper.toEntity(requestType);
       stockAudit.setOperatedBy(securityService.getCurrentUserName());
       stockAudit.setStock(stock);
+      stockAudit.setTransactionTime(OffsetDateTime.now());
       stockAudit = stockAuditService.save(stockAudit);
       log.info("Stock created/updated with id {}", stock.getId());
       log.info("Stock audit created with id {}", stockAudit.getId());
