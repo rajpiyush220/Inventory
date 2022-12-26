@@ -29,23 +29,6 @@
                         <nav class="sb-sidenav-menu-nested nav accordion"
                              id="sidenavAccordionPages">
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                               data-target="#pagesCollapseAuth" aria-expanded="false"
-                               aria-controls="pagesCollapseAuth"
-                               th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}">
-                                Authentication
-                                <div class="sb-sidenav-collapse-arrow">
-                                    <i class="fas fa-angle-down"></i>
-                                </div>
-                            </a>
-                            <div class="collapse" id="pagesCollapseAuth"
-                                 aria-labelledby="headingOne"
-                                 data-parent="#sidenavAccordionPages"
-                                 th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'ADMIN_CREATE','MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a href="/user/register">Register User</a>
-                                </nav>
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                data-target="#pagesCollapseItem" aria-expanded="false"
                                aria-controls="pagesCollapseItem"
                                th:if="${@permissionService.hasPermission({'PROD_CAT_CREATE','PROD_CAT_VIEW'})}"> Product
@@ -132,22 +115,8 @@
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                               data-target="#pagesCollapseItemRepair" aria-expanded="false"
-                               aria-controls="pagesCollapseItemRepair"> Item Repairing
-                                <div class="sb-sidenav-collapse-arrow">
-                                    <i class="fas fa-angle-down"></i>
-                                </div>
-                            </a>
-                            <div class="collapse" id="pagesCollapseItemRepair"
-                                 aria-labelledby="headingOne"
-                                 data-parent="#sidenavAccordionPages">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/ItemRepairCreate">Repair
-                                        Item</a>
-                                </nav>
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                data-target="#pagesCollapseUser" aria-expanded="false"
+                               th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}"
                                aria-controls="pagesCollapseUser"> User Management
                                 <div class="sb-sidenav-collapse-arrow">
                                     <i class="fas fa-angle-down"></i>
@@ -155,16 +124,16 @@
                             </a>
                             <div class="collapse" id="pagesCollapseUser"
                                  aria-labelledby="headingOne"
-                                 data-parent="#sidenavAccordionPages">
+                                 data-parent="#sidenavAccordionPages"
+                                 th:if="${@permissionService.hasPermission({'ADMIN_CREATE'}) or @permissionService.hasPermission({'ADMIN_CREATE','MANAGER_CREATE','SUPERVISOR_CREATE','USER_CREATE','STAFF_CREATE'})}">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link"
-                                       href="../User Management/ManageUserAccount.html">User
-                                        Account Management</a> <a class="nav-link"
-                                                                  href="../User Management/AddNewUser.html">Add a new
-                                    User</a>
-                                    <a class="nav-link"
-                                       href="../User Management/ForgotPassword.html">Change
-                                        Password</a>
+                                    <!--<a class="nav-link"
+                                       href="#">User
+                                        Account Management</a>-->
+                                    <a class="nav-link" href="/user/register">Register User</a>
+                                    <!--<a class="nav-link"
+                                       href="#">Change
+                                        Password</a>-->
                                 </nav>
                             </div>
                         </nav>
