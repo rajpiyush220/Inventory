@@ -1,5 +1,6 @@
 package com.touchblankspot.inventory.portal.web.controller.product;
 
+import com.touchblankspot.inventory.portal.data.model.Product;
 import com.touchblankspot.inventory.portal.service.CategoryService;
 import com.touchblankspot.inventory.portal.service.ProductService;
 import com.touchblankspot.inventory.portal.web.annotations.ProductController;
@@ -20,13 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @ProductController
 @Slf4j
@@ -42,9 +42,7 @@ public class ProductManagementController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_CREATE'})")
   public String createProductCategory(Model model) {
     model.addAttribute("managementForm", new ProductManagementRequestType());
-    List<SelectType> categories = productCategoryService.getCategorySelectList();
-    model.addAttribute("categories", categories);
-    model.addAttribute("selectedCategoryId", categories.get(0).id());
+    model.addAttribute("categories", productCategoryService.getCategoryList());
     return "product/management/create";
   }
 
@@ -55,13 +53,22 @@ public class ProductManagementController extends BaseController {
       BindingResult bindingResult,
       Model model) {
     if (bindingResult.hasErrors()) {
-      List<SelectType> categories = productCategoryService.getCategorySelectList();
+      List<String> categories = productCategoryService.getCategoryList();
       model.addAttribute("categories", categories);
       model.addAttribute(
           "selectedCategoryId",
-          requestType.getCategoryId() != null
-              ? requestType.getCategoryId()
-              : categories.get(0).id());
+          requestType.getCategoryId() != null ? requestType.getCategoryId() : "");
+      if (!ObjectUtils.isEmpty(requestType.getCategoryName())) {
+        List<SelectType> subCategories =
+            productCategoryService.getSubCategorySelectList(requestType.getCategoryName());
+        model.addAttribute("subCategories", subCategories);
+        model.addAttribute(
+            "selectedCategoryId",
+            requestType.getCategoryId() != null ? requestType.getCategoryId() : "");
+      }
+      if (requestType.getCategoryId() != null) {
+        model.addAttribute("existingProducts", getExistingProductLis(requestType.getCategoryId()));
+      }
       return "product/management/create";
     }
     try {
@@ -107,5 +114,23 @@ public class ProductManagementController extends BaseController {
     productService.deleteProduct(UUID.fromString(id));
     log.warn("Product with id {} deleted successfully.", id);
     return "redirect:/product/management/list";
+  }
+
+  @GetMapping(
+      value = "/existingProducts",
+      produces = "application/json",
+      consumes = "application/json")
+  @ResponseBody
+  @PreAuthorize("@permissionService.hasPermission({'PROD_VIEW'})")
+  public ResponseEntity<List<String>> getProductSubCategories(@RequestParam UUID categoryId) {
+    return ResponseEntity.ok(getExistingProductLis(categoryId));
+  }
+
+  private List<String> getExistingProductLis(UUID categoryId) {
+    return productService.findByIdCategoryId(categoryId).stream()
+        .map(Product::getName)
+        .distinct()
+        .sorted()
+        .toList();
   }
 }

@@ -17,6 +17,10 @@ import lombok.NoArgsConstructor;
     message = "Selected category and subcategory pair is already taken.")
 public class CategoryRequestType {
 
+  private String existingCategories;
+
+  private String existingSubCategories;
+
   @Size(min = 2, max = 50, message = "Category must be between 2 and 50 character.")
   private String category;
 

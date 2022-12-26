@@ -5,6 +5,7 @@ import com.touchblankspot.inventory.portal.service.CategoryService;
 import com.touchblankspot.inventory.portal.web.annotations.ProductController;
 import com.touchblankspot.inventory.portal.web.controller.BaseController;
 import com.touchblankspot.inventory.portal.web.types.AutoCompleteWrapper;
+import com.touchblankspot.inventory.portal.web.types.SelectType;
 import com.touchblankspot.inventory.portal.web.types.mapper.CategoryMapper;
 import com.touchblankspot.inventory.portal.web.types.product.category.CategoryRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.category.CategoryResponseType;
@@ -22,8 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -71,6 +74,7 @@ public class CategoryController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_CREATE'})")
   public String createProductCategory(Model model) {
     model.addAttribute("categoryForm", new CategoryRequestType());
+    model.addAttribute("existingCategories", productCategoryService.getCategoryList());
     return "product/category/create";
   }
 
@@ -81,6 +85,14 @@ public class CategoryController extends BaseController {
       BindingResult bindingResult,
       Model model) {
     if (bindingResult.hasErrors()) {
+      model.addAttribute("existingCategories", productCategoryService.getCategoryList());
+      if (!ObjectUtils.isEmpty(requestType.getExistingCategories())) {
+        model.addAttribute("selectedCategory", requestType.getExistingCategories());
+        model.addAttribute(
+            "existingSubCategories",
+            productCategoryService.getSubCategorySelectList(requestType.getExistingCategories()));
+        model.addAttribute("selectedSubCategory", requestType.getExistingCategories());
+      }
       return "product/category/create";
     }
     try {
@@ -91,7 +103,7 @@ public class CategoryController extends BaseController {
       model.addAttribute(
           "errorMessage", "Unable to create Product category. please contact administrator");
     }
-    return "product/category/create";
+    return "redirect:/product/category";
   }
 
   @GetMapping(value = "/category/search", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -136,5 +148,16 @@ public class CategoryController extends BaseController {
         "category",
         categoryMapper.toResponse(productCategoryService.findById(UUID.fromString(id))));
     return "product/category/view";
+  }
+
+  @GetMapping(
+      value = "/category/subCategories",
+      produces = "application/json",
+      consumes = "application/json")
+  @ResponseBody
+  @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
+  public ResponseEntity<List<SelectType>> getProductSubCategories(
+      @RequestParam String categoryName) {
+    return ResponseEntity.ok(productCategoryService.getSubCategorySelectList(categoryName));
   }
 }

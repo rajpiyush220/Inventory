@@ -1,6 +1,7 @@
 package com.touchblankspot.inventory.portal.data.repository;
 
 import com.touchblankspot.inventory.portal.data.model.Product;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
   Product findByNameAndIsDeleted(String name, Boolean isDeleted);
+
+  List<Product> findByCategoryIdAndIsDeleted(UUID id, Boolean isDeleted);
 
   Product findByShortNameAndIsDeleted(String shortName, Boolean isDeleted);
 

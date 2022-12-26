@@ -11,6 +11,65 @@
 	function logoutUser() {
 		$('#logoutForm').submit();
 	}
+	function getSubCategories(){
+	    var categoryName = $('#categoryName').val();
+	    if(categoryName === ''){
+           $('#categoryId').html('<option value="">Select Product Sub Category</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/category/subCategories?categoryName="+categoryName,
+               dataType : 'json',
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Select Product Sub Category</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                       + data[i].value
+                       + '</option>';
+                    }
+                    html += '</option>';
+                    $('#categoryId').html(html);
+               },
+               error : function(e) {
+                alert(e);
+               }
+              });
+          }
+	}
+	function getExistingProduct(){
+	    var categoryId = $('#categoryId').val();
+	    if(categoryId === ''){
+           $('#existingProduct').html('<option value="">Existing Product List</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/existingProducts?categoryId="+categoryId,
+               dataType : 'json',
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Existing Product List</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i] + '">'
+                       + data[i]
+                       + '</option>';
+                    }
+                    $('#existingProduct').html(html);
+               },
+               error : function(e) {
+                alert(e);
+               }
+              });
+          }
+	}
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -36,12 +95,34 @@
                         </h6>
                         <!-- Product Category -->
                         <div class="form-group">
-                            <label>Select Product Category</label>
-                            <select th:field="*{categoryId}" class="form-control" name="permission">
+                            <select th:field="*{categoryName}" class="form-control" name="categoryName" onchange="getSubCategories();">
+                                <option selected value="">Select Product Category</option>
                                 <option th:each="category : ${categories}"
-                                        th:value="${category.id}"
-                                        th:text="${category.value}" th:selected="(${category.id} eq ${selectedCategoryId})" />
+                                        th:value="${category}"
+                                        th:text="${category}" th:selected="(${category} eq ${selectedCategory})" />
                             </select>
+                            <span class="has-error" th:if="${#fields.hasErrors('categoryName')}"
+                                  th:errors="*{categoryName}"></span>
+                        </div>
+                        <div class="form-group">
+                            <select th:field="*{categoryId}" class="form-control" name="categoryId" onchange="getExistingProduct();">
+                                <option value="">Select Product Sub Category</option>
+                                <option th:each="subCategory : ${subCategories}"
+                                        th:value="${subCategory.id}"
+                                        th:text="${subCategory.value}" th:selected="(${subCategory.id} eq ${selectedCategoryId})" />
+                            </select>
+                            <span class="has-error" th:if="${#fields.hasErrors('categoryId')}"
+                                  th:errors="*{categoryId}"></span>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="existingProduct" name="existingProduct">
+                                <option value="">Existing Product List</option>
+                                <option th:each="existingProduct : ${existingProducts}"
+                                        th:value="${existingProduct}"
+                                        th:text="${existingProduct}" />
+                            </select>
+                            <span class="has-error" th:if="${#fields.hasErrors('categoryId')}"
+                                  th:errors="*{categoryId}"></span>
                         </div>
                         <div class="form-group">
                             <input size="50" type="text" th:field="*{name}" class="form-control" placeholder="Enter Product Name" autofocus="true">
@@ -91,12 +172,8 @@
 <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-<script type="text/javascript" th:src="@{/js/chart/chart-area-demo.js}"></script>
-<script type="text/javascript" th:src="@{/js/chart/chart-bar-demo.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/chart/datatables-demo.js}"></script>
 </body>
 </html>
