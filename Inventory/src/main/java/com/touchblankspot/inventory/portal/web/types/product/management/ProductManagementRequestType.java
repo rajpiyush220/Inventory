@@ -28,7 +28,12 @@ public class ProductManagementRequestType {
       message = "Selected product name is already taken.")
   private String name;
 
-  @NotNull private UUID categoryId;
+  @Size(min = 1, max = 50, message = "Category name must be Selected.")
+  @NotNull
+  private String categoryName;
+
+  @NotNull(message = "Product Sub category must be selected.")
+  private UUID categoryId;
 
   @Size(min = 2, max = 50, message = "Product shortDescription must be between 2 and 50 character.")
   private String shortDescription;

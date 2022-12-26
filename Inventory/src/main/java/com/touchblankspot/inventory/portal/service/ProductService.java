@@ -64,6 +64,10 @@ public class ProductService implements FieldValueExists {
         .orElseThrow(() -> new RuntimeException("No product found with id " + id));
   }
 
+  public List<Product> findByIdCategoryId(UUID id) {
+    return productRepository.findByCategoryIdAndIsDeleted(id, false);
+  }
+
   public void deleteProduct(UUID id) {
     Product product = productRepository.findByIdAndIsDeleted(id, false);
     if (product != null) {

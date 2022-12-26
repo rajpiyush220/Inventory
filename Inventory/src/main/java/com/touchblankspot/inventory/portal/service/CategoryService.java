@@ -5,9 +5,8 @@ import com.touchblankspot.inventory.portal.data.model.Category;
 import com.touchblankspot.inventory.portal.data.repository.CategoryRepository;
 import com.touchblankspot.inventory.portal.web.types.SelectType;
 import java.time.OffsetDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,12 +60,29 @@ public class CategoryService implements IsUniqueRowExists {
   }
 
   public List<SelectType> getCategorySelectList() {
-    return findAll().stream()
-        .sorted(Comparator.comparing(Category::getCategory))
+    return new HashSet<>(findAll())
+        .stream()
+            .sorted(Comparator.comparing(Category::getCategory))
+            .map(
+                productCategory ->
+                    new SelectType(
+                        productCategory.getId().toString(), productCategory.getCategory()))
+            .toList();
+  }
+
+  public List<String> getCategoryList() {
+    return findAll().stream().map(Category::getCategory).distinct().sorted().toList();
+  }
+
+  public List<SelectType> getSubCategorySelectList(String categoryName) {
+    return productCategoryRepository.findAllByCategoryAndIsDeleted(categoryName, false).stream()
+        .sorted(Comparator.comparing(Category::getSubCategory))
         .map(
             productCategory ->
-                new SelectType(productCategory.getId().toString(), productCategory.getCategory()))
-        .toList();
+                new SelectType(
+                    productCategory.getId().toString(), productCategory.getSubCategory()))
+        .distinct()
+        .collect(Collectors.toList());
   }
 
   @Override

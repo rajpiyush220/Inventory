@@ -22,6 +22,8 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
   List<Category> findAllByIsDeleted(Boolean isDeleted);
 
+  List<Category> findAllByCategoryAndIsDeleted(String category, Boolean isDeleted);
+
   Category findByIdAndIsDeleted(UUID id, Boolean isDeleted);
 
   @Query(

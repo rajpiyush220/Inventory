@@ -11,6 +11,36 @@
 	function logoutUser() {
 		$('#logoutForm').submit();
 	}
+	function getSubCategories(){
+	    var categoryName = $('#existingCategories').val();
+	    if(categoryName === ''){
+           $('#existingSubCategories').html('<option value="">Existing Sub category List</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/category/subCategories?categoryName="+categoryName,
+               dataType : 'json',
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Existing Sub category List</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                       + data[i].value
+                       + '</option>';
+                    }
+                    html += '</option>';
+                    $('#existingSubCategories').html(html);
+               },
+               error : function(e) {
+                alert(e);
+               }
+              });
+          }
+	}
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -34,6 +64,22 @@
                             <span class="has-error" th:text="${errorMessage}"></span>
                             <span th:text="${successMessage}"></span>
                         </h6>
+                        <div class="form-group">
+                            <select class="form-control" id="existingCategories" name="existingCategories" onchange="getSubCategories();">
+                                <option value="">Existing category List</option>
+                                <option th:each="existingCategory : ${existingCategories}"
+                                        th:value="${existingCategory}"
+                                        th:text="${existingCategory}" th:selected="(${existingCategory} eq ${selectedCategory})" />
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="existingSubCategories" name="existingSubCategories">
+                                <option value="">Existing Sub category List</option>
+                                <option th:each="existingSubCategory : ${existingSubCategories}"
+                                        th:value="${existingSubCategory}"
+                                        th:text="${existingSubCategory}" th:selected="(${existingSubCategory} eq ${selectedSubCategory})" />
+                            </select>
+                        </div>
                         <div class="form-group">
                             <input size="50" type="text" th:field="*{category}" class="form-control border-groove"
                                    placeholder="Enter Category"
