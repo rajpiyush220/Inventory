@@ -108,6 +108,66 @@
       }
     }
 
+    function getSubCategories(){
+	    var categoryName = $('#category').val();
+	    if(categoryName === ''){
+           $('#subCategory').html('<option value="">Sub category List</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/category/subCategories?categoryName="+categoryName,
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Sub category List</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                       + data[i].value
+                       + '</option>';
+                    }
+                    html += '</option>';
+                    $('#subCategory').html(html);
+               },
+               error : function(e) {
+                alert(e)
+               }
+              });
+          }
+	}
+
+	function getProducts(){
+	    var categoryId = $('#subCategory').val();
+	    if(categoryId === ''){
+           $('#productId').html('<option value="">Select Product</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/select/types?categoryId="+categoryId,
+               dataType : 'json',
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Select Product</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                       + data[i].value
+                       + '</option>';
+                    }
+                    $('#productId').html(html);
+               },
+               error : function(e) {
+                alert(e);
+               }
+              });
+          }
+	}
+
 
 </script>
 <body class="sb-nav-fixed">

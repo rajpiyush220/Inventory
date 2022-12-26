@@ -51,6 +51,7 @@
                             </div>
                             <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                data-target="#pagesCollapseItemIssue" aria-expanded="false"
+                               th:if="${@permissionService.hasPermission({'PROD_CREATE','PROD_VIEW'})}"
                                aria-controls="pagesCollapseItemIssue"> Product Management
                                 <div class="sb-sidenav-collapse-arrow">
                                     <i class="fas fa-angle-down"></i>
@@ -58,7 +59,8 @@
                             </a>
                             <div class="collapse" id="pagesCollapseItemIssue"
                                  aria-labelledby="headingOne"
-                                 data-parent="#sidenavAccordionPages">
+                                 data-parent="#sidenavAccordionPages"
+                                 th:if="${@permissionService.hasPermission({'PROD_CREATE','PROD_VIEW'})}">
                                 <nav class="sb-sidenav-menu-nested nav">
 									<a class="nav-link" href="/product/management"> Add Product </a>
 									<a class="nav-link" href="/product/management/list"> Product List</a>
@@ -92,7 +94,8 @@
                             </a>
                             <div class="collapse" id="pagesCollapseItemReturn"
                                  aria-labelledby="headingOne"
-                                 data-parent="#sidenavAccordionPages">
+                                 data-parent="#sidenavAccordionPages"
+                                 th:if="${@permissionService.hasPermission({'STOCK_CREATE','STOCK_VIEW','STOCK_DELETE'})}">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="/stock/management">Create Stock</a>
                                     <a class="nav-link" href="/stock/management/list">Stock List</a>
