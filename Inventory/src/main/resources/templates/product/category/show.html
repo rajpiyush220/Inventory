@@ -7,11 +7,9 @@
     <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/chart/datatables-demo.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
 
@@ -56,6 +54,7 @@
                         </select>
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
                                class="autocomplete border-inset" style="width: 120px;">
+                        <button id="SearchButton">Search</button>
                         <label>Select Page Size: </label>
                         <select class="form-select form-select-lg border-inset" onchange="submitPageSizeChange()"
                                 name="pageSize" id="pageSize">

@@ -64,6 +64,66 @@
               });
           }
     }
+
+    function getSubCategories(){
+	    var categoryName = $('#category').val();
+	    if(categoryName === ''){
+           $('#subCategory').html('<option value="">Sub category List</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/category/subCategories?categoryName="+categoryName,
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Sub category List</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                       + data[i].value
+                       + '</option>';
+                    }
+                    html += '</option>';
+                    $('#subCategory').html(html);
+               },
+               error : function(e) {
+                alert(e)
+               }
+              });
+          }
+	}
+
+	function getProducts(){
+	    var categoryId = $('#subCategory').val();
+	    if(categoryId === ''){
+           $('#productId').html('<option value="">Select Product</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/select/types?categoryId="+categoryId,
+               dataType : 'json',
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Select Product</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                       + data[i].value
+                       + '</option>';
+                    }
+                    $('#productId').html(html);
+               },
+               error : function(e) {
+                alert(e);
+               }
+              });
+          }
+	}
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -88,8 +148,30 @@
                                 <span th:text="${successMessage}"></span>
                             </h6>
                             <div class="form-group">
+                                <select class="form-control" id="category" name="category" onchange="getSubCategories();">
+                                    <option value="">Category List</option>
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category}"
+                                            th:text="${category}" th:selected="(${category} eq ${selectedCategory})" ></option>
+                                </select>
+                                <span class="has-error" th:if="${#fields.hasErrors('category')}"
+                                      th:errors="*{category}"></span>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" id="subCategory" name="subCategory" onchange="getProducts();">
+                                    <option value="">Sub category List</option>
+                                    <option th:each="subCategory : ${subCategories}"
+                                            th:selected="(${subCategory.id} == ${selectedSubCategoryId})"
+                                            th:value="${subCategory.id}"
+                                            th:text="${subCategory.value}"
+                                    />
+                                </select>
+                                <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
+                                      th:errors="*{subCategory}"></span>
+                            </div>
+                            <div class="form-group">
                                 <select th:field="*{productId}" class="form-control"  onchange="get_size();" name="productId">
-                                    <option value="" selected>Select Product</option>
+                                    <option value="">Select Product</option>
                                     <option th:each="product : ${productSelectList}"
                                             th:value="${product.id}"
                                             th:text="${product.value}" th:selected="(${product.id} eq ${selectedProductId})" />

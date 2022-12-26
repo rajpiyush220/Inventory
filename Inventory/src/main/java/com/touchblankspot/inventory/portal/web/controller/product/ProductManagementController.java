@@ -10,6 +10,7 @@ import com.touchblankspot.inventory.portal.web.types.mapper.ProductMapper;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementResponseType;
 import jakarta.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,7 +68,7 @@ public class ProductManagementController extends BaseController {
             requestType.getCategoryId() != null ? requestType.getCategoryId() : "");
       }
       if (requestType.getCategoryId() != null) {
-        model.addAttribute("existingProducts", getExistingProductLis(requestType.getCategoryId()));
+        model.addAttribute("existingProducts", getExistingProductList(requestType.getCategoryId()));
       }
       return "product/management/create";
     }
@@ -123,10 +124,23 @@ public class ProductManagementController extends BaseController {
   @ResponseBody
   @PreAuthorize("@permissionService.hasPermission({'PROD_VIEW'})")
   public ResponseEntity<List<String>> getProductSubCategories(@RequestParam UUID categoryId) {
-    return ResponseEntity.ok(getExistingProductLis(categoryId));
+    return ResponseEntity.ok(getExistingProductList(categoryId));
   }
 
-  private List<String> getExistingProductLis(UUID categoryId) {
+  @GetMapping(value = "/select/types", produces = "application/json", consumes = "application/json")
+  @ResponseBody
+  @PreAuthorize("@permissionService.hasPermission({'PROD_VIEW'})")
+  public ResponseEntity<List<SelectType>> getProductSelectList(@RequestParam UUID categoryId) {
+    List<SelectType> productSelectTypes =
+        productService.findByIdCategoryId(categoryId).stream()
+            .map(product -> new SelectType(product.getId().toString(), product.getName()))
+            .distinct()
+            .sorted(Comparator.comparing(SelectType::value))
+            .toList();
+    return ResponseEntity.ok(productSelectTypes);
+  }
+
+  private List<String> getExistingProductList(UUID categoryId) {
     return productService.findByIdCategoryId(categoryId).stream()
         .map(Product::getName)
         .distinct()

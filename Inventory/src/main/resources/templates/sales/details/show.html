@@ -60,11 +60,9 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Short Name</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Short Description</th>
-                            <th scope="col">Product Category</th>
-                            <th scope="col">Product Sub Category</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Sub Category</th>
                             <th scope="col">Quantity</th>
                             <th scope="col">Unit Price</th>
                             <th scope="col">Discount Amount</th>
@@ -81,9 +79,7 @@
                         </tr>
                         <tr th:each="saleDetail : ${SaleDetails}">
                             <td scope="row" th:text="${saleDetailStat.index+1}">#</td>
-                            <td><span th:text="${saleDetail.shortName}"></span></td>
                             <td><span th:text="${saleDetail.name}"></span></td>
-                            <td><span th:text="${saleDetail.shortDescription}"></span></td>
                             <td><span th:text="${saleDetail.productCategory}"></span></td>
                             <td><span th:text="${saleDetail.subCategory}"></span></td>
                             <td><span th:text="${saleDetail.quantity}"></span></td>

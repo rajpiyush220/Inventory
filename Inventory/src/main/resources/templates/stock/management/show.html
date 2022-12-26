@@ -6,15 +6,11 @@
     <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/chart/datatables-demo.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
-    <!--<link type="text/css" rel="stylesheet"
-          th:href="@{/css/library/materialize.min.css}" media="screen,projection"/>-->
     <div th:replace="~{common/header :: myHeader}"></div>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
@@ -78,7 +74,7 @@
                         <tr th:if="${Stocks.empty}">
                             <td colspan="5"> No Records Available</td>
                         </tr>
-                        <tr th:each="stock : ${Stocks}">
+                        <tr th:each="stock : ${Stocks}" th:attr="class=${stock.quantity > 0 ? '' : 'has-error'},title=${stock.quantity > 0 ? '' : 'No Stock Present'}">
                             <td scope="row" th:text="${stockStat.index+1}">#</td>
                             <td><span th:text="${stock.name}"></span></td>
                             <td><span th:text="${stock.shortName}"></span></td>

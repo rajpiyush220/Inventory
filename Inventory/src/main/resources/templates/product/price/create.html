@@ -14,6 +14,65 @@
 	function setTwoNumberDecimal(event) {
         $('#price').val(parseFloat($('#price').val()).toFixed(2));
     }
+    function getSubCategories(){
+	    var categoryName = $('#category').val();
+	    if(categoryName === ''){
+           $('#subCategory').html('<option value="">Sub category List</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/category/subCategories?categoryName="+categoryName,
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Sub category List</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                       + data[i].value
+                       + '</option>';
+                    }
+                    html += '</option>';
+                    $('#subCategory').html(html);
+               },
+               error : function(e) {
+                alert(e)
+               }
+              });
+          }
+	}
+
+	function getProducts(){
+	    var categoryId = $('#subCategory').val();
+	    if(categoryId === ''){
+           $('#productId').html('<option value="">Select Product</option>')
+          }else
+          {
+            $.ajax({
+               type : "GET",
+               contentType : "application/json",
+               url : "/product/select/types?categoryId="+categoryId,
+               dataType : 'json',
+               cache : false,
+               timeout : 600000,
+               success : function(data) {
+                    var html = '<option value="">Select Product</option>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                       + data[i].value
+                       + '</option>';
+                    }
+                    $('#productId').html(html);
+               },
+               error : function(e) {
+                alert(e);
+               }
+              });
+          }
+	}
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -37,17 +96,40 @@
                             <span class="has-error" th:text="${errorMessage}"></span>
                             <span th:text="${successMessage}"></span>
                         </h6>
-                        <!-- Product Category -->
                         <div class="form-group">
-                            <label>Select Product</label>
+                            <select class="form-control" id="category" name="category" onchange="getSubCategories();">
+                                <option value="">Category List</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category}"
+                                        th:text="${category}" th:selected="(${category} eq ${selectedCategory})" ></option>
+                            </select>
+                            <span class="has-error" th:if="${#fields.hasErrors('category')}"
+                                  th:errors="*{category}"></span>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="subCategory" name="subCategory" onchange="getProducts();">
+                                <option value="">Sub category List</option>
+                                <option th:each="subCategory : ${subCategories}"
+                                        th:selected="(${subCategory.id} == ${selectedSubCategoryId})"
+                                        th:value="${subCategory.id}"
+                                        th:text="${subCategory.value}"
+                                         />
+                            </select>
+                            <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
+                                  th:errors="*{subCategory}"></span>
+                        </div>
+                        <div class="form-group">
                             <select th:field="*{productId}" class="form-control">
+                                <option value="">Select Product</option>
                                 <option th:each="productSelect : ${productSelectTypes}"
                                         th:value="${productSelect.id}"
                                         th:text="${productSelect.value}" th:selected="(${productSelect.id} eq ${selectedProductId})" />
                             </select>
+                            <span class="has-error" th:if="${#fields.hasErrors('productId')}"
+                                  th:errors="*{productId}"></span>
                         </div>
                         <div class="form-group">
-                            <input size="50" type="text" th:field="*{productSize}" class="form-control" placeholder="Enter Product Size" autofocus="true">
+                            <input size="50" type="text" th:field="*{productSize}" class="form-control" placeholder="Enter Product Size">
                             <span class="has-error" th:if="${#fields.hasErrors('productSize')}"
                                   th:errors="*{productSize}"></span>
                         </div>
