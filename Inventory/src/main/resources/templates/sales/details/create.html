@@ -107,65 +107,7 @@
           });
       }
     }
-    function getSubCategories(){
-	    var categoryName = $('#category').val();
-	    if(categoryName === ''){
-           $('#subCategory').html('<option value="">Sub category List</option>')
-          }else
-          {
-            $.ajax({
-               type : "GET",
-               contentType : "application/json",
-               url : "/product/category/subCategories?categoryName="+categoryName,
-               cache : false,
-               timeout : 600000,
-               success : function(data) {
-                    var html = '<option value="">Sub category List</option>';
-                    var len = data.length;
-                    for (var i = 0; i < len; i++) {
-                        html += '<option value="' + data[i].id + '">'
-                       + data[i].value
-                       + '</option>';
-                    }
-                    html += '</option>';
-                    $('#subCategory').html(html);
-               },
-               error : function(e) {
-                alert(e)
-               }
-              });
-          }
-	}
 
-	function getProducts(){
-	    var categoryId = $('#subCategory').val();
-	    if(categoryId === ''){
-           $('#productId').html('<option value="">Select Product</option>')
-          }else
-          {
-            $.ajax({
-               type : "GET",
-               contentType : "application/json",
-               url : "/product/select/types?categoryId="+categoryId,
-               dataType : 'json',
-               cache : false,
-               timeout : 600000,
-               success : function(data) {
-                    var html = '<option value="">Select Product</option>';
-                    var len = data.length;
-                    for (var i = 0; i < len; i++) {
-                        html += '<option value="' + data[i].id + '">'
-                       + data[i].value
-                       + '</option>';
-                    }
-                    $('#productId').html(html);
-               },
-               error : function(e) {
-                alert(e);
-               }
-              });
-          }
-	}
 
 </script>
 <body class="sb-nav-fixed">
@@ -277,7 +219,7 @@
             <div class="container-fluid">
                 <div
                         class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; IMS 2021</div>
+                    <div class="text-muted">Copyright &copy; 99Mall 2023</div>
                     <div>
                         <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
                         &amp; Conditions</a>
@@ -290,7 +232,6 @@
 <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/Chart.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>

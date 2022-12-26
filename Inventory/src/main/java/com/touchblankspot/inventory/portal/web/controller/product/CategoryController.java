@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class CategoryController extends BaseController {
 
-  @NonNull private final CategoryService productCategoryService;
+  @NonNull private final CategoryService categoryService;
 
   @NonNull private final CategoryMapper categoryMapper;
 
@@ -53,7 +53,7 @@ public class CategoryController extends BaseController {
     int pageSize = size.orElse(pageSizeList.get(0));
 
     Page<Category> productCategoryPage =
-        productCategoryService.findAll(PageRequest.of(currentPage - 1, pageSize));
+            categoryService.findAll(PageRequest.of(currentPage - 1, pageSize));
     List<CategoryResponseType> responseTypeList =
         productCategoryPage.stream().map(categoryMapper::toResponse).toList();
     int totalPages = productCategoryPage.getTotalPages();
@@ -74,7 +74,7 @@ public class CategoryController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_CREATE'})")
   public String createProductCategory(Model model) {
     model.addAttribute("categoryForm", new CategoryRequestType());
-    model.addAttribute("existingCategories", productCategoryService.getCategoryList());
+    model.addAttribute("existingCategories", categoryService.getCategoryList());
     return "product/category/create";
   }
 
@@ -85,18 +85,18 @@ public class CategoryController extends BaseController {
       BindingResult bindingResult,
       Model model) {
     if (bindingResult.hasErrors()) {
-      model.addAttribute("existingCategories", productCategoryService.getCategoryList());
+      model.addAttribute("existingCategories", categoryService.getCategoryList());
       if (!ObjectUtils.isEmpty(requestType.getExistingCategories())) {
         model.addAttribute("selectedCategory", requestType.getExistingCategories());
         model.addAttribute(
             "existingSubCategories",
-            productCategoryService.getSubCategorySelectList(requestType.getExistingCategories()));
+                categoryService.getSubCategorySelectList(requestType.getExistingCategories()));
         model.addAttribute("selectedSubCategory", requestType.getExistingCategories());
       }
       return "product/category/create";
     }
     try {
-      productCategoryService.save(categoryMapper.toEntity(requestType));
+      categoryService.save(categoryMapper.toEntity(requestType));
       model.addAttribute("successMessage", "Product category Created successfully.");
     } catch (Exception ex) {
       log.error("Unable to create category", ex);
@@ -112,9 +112,9 @@ public class CategoryController extends BaseController {
   public AutoCompleteWrapper getSearchSuggestion(String searchKey, String type) {
     return new AutoCompleteWrapper(
         switch (type.toLowerCase()) {
-          case "category" -> productCategoryService.findByCategoryContains(searchKey);
-          case "subcategory" -> productCategoryService.findBySubCategoryContains(searchKey);
-          case "productsize" -> productCategoryService.findByProductSizeContains(searchKey);
+          case "category" -> categoryService.findByCategoryContains(searchKey);
+          case "subcategory" -> categoryService.findBySubCategoryContains(searchKey);
+          case "productsize" -> categoryService.findByProductSizeContains(searchKey);
           default -> new ArrayList<>();
         });
   }
@@ -122,7 +122,7 @@ public class CategoryController extends BaseController {
   @GetMapping("/category/delete")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_DELETE'})")
   public String deleteCategory(String id) {
-    productCategoryService.deleteProductCategory(UUID.fromString(id));
+    categoryService.deleteProductCategory(UUID.fromString(id));
     log.warn("Product category with id {} deleted successfully.", id);
     return "redirect:/product/categories";
   }
@@ -136,7 +136,7 @@ public class CategoryController extends BaseController {
   @PostMapping("/category/update")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_UPDATE'})")
   public String updateCategory(String id) {
-    productCategoryService.deleteProductCategory(UUID.fromString(id));
+    categoryService.deleteProductCategory(UUID.fromString(id));
     log.warn("Product category with id {} deleted successfully.", id);
     return "redirect:/product/categories";
   }
@@ -146,7 +146,7 @@ public class CategoryController extends BaseController {
   public String ViewCategory(String id, Model model) {
     model.addAttribute(
         "category",
-        categoryMapper.toResponse(productCategoryService.findById(UUID.fromString(id))));
+        categoryMapper.toResponse(categoryService.findById(UUID.fromString(id))));
     return "product/category/view";
   }
 
@@ -158,6 +158,6 @@ public class CategoryController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   public ResponseEntity<List<SelectType>> getProductSubCategories(
       @RequestParam String categoryName) {
-    return ResponseEntity.ok(productCategoryService.getSubCategorySelectList(categoryName));
+    return ResponseEntity.ok(categoryService.getSubCategorySelectList(categoryName));
   }
 }
