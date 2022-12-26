@@ -76,12 +76,12 @@ public class CategoryService implements IsUniqueRowExists {
 
   public List<SelectType> getSubCategorySelectList(String categoryName) {
     return productCategoryRepository.findAllByCategoryAndIsDeleted(categoryName, false).stream()
-        .sorted(Comparator.comparing(Category::getSubCategory))
         .map(
             productCategory ->
                 new SelectType(
                     productCategory.getId().toString(), productCategory.getSubCategory()))
         .distinct()
+        .sorted(Comparator.comparing(SelectType::value))
         .collect(Collectors.toList());
   }
 

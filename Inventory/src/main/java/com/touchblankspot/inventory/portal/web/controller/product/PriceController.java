@@ -1,5 +1,6 @@
 package com.touchblankspot.inventory.portal.web.controller.product;
 
+import com.touchblankspot.inventory.portal.service.CategoryService;
 import com.touchblankspot.inventory.portal.service.ProductPriceService;
 import com.touchblankspot.inventory.portal.service.ProductService;
 import com.touchblankspot.inventory.portal.web.annotations.ProductController;
@@ -10,6 +11,7 @@ import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceR
 import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceResponseType;
 import com.touchblankspot.inventory.portal.web.types.product.price.validator.ProductPriceValidator;
 import jakarta.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +42,8 @@ public class PriceController extends BaseController {
 
   @NonNull private final ProductService productService;
 
+  @NonNull private final CategoryService categoryService;
+
   @NonNull private final ProductPriceMapper productPriceMapper;
 
   @NonNull private final ProductPriceValidator productPriceValidator;
@@ -47,12 +52,8 @@ public class PriceController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_PRICE_CREATE'})")
   public String createProductCategory(Model model) {
     model.addAttribute("managementForm", new ProductPriceRequestType());
-    List<SelectType> productSelectTypes = productService.getProductSelectList();
-    if (!productSelectTypes.isEmpty()) {}
+    model.addAttribute("categories", categoryService.getCategoryList());
 
-    model.addAttribute("productSelectTypes", productSelectTypes);
-    model.addAttribute(
-        "selectedProductId", productSelectTypes.isEmpty() ? "" : productSelectTypes.get(0).id());
     return "product/price/create";
   }
 
@@ -65,15 +66,30 @@ public class PriceController extends BaseController {
       Errors errors) {
     productPriceValidator.validate(requestType, errors);
     if (bindingResult.hasErrors() || errors.hasErrors()) {
-      List<SelectType> productSelectTypes = productService.getProductSelectList();
-      if (!productSelectTypes.isEmpty()) {}
-
-      model.addAttribute("productSelectTypes", productSelectTypes);
+      List<String> categories = categoryService.getCategoryList();
+      model.addAttribute("categories", categories);
       model.addAttribute(
-          "selectedProductId",
-          requestType.getProductId() != null
-              ? requestType.getProductId()
-              : productSelectTypes.get(0).id());
+          "selectedCategory", requestType.getCategory() != null ? requestType.getCategory() : "");
+      if (!ObjectUtils.isEmpty(requestType.getCategory())) {
+        List<SelectType> subCategories =
+            categoryService.getSubCategorySelectList(requestType.getCategory());
+        model.addAttribute("subCategories", subCategories);
+        model.addAttribute(
+            "selectedSubCategoryId",
+            requestType.getSubCategory() != null ? requestType.getSubCategory().toString() : "");
+      }
+      if (requestType.getSubCategory() != null) {
+        model.addAttribute(
+            "productSelectTypes",
+            productService.findByIdCategoryId(requestType.getSubCategory()).stream()
+                .map(product -> new SelectType(product.getId().toString(), product.getName()))
+                .distinct()
+                .sorted(Comparator.comparing(SelectType::value))
+                .toList());
+        if (requestType.getProductId() != null) {
+          model.addAttribute("selectedProductId", requestType.getProductId());
+        }
+      }
       return "product/price/create";
     }
     try {

@@ -64,7 +64,7 @@
                             <span class="has-error" th:text="${errorMessage}"></span>
                             <span th:text="${successMessage}"></span>
                         </h6>
-                        <div class="form-group">
+                        <div class="form-group" th:if="${!existingCategories.empty}">
                             <select class="form-control" id="existingCategories" name="existingCategories" onchange="getSubCategories();">
                                 <option value="">Existing category List</option>
                                 <option th:each="existingCategory : ${existingCategories}"
@@ -72,7 +72,7 @@
                                         th:text="${existingCategory}" th:selected="(${existingCategory} eq ${selectedCategory})" />
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" th:if="${!existingCategories.empty}">
                             <select class="form-control" id="existingSubCategories" name="existingSubCategories">
                                 <option value="">Existing Sub category List</option>
                                 <option th:each="existingSubCategory : ${existingSubCategories}"

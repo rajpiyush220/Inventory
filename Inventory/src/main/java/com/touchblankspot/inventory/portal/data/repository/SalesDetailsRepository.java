@@ -23,7 +23,7 @@ public interface SalesDetailsRepository extends JpaRepository<SalesDetails, UUID
                 else 'No Discount'
               end as discount_amount,
               sales_details.total_price,sales_details.payment_mode,sales_details.transaction_id,
-              sales_details.sold_by,DATE_FORMAT(sales_details.sold_at, '%D %M %Y %h:%i:%S %p') as soldAt
+              sales_details.sold_by,DATE_FORMAT(sales_details.sold_at, '%d-%m-%Y %h:%i:%S %p') as soldAt
             from sales_details
               inner join product on product.id = sales_details.product_id
               inner join category on category.id = product.category_id

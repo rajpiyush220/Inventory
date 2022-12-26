@@ -3,6 +3,7 @@ package com.touchblankspot.inventory.portal.web.controller.stock;
 import com.touchblankspot.inventory.portal.data.model.Stock;
 import com.touchblankspot.inventory.portal.data.model.StockAudit;
 import com.touchblankspot.inventory.portal.security.service.SecurityService;
+import com.touchblankspot.inventory.portal.service.CategoryService;
 import com.touchblankspot.inventory.portal.service.ProductPriceService;
 import com.touchblankspot.inventory.portal.service.ProductService;
 import com.touchblankspot.inventory.portal.service.StockAuditService;
@@ -17,6 +18,7 @@ import com.touchblankspot.inventory.portal.web.types.stock.management.StockManag
 import com.touchblankspot.inventory.portal.web.types.stock.management.StockManagementResponseType;
 import jakarta.validation.Valid;
 import java.time.OffsetDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -56,12 +59,13 @@ public class StockManagementController extends BaseController {
 
   @NonNull private final ProductPriceService productPriceService;
 
+  @NonNull private final CategoryService categoryService;
+
   @GetMapping("/management")
   @PreAuthorize("@permissionService.hasPermission({'STOCK_CREATE'})")
   public String createStock(Model model) {
     model.addAttribute("managementForm", new StockManagementRequestType());
-    List<SelectType> productSelectList = productService.getProductSelectList();
-    model.addAttribute("productSelectList", productSelectList);
+    model.addAttribute("categories", categoryService.getCategoryList());
     return "stock/management/create";
   }
 
@@ -72,13 +76,30 @@ public class StockManagementController extends BaseController {
       BindingResult bindingResult,
       Model model) {
     if (bindingResult.hasErrors()) {
-      List<SelectType> productSelectList = productService.getProductSelectList();
-      model.addAttribute("productSelectList", productSelectList);
+      List<String> categories = categoryService.getCategoryList();
+      model.addAttribute("categories", categories);
       model.addAttribute(
-          "selectedProductId",
-          requestType.getProductId() != null
-              ? requestType.getProductId()
-              : productSelectList.get(0).id());
+          "selectedCategory", requestType.getCategory() != null ? requestType.getCategory() : "");
+      if (!ObjectUtils.isEmpty(requestType.getCategory())) {
+        List<SelectType> subCategories =
+            categoryService.getSubCategorySelectList(requestType.getCategory());
+        model.addAttribute("subCategories", subCategories);
+        model.addAttribute(
+            "selectedSubCategoryId",
+            requestType.getSubCategory() != null ? requestType.getSubCategory().toString() : "");
+      }
+      if (requestType.getSubCategory() != null) {
+        model.addAttribute(
+            "productSelectList",
+            productService.findByIdCategoryId(requestType.getSubCategory()).stream()
+                .map(product -> new SelectType(product.getId().toString(), product.getName()))
+                .distinct()
+                .sorted(Comparator.comparing(SelectType::value))
+                .toList());
+        if (requestType.getProductId() != null) {
+          model.addAttribute("selectedProductId", requestType.getProductId());
+        }
+      }
       if (requestType.getProductId() != null) {
         model.addAttribute(
             "productSizes", productPriceService.getProductSize(requestType.getProductId()));
@@ -112,10 +133,7 @@ public class StockManagementController extends BaseController {
       log.error("Unable to create stock", ex);
       model.addAttribute("errorMessage", "Unable to create Stock. please contact administrator");
     }
-    model.addAttribute("managementForm", new StockManagementRequestType());
-    List<SelectType> productSelectList = productService.getProductSelectList();
-    model.addAttribute("productSelectList", productSelectList);
-    return "stock/management/create";
+    return "redirect:/stock/management";
   }
 
   @GetMapping("/management/list")

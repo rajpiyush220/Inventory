@@ -7,6 +7,7 @@ import com.touchblankspot.inventory.portal.data.model.SalesDetails;
 import com.touchblankspot.inventory.portal.data.model.Stock;
 import com.touchblankspot.inventory.portal.data.model.StockAudit;
 import com.touchblankspot.inventory.portal.security.service.SecurityService;
+import com.touchblankspot.inventory.portal.service.CategoryService;
 import com.touchblankspot.inventory.portal.service.ProductPriceService;
 import com.touchblankspot.inventory.portal.service.ProductService;
 import com.touchblankspot.inventory.portal.service.SalesDetailsService;
@@ -22,6 +23,7 @@ import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.OffsetDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,6 +38,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -60,14 +63,15 @@ public class SalesDetailsController extends BaseController {
 
   @NonNull private final StockAuditService stockAuditService;
 
+  @NonNull private final CategoryService categoryService;
+
   @NonNull private final SalesDetailMapper salesDetailMapper;
 
   @GetMapping("/detail/create")
   @PreAuthorize("@permissionService.hasPermission({'SALES_CREATE'})")
   public String createSales(Model model) {
     model.addAttribute("managementForm", new SalesDetailRequestType());
-    List<SelectType> productSelectList = productService.getProductSelectList();
-    model.addAttribute("productSelectTypes", productSelectList);
+    model.addAttribute("categories", categoryService.getCategoryList());
     model.addAttribute("paymentModes", PaymentModeEnum.getSelectList());
     model.addAttribute("selectedPaymentMode", PaymentModeEnum.CASH.name());
     return "sales/details/create";
@@ -80,18 +84,41 @@ public class SalesDetailsController extends BaseController {
       BindingResult bindingResult,
       Model model) {
     if (bindingResult.hasErrors()) {
-      List<SelectType> productSelectList = productService.getProductSelectList();
-      model.addAttribute("productSelectTypes", productSelectList);
-      model.addAttribute("paymentModes", PaymentModeEnum.getSelectList());
-      model.addAttribute("selectedPaymentMode", PaymentModeEnum.CASH.name());
+      List<String> categories = categoryService.getCategoryList();
+      model.addAttribute("categories", categories);
       model.addAttribute(
-          "selectedProductId",
-          requestType.getProductId() != null ? requestType.getProductId() : "");
+          "selectedCategory", requestType.getCategory() != null ? requestType.getCategory() : "");
+      if (!ObjectUtils.isEmpty(requestType.getCategory())) {
+        List<SelectType> subCategories =
+            categoryService.getSubCategorySelectList(requestType.getCategory());
+        model.addAttribute("subCategories", subCategories);
+        model.addAttribute(
+            "selectedSubCategoryId",
+            requestType.getSubCategory() != null ? requestType.getSubCategory().toString() : "");
+      }
+      if (requestType.getSubCategory() != null) {
+        model.addAttribute(
+            "productSelectTypes",
+            productService.findByIdCategoryId(requestType.getSubCategory()).stream()
+                .map(product -> new SelectType(product.getId().toString(), product.getName()))
+                .distinct()
+                .sorted(Comparator.comparing(SelectType::value))
+                .toList());
+        if (requestType.getProductId() != null) {
+          model.addAttribute("selectedProductId", requestType.getProductId());
+        }
+      }
       if (requestType.getProductId() != null) {
         model.addAttribute(
             "productSizes", productPriceService.getProductSize(requestType.getProductId()));
         model.addAttribute("selectedSize", requestType.getSize());
       }
+      model.addAttribute("paymentModes", PaymentModeEnum.getSelectList());
+      model.addAttribute(
+          "selectedPaymentMode",
+          requestType.getPaymentMode() != null
+              ? requestType.getPaymentMode()
+              : PaymentModeEnum.CASH.name());
       if (requestType.getProductId() != null && !Objects.equals(requestType.getSize(), "")) {
         BigDecimal price =
             productPriceService.getProductPrice(requestType.getProductId(), requestType.getSize());
@@ -185,7 +212,7 @@ public class SalesDetailsController extends BaseController {
       log.error("Unable to create sales details ", ex);
       model.addAttribute("errorMessage", "Unable to create Sales details. Please contact admin.");
     }
-    return "sales/details/create";
+    return "redirect:/sales/detail/create";
   }
 
   @GetMapping("/details")

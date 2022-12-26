@@ -50,3 +50,11 @@ body {
 .has-error {
     color: red
 }
+
+.is-purchase{
+    color: red;
+}
+
+.is-sell{
+    color: green;
+}

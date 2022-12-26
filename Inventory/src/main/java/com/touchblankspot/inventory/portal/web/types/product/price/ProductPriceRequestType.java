@@ -14,7 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductPriceRequestType {
 
+  @NotNull(message = "Product must be selected.")
   private UUID productId;
+
+  @Size(min = 1, max = 20, message = "Product Category must be selected.")
+  private String category;
+
+  @NotNull(message = "Product Sub Category must be selected.")
+  private UUID subCategory;
 
   @Size(min = 1, max = 20, message = "Product Size name must be between 1 and 20 character.")
   private String productSize;
