@@ -21,3 +21,12 @@
     });
 })(jQuery);
 
+function getBasePath(){
+        var context = window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
+        return window.location.protocol+"//"+ window.location.host +context;
+}
+
+function build_sort_url(endpoint,size,number,order,column){
+    return getBasePath() +"/"+endpoint+"?size="+size+"&page="+number+"&sortOrder="+order+"&sortColumn="+column;
+}
+

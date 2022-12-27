@@ -27,7 +27,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
   Category findByIdAndIsDeleted(UUID id, Boolean isDeleted);
 
   @Query(
-      value = "select * from category where is_deleted = false ORDER BY id",
+      value = "select * from category where is_deleted = false",
       countQuery = "select count(*) from category where is_deleted = false",
       nativeQuery = true)
   Page<Category> findAll(Pageable pageable);

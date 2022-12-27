@@ -3,6 +3,7 @@
 <head>
     <link href="/css/main.css" rel="stylesheet">
     <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
+    <!--<link th:href="@{/css/library/bootstrap-icons.css}" rel="stylesheet"/>-->
     <link th:href="@{/vendor/remixicon/fonts/remixicon.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
@@ -12,18 +13,30 @@
     <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
     <div th:replace="~{common/header :: myHeader}"></div>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
 <script th:inline="javascript">
+    var currentPageNumber = [[${currentPageNumber}]];
+    var sortOrder = [[${sortOrder}]];
+    var sortColumn = [[${sortColumn}]];
+    var currentPageSize = [[${currentPageSize}]];
 	function logoutUser() {
 		$('#logoutForm').submit();
 	}
+
+	function sortChanged(selectedColumn){
+	    sortOrder = (sortOrder === 'ASC') ? 'DESC' : 'ASC';
+	    sortColumn = selectedColumn;
+	    location.href = build_sort_url('categories',currentPageSize,currentPageNumber,sortOrder,sortColumn);
+	}
+
     function submitPageSizeChange(){
         currentPageSize = $('#pageSize').val();
-        alert("Change page number on, yet to be developed.");
+        location.href = build_sort_url('categories',currentPageSize,currentPageNumber,sortOrder,sortColumn);
     }
     $(document).ready(function() {
       $('#searchKey').devbridgeAutocomplete({
@@ -63,12 +76,14 @@
                                     th:selected="(${index} == ${selectedPageSize})"></option>
                         </select>
                     </div>
-                    <table class="table caption-top table-hover">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col"> Category</th>
-                            <th scope="col"> SubCategory</th>
+                            <th scope="col" onclick="sortChanged('category');">
+                                <span th:attr="class=${sortColumn eq 'category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>Category</th>
+                            <th scope="col" onclick="sortChanged('sub_category');">
+                                <span th:attr="class=${sortColumn eq 'sub_category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>SubCategory</th>
                             <th scope="col"> Action</th>
                         </tr>
                         </thead>
@@ -99,9 +114,10 @@
                                 </a>
                             </li>
                             <span th:each="pageNumber : ${pageNumbers}">
-                                <li class="page-item"><a class="page-link"
-                                                         th:href="@{/product/categories(size=${ProductCategoriesPage.size}, page=${pageNumber})}"
-                                                         th:text="${pageNumber}">1</a></li>
+                                <li class="page-item">
+                                    <a th:attr="class=${pageNumber eq  currentPageNumber? 'page-link current' : 'page-link'}"
+                                       th:href="@{/product/categories(size=${ProductCategoriesPage.size}, page=${pageNumber})}"
+                                       th:text="${pageNumber}">1</a></li>
                             </span>
                             <li class="page-item" th:if="${currentPageNumber < ProductCategoriesPage.totalPages}">
                                 <a class="page-link"
