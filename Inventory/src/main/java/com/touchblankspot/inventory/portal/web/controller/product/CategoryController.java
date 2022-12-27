@@ -22,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,13 +49,18 @@ public class CategoryController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   public String getAll(
       Model model,
-      @RequestParam("page") Optional<Integer> page,
-      @RequestParam("size") Optional<Integer> size) {
-    int currentPage = page.orElse(1);
-    int pageSize = size.orElse(pageSizeList.get(0));
-
-    Page<Category> productCategoryPage =
-            categoryService.findAll(PageRequest.of(currentPage - 1, pageSize));
+      @RequestParam(value = "page", defaultValue = "1") Optional<Integer> page,
+      @RequestParam("size") Optional<Integer> size,
+      @RequestParam(value = "sortColumn", defaultValue = "category")
+          Optional<String> optionalSortColumn,
+      @RequestParam(value = "sortOrder", defaultValue = "ASC") Optional<String> optionalSortOrder) {
+    int currentPage = (page.isPresent() && page.get() > 0) ? page.get() : 1;
+    int pageSize = (size.isPresent() && size.get() > 0) ? size.get() : pageSizeList.get(0);
+    String sortColumn = optionalSortColumn.orElse("category");
+    String sortOrder = optionalSortOrder.orElse("asc").toUpperCase();
+    Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortColumn);
+    Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
+    Page<Category> productCategoryPage = categoryService.findAll(pageable);
     List<CategoryResponseType> responseTypeList =
         productCategoryPage.stream().map(categoryMapper::toResponse).toList();
     int totalPages = productCategoryPage.getTotalPages();
@@ -67,6 +74,9 @@ public class CategoryController extends BaseController {
     model.addAttribute("currentPageNumber", currentPage);
     model.addAttribute("PageSizeList", pageSizeList);
     model.addAttribute("selectedPageSize", pageSizeList.get(0));
+    model.addAttribute("sortOrder", sortOrder);
+    model.addAttribute("sortColumn", sortColumn);
+    model.addAttribute("currentPageSize", pageSize);
     return "product/category/show";
   }
 
@@ -90,7 +100,7 @@ public class CategoryController extends BaseController {
         model.addAttribute("selectedCategory", requestType.getExistingCategories());
         model.addAttribute(
             "existingSubCategories",
-                categoryService.getSubCategorySelectList(requestType.getExistingCategories()));
+            categoryService.getSubCategorySelectList(requestType.getExistingCategories()));
         model.addAttribute("selectedSubCategory", requestType.getExistingCategories());
       }
       return "product/category/create";
@@ -145,8 +155,7 @@ public class CategoryController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   public String ViewCategory(String id, Model model) {
     model.addAttribute(
-        "category",
-        categoryMapper.toResponse(categoryService.findById(UUID.fromString(id))));
+        "category", categoryMapper.toResponse(categoryService.findById(UUID.fromString(id))));
     return "product/category/view";
   }
 
