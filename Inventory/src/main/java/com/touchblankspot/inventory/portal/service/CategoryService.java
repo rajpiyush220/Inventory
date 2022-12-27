@@ -30,24 +30,18 @@ public class CategoryService implements IsUniqueRowExists {
     return productCategoryRepository.findAllByIsDeleted(false);
   }
 
-  public Page<Category> findAll(Pageable pageable) {
-    return productCategoryRepository.findAll(pageable);
+  public Page<Category> findAll(Pageable pageable, String searchType, String searchKey) {
+    return productCategoryRepository.findAll(pageable, searchType, searchKey);
   }
 
   public Category findById(UUID id) {
     return productCategoryRepository.findByIdAndIsDeleted(id, false);
   }
 
-  public List<String> findByCategoryContains(String category) {
-    return productCategoryRepository.findByCategoryContains(category);
-  }
-
-  public List<String> findByProductSizeContains(String productSize) {
-    return productCategoryRepository.findByProductSizeContains(productSize);
-  }
-
-  public List<String> findBySubCategoryContains(String subCategory) {
-    return productCategoryRepository.findBySubCategoryContains(subCategory);
+  public List<String> getAutoCompleteSuggestions(String searchType, String searchKey) {
+    return (searchType.equalsIgnoreCase("category") || searchType.equalsIgnoreCase("subcategory"))
+        ? productCategoryRepository.getAutoCompleteSuggestions(searchType, searchKey)
+        : List.of();
   }
 
   public void deleteProductCategory(UUID id) {
@@ -57,17 +51,6 @@ public class CategoryService implements IsUniqueRowExists {
       productCategory.setUpdated(OffsetDateTime.now());
       productCategoryRepository.save(productCategory);
     }
-  }
-
-  public List<SelectType> getCategorySelectList() {
-    return new HashSet<>(findAll())
-        .stream()
-            .sorted(Comparator.comparing(Category::getCategory))
-            .map(
-                productCategory ->
-                    new SelectType(
-                        productCategory.getId().toString(), productCategory.getCategory()))
-            .toList();
   }
 
   public List<String> getCategoryList() {
