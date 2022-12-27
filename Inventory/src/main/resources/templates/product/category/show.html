@@ -98,24 +98,22 @@
                     <nav th:if="${ProductCategoriesPage.totalPages > 0}">
                         <ul class="pagination">
                             <li class="page-item">
-                                <a class="page-link" onclick="paginationClicked(-1)"
+                                <a class="page-link"
+                                   th:attr="onclick=${currentPageNumber > 1 ? 'paginationClicked(-1,-1)' : '' }"
                                    aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
                                 </a>
                             </li>
                             <span th:each="pageNumber : ${pageNumbers}">
                                 <li class="page-item">
-                                    <a th:attr="class=${pageNumber eq  currentPageNumber? 'page-link current' : 'page-link'}"
-                                       onclick="paginationClicked(0)"
+                                    <a th:attr="onclick=|paginationClicked(0,'${pageNumber}')|,class=${pageNumber eq  currentPageNumber? 'page-link current' : 'page-link'}"
                                        th:text="${pageNumber}">1</a></li>
                             </span>
-                            <li class="page-item" th:if="${currentPageNumber < ProductCategoriesPage.totalPages}">
+                            <li class="page-item">
                                 <a class="page-link"
-                                   onclick="paginationClicked(1)"
+                                   th:attr="onclick=${ProductCategoriesPage.totalPages > currentPageNumber ? 'paginationClicked(1,1)' : '' }"
                                    aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
                                 </a>
                             </li>
                         </ul>

@@ -4,12 +4,14 @@ function sortChanged(selectedColumn){
     location.href = build_sort_url('categories',currentPageSize,currentPageNumber,sortOrder,sortColumn,searchKey,searchType);
 }
 
-function paginationClicked(index){
+function paginationClicked(index,pagenumber){
     index = parseInt(index);
     if (index > 0) {
       currentPageNumber = parseInt(currentPageNumber) + 1
     } else if (index < 0) {
       currentPageNumber = parseInt(currentPageNumber) - 1
+    }else{
+        currentPageNumber = parseInt(pagenumber);
     }
     location.href = build_sort_url('categories',currentPageSize,currentPageNumber,sortOrder,sortColumn,searchKey,searchType);
 }
