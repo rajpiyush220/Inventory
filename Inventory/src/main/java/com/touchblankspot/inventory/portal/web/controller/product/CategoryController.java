@@ -10,9 +10,7 @@ import com.touchblankspot.inventory.portal.web.types.mapper.CategoryMapper;
 import com.touchblankspot.inventory.portal.web.types.product.category.CategoryRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.category.CategoryResponseType;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -45,22 +43,27 @@ public class CategoryController extends BaseController {
 
   @NonNull private final CategoryMapper categoryMapper;
 
+  private static final List<SelectType> SEARCH_TYPES =
+      List.of(
+          new SelectType("category", "Category"), new SelectType("subcategory", "Sub Category"));
+
   @GetMapping("/categories")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   public String getAll(
       Model model,
-      @RequestParam(value = "page", defaultValue = "1") Optional<Integer> page,
-      @RequestParam("size") Optional<Integer> size,
-      @RequestParam(value = "sortColumn", defaultValue = "category")
-          Optional<String> optionalSortColumn,
-      @RequestParam(value = "sortOrder", defaultValue = "ASC") Optional<String> optionalSortOrder) {
-    int currentPage = (page.isPresent() && page.get() > 0) ? page.get() : 1;
-    int pageSize = (size.isPresent() && size.get() > 0) ? size.get() : pageSizeList.get(0);
-    String sortColumn = optionalSortColumn.orElse("category");
-    String sortOrder = optionalSortOrder.orElse("asc").toUpperCase();
+      @RequestParam(value = "page", defaultValue = "1", required = false) Integer currentPage,
+      @RequestParam(value = "size", defaultValue = "0", required = false) Integer pageSize,
+      @RequestParam(value = "sortColumn", defaultValue = "category", required = false)
+          String sortColumn,
+      @RequestParam(value = "sortOrder", defaultValue = "ASC", required = false) String sortOrder,
+      @RequestParam(value = "searchKey", defaultValue = "", required = false) String searchKey,
+      @RequestParam(value = "searchType", defaultValue = "", required = false) String searchType) {
+
+    pageSize = pageSize > 0 ? pageSize : pageSizeList.get(0);
+    sortOrder = sortOrder.toUpperCase();
     Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortColumn);
     Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
-    Page<Category> productCategoryPage = categoryService.findAll(pageable);
+    Page<Category> productCategoryPage = categoryService.findAll(pageable, searchType, searchKey);
     List<CategoryResponseType> responseTypeList =
         productCategoryPage.stream().map(categoryMapper::toResponse).toList();
     int totalPages = productCategoryPage.getTotalPages();
@@ -73,10 +76,14 @@ public class CategoryController extends BaseController {
     model.addAttribute("ProductCategories", responseTypeList);
     model.addAttribute("currentPageNumber", currentPage);
     model.addAttribute("PageSizeList", pageSizeList);
-    model.addAttribute("selectedPageSize", pageSizeList.get(0));
+    model.addAttribute("selectedPageSize", pageSize);
     model.addAttribute("sortOrder", sortOrder);
     model.addAttribute("sortColumn", sortColumn);
     model.addAttribute("currentPageSize", pageSize);
+    model.addAttribute("searchType", searchType);
+    model.addAttribute("searchKey", searchKey);
+    model.addAttribute("searchTypes", SEARCH_TYPES);
+
     return "product/category/show";
   }
 
@@ -120,13 +127,8 @@ public class CategoryController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_VIEW'})")
   @ResponseBody
   public AutoCompleteWrapper getSearchSuggestion(String searchKey, String type) {
-    return new AutoCompleteWrapper(
-        switch (type.toLowerCase()) {
-          case "category" -> categoryService.findByCategoryContains(searchKey);
-          case "subcategory" -> categoryService.findBySubCategoryContains(searchKey);
-          case "productsize" -> categoryService.findByProductSizeContains(searchKey);
-          default -> new ArrayList<>();
-        });
+    List<String> results = categoryService.getAutoCompleteSuggestions(type, searchKey);
+    return new AutoCompleteWrapper(results);
   }
 
   @GetMapping("/category/delete")

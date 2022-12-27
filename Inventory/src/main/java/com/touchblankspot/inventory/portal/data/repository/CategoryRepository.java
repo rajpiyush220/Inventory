@@ -13,12 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
-  List<Category> findByCategoryAndIsDeleted(String category, Boolean isDeleted);
-
   List<Category> findByCategoryAndSubCategoryAndIsDeleted(
       String category, String subCategory, Boolean isDeleted);
-
-  List<Category> findBySubCategoryAndIsDeleted(String subCategory, Boolean isDeleted);
 
   List<Category> findAllByIsDeleted(Boolean isDeleted);
 
@@ -27,53 +23,50 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
   Category findByIdAndIsDeleted(UUID id, Boolean isDeleted);
 
   @Query(
-      value = "select * from category where is_deleted = false",
+      value =
+          """
+                    select
+                        *
+                    from category
+                    where
+                      (
+                        (:searchType = 'category' and category like %:searchKey%) or
+                        (:searchType = 'subcategory' and sub_category like %:searchKey%) or
+                        (:searchType = '' and 1=1)
+                      ) and
+                      is_deleted = false
+                    """,
       countQuery = "select count(*) from category where is_deleted = false",
       nativeQuery = true)
-  Page<Category> findAll(Pageable pageable);
+  Page<Category> findAll(
+      Pageable pageable,
+      @Param("searchType") String searchType,
+      @Param("searchKey") String searchKey);
 
   @Query(
       nativeQuery = true,
       value =
           """
-              select
-                category
-              from category
-              where
-                category like %:category% and
-                is_deleted = false
-              group by category
-              order by category
-              """)
-  List<String> findByCategoryContains(@Param("category") String category);
-
-  @Query(
-      nativeQuery = true,
-      value =
-          """
-              select
-                product_size
-              from category
-              where
-                product_size like '%:productSize%' and
-                is_deleted = false
-              group by product_size
-              order by product_size
-              """)
-  List<String> findByProductSizeContains(@Param("productSize") String productSize);
-
-  @Query(
-      nativeQuery = true,
-      value =
-          """
-              select
-                sub_category
-              from sub_category
-              where
-                sub_category like '%:subCategory%' and
-                is_deleted = false
-              group by sub_category
-              order by sub_category
-              """)
-  List<String> findBySubCategoryContains(@Param("subCategory") String subCategory);
+                               select
+                                  result
+                               from
+                                  (
+                                  select
+                                    case
+                                      when :searchType = 'category' then category
+                                      else sub_category
+                                    end as result
+                                  from category
+                                  where
+                                    (
+                                      (:searchType = 'category' and category like %:searchKey%) or
+                                      (:searchType = 'subcategory' and sub_category like %:searchKey%)
+                                    ) and
+                                    is_deleted = false
+                                  )suggestions
+                               group by result
+                               order by result
+                            """)
+  List<String> getAutoCompleteSuggestions(
+      @Param("searchType") String searchType, @Param("searchKey") String searchKey);
 }

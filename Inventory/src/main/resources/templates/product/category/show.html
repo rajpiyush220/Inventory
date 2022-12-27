@@ -9,6 +9,7 @@
     <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+    <script type="text/javascript" th:src="@{/js/category.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
@@ -23,29 +24,18 @@
     var currentPageNumber = [[${currentPageNumber}]];
     var sortOrder = [[${sortOrder}]];
     var sortColumn = [[${sortColumn}]];
+    var searchType =  [[${searchType}]];
+    var searchKey =  [[${searchKey}]];
     var currentPageSize = [[${currentPageSize}]];
-	function logoutUser() {
-		$('#logoutForm').submit();
-	}
 
-	function sortChanged(selectedColumn){
-	    sortOrder = (sortOrder === 'ASC') ? 'DESC' : 'ASC';
-	    sortColumn = selectedColumn;
-	    location.href = build_sort_url('categories',currentPageSize,currentPageNumber,sortOrder,sortColumn);
-	}
-
-    function submitPageSizeChange(){
-        currentPageSize = $('#pageSize').val();
-        location.href = build_sort_url('categories',currentPageSize,currentPageNumber,sortOrder,sortColumn);
-    }
     $(document).ready(function() {
       $('#searchKey').devbridgeAutocomplete({
-          serviceUrl: '/product/category/search?type=category',
+          serviceUrl: '/product/category/search',
           paramName: 'searchKey',
+          params: {type:$('#searchType').val()},
           minChars: 1,
       });
     });
-
 </script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -60,21 +50,23 @@
                         <h4>Product Category List</h4>
                     </div>
                     <div class="form-group" style="text-align:right;">
-                        <select id="searchType" name="searchType" class="border-inset">
-                            <option selected="selected">Select Search Type</option>
-                            <option value="category">Category</option>
-                            <option value="subcategory">Sub Category</option>
+                        <select id="searchType" name="searchType" class="border-inset" onchange="searchTypeChanged();">
+                            <option th:each="searchType : ${searchTypes}"
+                                    th:value="${searchType.id}"
+                                    th:text="${searchType.value}"
+                                    th:selected="(${searchType.id} == ${searchType})"></option>
                         </select>
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
-                               class="autocomplete border-inset" style="width: 120px;">
-                        <button id="SearchButton">Search</button>
-                        <label>Select Page Size: </label>
+                               class="autocomplete border-inset" style="width: 120px;" th:value="${searchKey}">
+                        <button id="SearchButton" onclick="searchBySuggestion();">Search</button>
+                        <label>Page Size: </label>
                         <select class="form-select form-select-lg border-inset" onchange="submitPageSizeChange()"
                                 name="pageSize" id="pageSize">
                             <option th:each="index : ${PageSizeList}" th:value="${index}"
                                     th:text="${index}"
                                     th:selected="(${index} == ${selectedPageSize})"></option>
                         </select>
+                        <a href="#" onclick="clearDataFilter();">Clear Data Filter</a>
                     </div>
                     <table class="table">
                         <thead>
@@ -106,8 +98,7 @@
                     <nav th:if="${ProductCategoriesPage.totalPages > 0}">
                         <ul class="pagination">
                             <li class="page-item">
-                                <a class="page-link"
-                                   th:href="@{/product/categories(size=${ProductCategoriesPage.size}, page=${currentPageNumber-1})}"
+                                <a class="page-link" onclick="paginationClicked(-1)"
                                    aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
@@ -116,12 +107,12 @@
                             <span th:each="pageNumber : ${pageNumbers}">
                                 <li class="page-item">
                                     <a th:attr="class=${pageNumber eq  currentPageNumber? 'page-link current' : 'page-link'}"
-                                       th:href="@{/product/categories(size=${ProductCategoriesPage.size}, page=${pageNumber})}"
+                                       onclick="paginationClicked(0)"
                                        th:text="${pageNumber}">1</a></li>
                             </span>
                             <li class="page-item" th:if="${currentPageNumber < ProductCategoriesPage.totalPages}">
                                 <a class="page-link"
-                                   th:href="@{/product/categories(size=${ProductCategoriesPage.size}, page=${currentPageNumber+1})}"
+                                   onclick="paginationClicked(1)"
                                    aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>

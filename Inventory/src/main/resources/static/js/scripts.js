@@ -26,7 +26,33 @@ function getBasePath(){
         return window.location.protocol+"//"+ window.location.host +context;
 }
 
-function build_sort_url(endpoint,size,number,order,column){
-    return getBasePath() +"/"+endpoint+"?size="+size+"&page="+number+"&sortOrder="+order+"&sortColumn="+column;
+function build_sort_url(endpoint,size,number,order,column,key,type){
+    var url = getBasePath().concat("/").concat(endpoint);
+    if(size > 0 || number > 0 || order.length > 0 || column.length > 0 || key.length > 0 || type.length > 0){
+        url = url.concat("?");
+    }
+    if(size > 0){
+        url = url.concat("&size=").concat(size);
+    }
+    if(number > 0){
+        url = url.concat("&page=").concat(number);
+    }
+    if(order.length > 0){
+        url = url.concat("&sortOrder=").concat(order);
+    }
+    if(column.length > 0){
+        url = url.concat("&sortColumn=").concat(column);
+    }
+    if(key.length > 0){
+        url = url.concat("&searchKey=").concat(key);
+    }
+    if(type.length > 0){
+        url = url.concat("&searchType=").concat(type);
+    }
+    return url;
+}
+
+function logoutUser() {
+    $('#logoutForm').submit();
 }
 
