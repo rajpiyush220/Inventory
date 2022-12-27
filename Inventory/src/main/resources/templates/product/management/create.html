@@ -8,9 +8,6 @@
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
 <script th:inline="javascript">
-	function logoutUser() {
-		$('#logoutForm').submit();
-	}
 	function getSubCategories(){
 	    var categoryName = $('#categoryName').val();
 	    if(categoryName === ''){
