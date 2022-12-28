@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link href="/css/main.css" rel="stylesheet">
     <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
-    <div th:replace="~{common/header :: myHeader}"></div>
+    <title>Category View Page</title>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
 <script th:inline="javascript">
 </script>
 <body class="sb-nav-fixed">
+<div th:replace="~{common/header :: myHeader}"></div>
 <div th:replace="~{common/navbar :: myNavbar}"></div>
 <div id="layoutSidenav">
     <div th:replace="~{common/sidebar :: mySidebar}"></div>
@@ -37,9 +38,8 @@
         </main>
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid">
-                <div
-                        class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; 99Mall 2023</div>
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted" th:text="#{application.copyright.text}"></div>
                     <div>
                         <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
                         &amp; Conditions</a>

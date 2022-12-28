@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+
     <link href="/css/main.css" rel="stylesheet">
     <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
     <!--<link th:href="@{/css/library/bootstrap-icons.css}" rel="stylesheet"/>-->
@@ -130,7 +131,7 @@
             <div class="container-fluid">
                 <div
                         class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; 99Mall 2023</div>
+                    <div class="text-muted" th:text="#{application.copyright.text}"></div>
                     <div>
                         <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
                         &amp; Conditions</a>
