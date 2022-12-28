@@ -9,6 +9,7 @@ import com.touchblankspot.inventory.portal.web.types.SelectType;
 import com.touchblankspot.inventory.portal.web.types.mapper.CategoryMapper;
 import com.touchblankspot.inventory.portal.web.types.product.category.CategoryRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.category.CategoryResponseType;
+import com.touchblankspot.inventory.portal.web.types.product.category.CategoryUpdateRequestType;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -142,15 +143,35 @@ public class CategoryController extends BaseController {
   @GetMapping("/category/edit")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_UPDATE'})")
   public String editCategory(String id, Model model) {
-    return "product/ViewCategory";
+    Category category = categoryService.findById(UUID.fromString(id));
+    model.addAttribute(
+        "categoryForm",
+        CategoryUpdateRequestType.builder()
+            .id(category.getId())
+            .category(category.getCategory())
+            .subCategory(category.getSubCategory())
+            .build());
+    return "product/category/edit";
   }
 
   @PostMapping("/category/update")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CAT_UPDATE'})")
-  public String updateCategory(String id) {
-    categoryService.deleteProductCategory(UUID.fromString(id));
-    log.warn("Product category with id {} deleted successfully.", id);
-    return "redirect:/product/categories";
+  public String updateCategory(
+      @Valid @ModelAttribute("categoryForm") CategoryUpdateRequestType updateRequestType,
+      BindingResult bindingResult,
+      Model model) {
+    model.addAttribute("categoryForm", updateRequestType);
+    if (!bindingResult.hasErrors()) {
+      try {
+        categoryService.updateCategory(updateRequestType);
+        log.warn("Product category with id {} deleted successfully.", updateRequestType.getId());
+        model.addAttribute("successMessage", "Category updated Successfully");
+      } catch (Exception ex) {
+        log.error("Unable to update category", ex);
+        model.addAttribute("errorMessage", "Unable to update Category. Please contact Admin.");
+      }
+    }
+    return "product/category/edit";
   }
 
   @GetMapping("/category/view")

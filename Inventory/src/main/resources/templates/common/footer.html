@@ -1,9 +1,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 	<div th:fragment="myFooter">
-		<script src="/js/library/jquery.min.js"></script>
-		<script src="/js/library/popper.min.js"></script>
-		<script src="/js/library/bootstrap.min.js"></script>
+		<footer class="py-4 bg-light mt-auto">
+			<div class="container-fluid">
+				<div class="d-flex align-items-center justify-content-between small">
+					<div class="text-muted" th:text="#{application.copyright.text}"></div>
+					<div>
+						<a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+						&amp; Conditions</a>
+					</div>
+				</div>
+			</div>
+		</footer>
 	</div>
 </body>
 </html>
