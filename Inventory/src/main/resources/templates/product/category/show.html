@@ -51,7 +51,7 @@
                     </div>
                     <div class="form-group" style="text-align:right;">
                         <label for="searchType"></label>
-                        <select id="searchType" name="searchType" class="border-inset" onchange="searchTypeChanged();">
+                        <select id="searchType" name="searchType" class="form-select form-select-sm " onchange="searchTypeChanged();">
                             <option th:each="searchType : ${searchTypes}"
                                     th:value="${searchType.id}"
                                     th:text="${searchType.value}"
@@ -59,26 +59,26 @@
                         </select>
                         <label for="searchKey"></label>
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
-                                                              class="autocomplete border-inset" style="width: 120px;" th:value="${searchKey}">
-                        <button id="SearchButton" onclick="searchBySuggestion();">Search</button>
-                        <label for="pageSize">Page Size: </label>
-                        <select class="form-select form-select-lg border-inset" onchange="submitPageSizeChange()"
-                                                              name="pageSize" id="pageSize">
+                                                              class="autocomplete" style="width: 120px;" th:value="${searchKey}">
+                        <button id="SearchButton" class="btn btn-sm btn-success" onclick="searchBySuggestion();">Search</button>
+                        <label for="pageSize"></label>
+                        <select class="form-select form-select-sm" onchange="submitPageSizeChange()"
+                              name="pageSize" id="pageSize" title="Page Size">
                             <option th:each="index : ${PageSizeList}" th:value="${index}"
                                     th:text="${index}"
                                     th:selected="(${index} == ${selectedPageSize})"></option>
                         </select>
-                        <a href="#" onclick="clearDataFilter();">Clear Data Filter</a>
+                        <a href="#" class="btn btn-primary btn-sm active " onclick="clearDataFilter();">Clear Data Filter</a>
                     </div>
                     <table class="table">
-                        <thead>
+                        <thead class="thead-light">
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col" onclick="sortChanged('category');">
+                            <th scope="col" style="width: 5%;">#</th>
+                            <th scope="col" style="width: 35%;" onclick="sortChanged('category');">
                                 <span th:attr="class=${sortColumn eq 'category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>Category</th>
-                            <th scope="col" onclick="sortChanged('sub_category');">
+                            <th scope="col" style="width: 35%;" onclick="sortChanged('sub_category');">
                                 <span th:attr="class=${sortColumn eq 'sub_category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>SubCategory</th>
-                            <th scope="col"> Action</th>
+                            <th scope="col" style="width: 25%;"> Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -90,9 +90,12 @@
                             <td><span th:text="${productCategory.category}"> Category </span></td>
                             <td><span th:text="${productCategory.subCategory}"> SubCategory </span></td>
                             <td>
-                                <a href="#" th:attr="onclick=|editPage('${productCategory.id}')|">Edit</a> &nbsp;&nbsp;
-                                <a href="#" th:attr="onclick=|viewPage('${productCategory.id}')|">View</a>&nbsp;&nbsp;
-                                <a href="#" th:attr="onclick=|deletePage('${productCategory.id}')|">Delete</a>&nbsp;&nbsp;
+                                <button th:attr="onclick=|viewPage('${productCategory.id}')|" class="btn btn-success green-tooltip"
+                                        data-toggle="tooltip" data-placement="top" title="View Category">View</button>
+                                <button th:attr="onclick=|editPage('${productCategory.id}')|" class="btn btn-warning yellow-tooltip"
+                                        data-toggle="tooltip" data-placement="top" title="Edit Category">Edit</button>
+                                <button th:attr="onclick=|deletePage('${productCategory.id}')|" class="btn btn-danger red-tooltip"
+                                        data-toggle="tooltip" data-placement="top" title="Delete Category">Delete</button>
                             </td>
                         </tr>
                         </tbody>
