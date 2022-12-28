@@ -1,21 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link href="/css/main.css" rel="stylesheet">
-    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
-    <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-    <script type="text/javascript" th:src="@{/js/category.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
     <title th:text="#{app.title.category.view}"></title>
+    <script type="text/javascript" th:src="@{/js/category.js}"></script>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
-<script th:inline="javascript">
-</script>
 <body class="sb-nav-fixed">
 <div th:replace="~{common/header :: myHeader}"></div>
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -41,16 +31,18 @@
                             </h6>
                             <input type="hidden" th:field="*{id}">
                             <div class="form-group">
-                                <input size="50" type="text" th:field="*{category}" class="form-control border-groove"
-                                       placeholder="Enter Category"
-                                       autofocus="true">
+                                <label>
+                                    <input size="50" type="text" th:field="*{category}" class="form-control border-groove"
+                                           placeholder="Enter Category"
+                                           autofocus="autofocus">
+                                </label>
                                 <span class="has-error" th:if="${#fields.hasErrors('category')}"
                                       th:errors="*{category}"></span>
                             </div>
                             <div class="form-group">
-                                <input type="text" th:field="*{subCategory}" class="form-control border-groove"
-                                       placeholder="Enter SubCategory"
-                                       autofocus="true">
+                                <label>
+                                    <input type="text" th:field="*{subCategory}" class="form-control border-groove" placeholder="Enter SubCategory">
+                                </label>
                                 <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
                                       th:errors="*{subCategory}"></span>
                             </div>

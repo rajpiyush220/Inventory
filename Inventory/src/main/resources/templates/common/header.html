@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <body>
 	<div th:fragment="myHeader">
 		<meta charset="utf-8" />
@@ -7,9 +7,23 @@
 			content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 		<meta name="description" content="" />
 		<meta name="author" content="" />
-		<title>Inventory Management System</title>
 		<link href="/css/styles.css" rel="stylesheet" />
 		<link href="/css/library/dataTables.bootstrap4.min.css" rel="stylesheet" />
+		<link href="/css/main.css" rel="stylesheet">
+		<link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
+		<!--<link th:href="@{/css/library/bootstrap-icons.css}" rel="stylesheet"/>-->
+		<link th:href="@{/vendor/remixicon/fonts/remixicon.css}" rel="stylesheet"/>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+		<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
+		<script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
+
+		<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
 		<script src="/js/library/all.min.js"></script>
 	</div>
 </body>

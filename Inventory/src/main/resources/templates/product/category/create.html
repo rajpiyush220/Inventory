@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link href="/css/main.css" rel="stylesheet">
-    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
-    <div th:replace="~{common/header :: myHeader}"></div>
+
+    <title>Category Create Page</title>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
 <script th:inline="javascript">
 	function getSubCategories(){
-	    var categoryName = $('#existingCategories').val();
+	    let categoryName = $('#existingCategories').val();
 	    if(categoryName === ''){
            $('#existingSubCategories').html('<option value="">Existing Sub category List</option>')
           }else
@@ -22,9 +21,9 @@
                cache : false,
                timeout : 600000,
                success : function(data) {
-                    var html = '<option value="">Existing Sub category List</option>';
-                    var len = data.length;
-                    for (var i = 0; i < len; i++) {
+                    let html = '<option value="">Existing Sub category List</option>';
+                    let len = data.length;
+                    for (let i = 0; i < len; i++) {
                         html += '<option value="' + data[i].id + '">'
                        + data[i].value
                        + '</option>';
@@ -40,6 +39,7 @@
 	}
 </script>
 <body class="sb-nav-fixed">
+<div th:replace="~{common/header :: myHeader}"></div>
 <div th:replace="~{common/navbar :: myNavbar}"></div>
 <div id="layoutSidenav">
     <div th:replace="~{common/sidebar :: mySidebar}"></div>
@@ -62,6 +62,7 @@
                             <span th:text="${successMessage}"></span>
                         </h6>
                         <div class="form-group" th:if="${!existingCategories.empty}">
+                            <label for="existingCategories"></label>
                             <select class="form-control" id="existingCategories" name="existingCategories" onchange="getSubCategories();">
                                 <option value="">Existing category List</option>
                                 <option th:each="existingCategory : ${existingCategories}"
@@ -70,6 +71,7 @@
                             </select>
                         </div>
                         <div class="form-group" th:if="${!existingCategories.empty}">
+                            <label for="existingSubCategories"></label>
                             <select class="form-control" id="existingSubCategories" name="existingSubCategories">
                                 <option value="">Existing Sub category List</option>
                                 <option th:each="existingSubCategory : ${existingSubCategories}"
@@ -78,16 +80,18 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <input size="50" type="text" th:field="*{category}" class="form-control border-groove"
-                                   placeholder="Enter Category"
-                                   autofocus="true">
+                            <label>
+                                <input size="50" type="text" th:field="*{category}" class="form-control border-groove"
+                                       placeholder="Enter Category"
+                                       autofocus="autofocus">
+                            </label>
                             <span class="has-error" th:if="${#fields.hasErrors('category')}"
                                   th:errors="*{category}"></span>
                         </div>
                         <div class="form-group">
-                            <input type="text" th:field="*{subCategory}" class="form-control border-groove"
-                                   placeholder="Enter SubCategory"
-                                   autofocus="true">
+                            <label>
+                                <input type="text" th:field="*{subCategory}" class="form-control border-groove" placeholder="Enter SubCategory">
+                            </label>
                             <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
                                   th:errors="*{subCategory}"></span>
                         </div>
@@ -101,11 +105,5 @@
         <div th:replace="~{common/footer :: myFooter}"></div>
     </div>
 </div>
-<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
 </body>
 </html>

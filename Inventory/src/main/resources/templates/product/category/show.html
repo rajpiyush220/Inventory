@@ -1,22 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-
-    <link href="/css/main.css" rel="stylesheet">
-    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
-    <!--<link th:href="@{/css/library/bootstrap-icons.css}" rel="stylesheet"/>-->
-    <link th:href="@{/vendor/remixicon/fonts/remixicon.css}" rel="stylesheet"/>
-    <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-    <script type="text/javascript" th:src="@{/js/category.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <title>Category List</title>
+    <script type="text/javascript" th:src="@{/js/category.js}"></script>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
@@ -94,24 +80,29 @@
                                 <button class="btn btn-success green-tooltip"
                                         th:attr="onclick=|viewPage('${productCategory.id}')|"
                                         th:if="${@permissionService.hasPermission('PROD_CAT_VIEW')}"
+                                        th:text="#{app.common.button.view}"
                                         data-toggle="tooltip" data-placement="top" title="View Category">View</button>
-                                <button class="btn btn-success disabled"  disabled="disabled"
+                                <button class="btn btn-success disabled"  disabled="disabled" th:text="#{app.common.button.view}"
                                         th:unless="${@permissionService.hasPermission('PROD_CAT_VIEW')}">View</button>
 
-                                <button th:attr="onclick=|editPage('${productCategory.id}')|"
+                                <button th:attr="onclick=|editPage('${productCategory.id}')|" th:text="#{app.common.button.edit}"
                                         class="btn btn-warning yellow-tooltip"
                                         th:if="${@permissionService.hasPermission('PROD_CAT_UPDATE')}"
                                         data-toggle="tooltip" data-placement="top" title="Edit Category">Edit</button>
-                                <button class="btn btn-warning disabled"  disabled="disabled"
+                                <button class="btn btn-warning disabled"  disabled="disabled" th:text="#{app.common.button.edit}"
                                         th:unless="${@permissionService.hasPermission('PROD_CAT_UPDATE')}">Edit</button>
 
-
-                                <button th:attr="onclick=|deletePage('${productCategory.id}')|"
-                                        th:if="${@permissionService.hasPermission('PROD_CAT_DELETE')}"
-                                        class="btn btn-danger red-tooltip"
-                                        data-toggle="tooltip" data-placement="top" title="Delete Category">Delete</button>
-                                <button th:unless="${@permissionService.hasPermission('PROD_CAT_DELETE')}"
-                                        class="btn btn-danger disabled" disabled="disabled">Delete</button>
+                                <a th:href="@{/product/category/delete?(id=${productCategory.id})}"
+                                    class="btn btn-danger red-tooltip"
+                                    th:if="${@permissionService.hasPermission('PROD_CAT_DELETE')}"
+                                    th:data-confirm-delete="|Are you sure you want to delete this category ${productCategory.category}?|"
+                                    onclick="return confirm(this.getAttribute('data-confirm-delete'))" th:text="#{app.common.button.delete}">
+                                </a>
+                                <a href="#"
+                                    class="btn btn-danger disabled" disabled="disabled"
+                                    th:unless="${@permissionService.hasPermission('PROD_CAT_DELETE')}"
+                                    th:text="#{app.common.button.delete}">
+                                </a>
                             </td>
                         </tr>
                         </tbody>
