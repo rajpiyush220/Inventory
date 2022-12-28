@@ -54,4 +54,8 @@ application:
     sender: touchblankspot@gmail.com
   pagination:
     pageSizeList: 10,15,20,25
+management:
+  health:
+    mail:
+      enabled: false
 
