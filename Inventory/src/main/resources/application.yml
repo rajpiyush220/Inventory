@@ -31,6 +31,10 @@ spring:
       static-locations: file:src/main/resources/static/
       cache:
         period: 0
+  messages:
+    basename: messages
+    cache-duration: 10
+    use-code-as-default-message: true
 server:
   port: 8086
 encryption:
