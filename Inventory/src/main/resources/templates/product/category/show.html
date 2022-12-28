@@ -91,12 +91,27 @@
                             <td><span th:text="${productCategory.category}"> Category </span></td>
                             <td><span th:text="${productCategory.subCategory}"> SubCategory </span></td>
                             <td>
-                                <button th:attr="onclick=|viewPage('${productCategory.id}')|" class="btn btn-success green-tooltip"
+                                <button class="btn btn-success green-tooltip"
+                                        th:attr="onclick=|viewPage('${productCategory.id}')|"
+                                        th:if="${@permissionService.hasPermission('PROD_CAT_VIEW')}"
                                         data-toggle="tooltip" data-placement="top" title="View Category">View</button>
-                                <button th:attr="onclick=|editPage('${productCategory.id}')|" class="btn btn-warning yellow-tooltip"
+                                <button class="btn btn-success disabled"  disabled="disabled"
+                                        th:unless="${@permissionService.hasPermission('PROD_CAT_VIEW')}">View</button>
+
+                                <button th:attr="onclick=|editPage('${productCategory.id}')|"
+                                        class="btn btn-warning yellow-tooltip"
+                                        th:if="${@permissionService.hasPermission('PROD_CAT_UPDATE')}"
                                         data-toggle="tooltip" data-placement="top" title="Edit Category">Edit</button>
-                                <button th:attr="onclick=|deletePage('${productCategory.id}')|" class="btn btn-danger red-tooltip"
+                                <button class="btn btn-warning disabled"  disabled="disabled"
+                                        th:unless="${@permissionService.hasPermission('PROD_CAT_UPDATE')}">Edit</button>
+
+
+                                <button th:attr="onclick=|deletePage('${productCategory.id}')|"
+                                        th:if="${@permissionService.hasPermission('PROD_CAT_DELETE')}"
+                                        class="btn btn-danger red-tooltip"
                                         data-toggle="tooltip" data-placement="top" title="Delete Category">Delete</button>
+                                <button th:unless="${@permissionService.hasPermission('PROD_CAT_DELETE')}"
+                                        class="btn btn-danger disabled" disabled="disabled">Delete</button>
                             </td>
                         </tr>
                         </tbody>
