@@ -32,8 +32,20 @@ function searchBySuggestion(){
 }
 
 function searchTypeChanged(){
-    var searchType = $('#searchType').val();
+    let searchType = $('#searchType').val();
     $('#searchKey').devbridgeAutocomplete().setOptions({
         params: {type:searchType}
     });
+}
+
+function viewPage(id){
+    location.href = getBasePath().concat("/category/view?id=").concat(id);
+}
+
+function editPage(id){
+    location.href = getBasePath().concat("/category/edit?id=").concat(id);
+}
+
+function deletePage(id){
+    location.href = getBasePath().concat("/category/delete?id=").concat(id);
 }

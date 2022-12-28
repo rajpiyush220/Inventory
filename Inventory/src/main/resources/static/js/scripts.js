@@ -27,7 +27,7 @@ function getBasePath(){
 }
 
 function build_sort_url(endpoint,size,number,order,column,key,type){
-    var url = getBasePath().concat("/").concat(endpoint);
+    let url = getBasePath().concat("/").concat(endpoint);
     if(size > 0 || number > 0 || order.length > 0 || column.length > 0 || key.length > 0 || type.length > 0){
         url = url.concat("?");
     }
