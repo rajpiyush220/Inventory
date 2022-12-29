@@ -21,6 +21,7 @@
                         <h4>Product Category List</h4>
                     </div>
                     <div class="form-group" style="text-align:right;">
+                        <a th:href="@{/product/category}" class="btn btn-primary btn-sm active">Add Product</a>
                         <label for="searchType"></label>
                         <select id="searchType" name="searchType" class="form-select form-select-sm " onchange="searchTypeChanged();">
                             <option th:each="searchType : ${searchTypes}"

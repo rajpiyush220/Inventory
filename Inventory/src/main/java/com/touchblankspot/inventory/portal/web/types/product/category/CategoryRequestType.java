@@ -1,6 +1,6 @@
 package com.touchblankspot.inventory.portal.web.types.product.category;
 
-import com.touchblankspot.common.validator.IsUniqueFieldCombination;
+import com.touchblankspot.common.validator.IsUniqueInput;
 import com.touchblankspot.inventory.portal.service.CategoryService;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@IsUniqueFieldCombination(
+@IsUniqueInput(
     service = CategoryService.class,
-    first = "category",
-    second = "subCategory",
+    fieldNames = {"category", "subCategory"},
     message = "Selected category and subcategory pair is already taken.")
 public class CategoryRequestType {
 

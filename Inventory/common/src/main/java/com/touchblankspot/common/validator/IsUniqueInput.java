@@ -12,23 +12,20 @@ import java.lang.annotation.Target;
 
 @Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = IsUpdatableValidator.class)
+@Constraint(validatedBy = IsUniqueInputValidator.class)
 @Documented
-public @interface IsUpdatable {
-
-  String message() default "Selected Row Already exists";
+public @interface IsUniqueInput {
+  String message() default "Selected fields must have unique rows";
 
   Class<?>[] groups() default {};
 
   Class<? extends Payload>[] payload() default {};
 
-  Class<? extends IsUpdatableRow> service();
+  Class<? extends IsUniqueInputFields> service();
 
   String serviceQualifier() default "";
 
-  String first();
+  boolean isUpdate() default false;
 
-  String second();
-
-  String id();
+  String[] fieldNames();
 }
