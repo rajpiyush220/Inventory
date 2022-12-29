@@ -96,9 +96,6 @@
                         </tr>
                         </tbody>
                     </table>
-                    <div th:if="${ProductCategoriesPage.totalPages > 0}">
-
-                    </div>
                     <nav th:if="${ProductCategoriesPage.totalPages > 0}">
                         <div style="margin-bottom: 20px;">Showing <b><span th:text="${currentPageNumber}"></span></b> of <b><span th:text="${ProductCategoriesPage.totalPages }"></span></b> pages.</div>
                         <ul class="pagination">
