@@ -39,7 +39,7 @@
                                     th:if="${@permissionService.hasPermission('PROD_CAT_VIEW')}"></button>
                             <button class="btn btn-sm btn-success disabled" disabled="disabled"
                                     th:text="#{app.common.back.list}"
-                                    th:unless="${@permissionService.hasPermission('PROD_CAT_VIEW')}">t</button>
+                                    th:unless="${@permissionService.hasPermission('PROD_CAT_VIEW')}"></button>
                             <button class="btn btn-sm btn-success"
                                     th:if="${@permissionService.hasPermission('PROD_CAT_UPDATE')}"
                                     th:text="#{app.common.button.edit}"

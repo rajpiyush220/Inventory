@@ -1,13 +1,14 @@
 package com.touchblankspot.inventory.portal.service;
 
-import com.touchblankspot.common.validator.IsUniqueRowExists;
-import com.touchblankspot.common.validator.IsUpdatableRow;
+import com.touchblankspot.common.validator.IsUniqueInputFields;
 import com.touchblankspot.inventory.portal.data.model.Category;
 import com.touchblankspot.inventory.portal.data.repository.CategoryRepository;
 import com.touchblankspot.inventory.portal.web.types.SelectType;
 import com.touchblankspot.inventory.portal.web.types.product.category.CategoryUpdateRequestType;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
-public class CategoryService implements IsUniqueRowExists, IsUpdatableRow {
+public class CategoryService implements IsUniqueInputFields {
   @NonNull private final CategoryRepository productCategoryRepository;
 
   public Category save(Category productCategory) {
@@ -55,11 +55,11 @@ public class CategoryService implements IsUniqueRowExists, IsUpdatableRow {
     }
   }
 
-  public Category updateCategory(CategoryUpdateRequestType requestType) {
+  public void updateCategory(CategoryUpdateRequestType requestType) {
     Category category = findById(requestType.getId());
     category.setCategory(requestType.getCategory());
     category.setSubCategory(requestType.getSubCategory());
-    return save(category);
+    save(category);
   }
 
   public List<String> getCategoryList() {
@@ -78,44 +78,32 @@ public class CategoryService implements IsUniqueRowExists, IsUpdatableRow {
   }
 
   @Override
-  public boolean isUniqueRowCombination(
-      String firstField, Object firstFieldValue, String secondField, Object secondFieldValue)
+  public boolean isUniqueRowCombination(List<String> fields, List<Object> values, Boolean isUpdate)
       throws UnsupportedOperationException {
-    List<Category> productCategories =
-        getValidationRecords(firstField, firstFieldValue, secondField, secondFieldValue);
-    return productCategories != null && productCategories.size() > 0;
-  }
-
-  @Override
-  public boolean isUpdatableRow(
-      String id,
-      String firstField,
-      Object firstFieldValue,
-      String secondField,
-      Object secondFieldValue)
-      throws UnsupportedOperationException {
-    return getValidationRecords(firstField, firstFieldValue, secondField, secondFieldValue).stream()
-            .filter(category -> !category.getId().toString().equals(id))
-            .count()
-        < 1;
-  }
-
-  private List<Category> getValidationRecords(
-      String firstField, Object firstFieldValue, String secondField, Object secondFieldValue)
-      throws UnsupportedOperationException {
-    if ("category".equalsIgnoreCase(firstField) && "subCategory".equalsIgnoreCase(secondField)) {
-      // Ignoring check if value is empty or its not matching min length criteria
-      if (ObjectUtils.isEmpty(firstFieldValue)
-          || firstFieldValue.toString().length() < 2
-          || ObjectUtils.isEmpty(secondFieldValue)
-          || secondFieldValue.toString().length() < 2) {
-        return List.of();
-      }
-      return productCategoryRepository.findByCategoryAndSubCategoryAndIsDeleted(
-          firstFieldValue.toString(), secondFieldValue.toString(), false);
+    String category = "category";
+    String subCategory = "subcategory";
+    String id = "id";
+    if (!fields.contains(category)
+        || !fields.contains(subCategory)
+        || (isUpdate && !fields.contains(id))) {
+      throw new UnsupportedOperationException(
+          "Operation not supported for selected fields " + fields);
     }
-    throw new UnsupportedOperationException(
-        String.format(
-            "Operation not supported for field combination %s and %s" + firstField, secondField));
+    Object categoryValue = values.get(fields.indexOf(category));
+    Object subCategoryValue = values.get(fields.indexOf(subCategory));
+    if (categoryValue == null
+        || categoryValue.toString().length() < 2
+        || subCategoryValue == null
+        || subCategoryValue.toString().length() < 2) {
+      return true;
+    }
+    List<Category> categories =
+        productCategoryRepository.findByCategoryAndSubCategoryAndIsDeleted(
+            categoryValue.toString(), subCategoryValue.toString(), false);
+    if (isUpdate && fields.contains(id) && values.get(fields.indexOf(id)) != null) {
+      UUID categoryId = UUID.fromString(values.get(fields.indexOf(id)).toString());
+      categories = categories.stream().filter(data -> !categoryId.equals(data.getId())).toList();
+    }
+    return categories.size() < 1;
   }
 }

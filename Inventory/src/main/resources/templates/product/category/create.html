@@ -2,41 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Category Create Page</title>
+    <script type="text/javascript" th:src="@{/js/category.js}"></script>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
-<script th:inline="javascript">
-	function getSubCategories(){
-	    let categoryName = $('#existingCategories').val();
-	    if(categoryName === ''){
-           $('#existingSubCategories').html('<option value="">Existing Sub category List</option>')
-          }else
-          {
-            $.ajax({
-               type : "GET",
-               contentType : "application/json",
-               url : "/product/category/subCategories?categoryName="+categoryName,
-               dataType : 'json',
-               cache : false,
-               timeout : 600000,
-               success : function(data) {
-                    let html = '<option value="">Existing Sub category List</option>';
-                    let len = data.length;
-                    for (let i = 0; i < len; i++) {
-                        html += '<option value="' + data[i].id + '">'
-                       + data[i].value
-                       + '</option>';
-                    }
-                    html += '</option>';
-                    $('#existingSubCategories').html(html);
-               },
-               error : function(e) {
-                alert(e);
-               }
-              });
-          }
-	}
-</script>
+
 <body class="sb-nav-fixed">
 <div th:replace="~{common/header :: myHeader}"></div>
 <div th:replace="~{common/navbar :: myNavbar}"></div>
@@ -80,7 +50,7 @@
                         </div>
                         <div class="form-group">
                             <label>
-                                <input size="50" type="text" th:field="*{category}" class="form-control border-groove"
+                                <input size="100" type="text" th:field="*{category}" class="form-control border-groove"
                                        placeholder="Enter Category"
                                        autofocus="autofocus">
                             </label>
@@ -89,12 +59,18 @@
                         </div>
                         <div class="form-group">
                             <label>
-                                <input type="text" th:field="*{subCategory}" class="form-control border-groove" placeholder="Enter SubCategory">
+                                <input size="100" type="text" th:field="*{subCategory}" class="form-control border-groove" placeholder="Enter SubCategory">
                             </label>
                             <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
                                   th:errors="*{subCategory}"></span>
                         </div>
-                        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                        <button class="btn btn-lg btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-lg btn-success" type="button" onclick="clearDataFilter();"
+                                th:text="#{app.common.back.list}"
+                                th:if="${@permissionService.hasPermission('PROD_CAT_VIEW')}"></button>
+                        <button class="btn btn-lg btn-success disabled" type="button" disabled="disabled"
+                                th:text="#{app.common.back.list}"
+                                th:unless="${@permissionService.hasPermission('PROD_CAT_VIEW')}"></button>
                     </form>
 
                 </div>
@@ -105,4 +81,36 @@
     </div>
 </div>
 </body>
+<script th:inline="javascript">
+    function getSubCategories(){
+        let categoryName = $('#existingCategories').val();
+        if(categoryName === ''){
+            $('#existingSubCategories').html('<option value="">Existing Sub category List</option>')
+        }else
+        {
+            $.ajax({
+                type : "GET",
+                contentType : "application/json",
+                url : "/product/category/subCategories?categoryName="+categoryName,
+                dataType : 'json',
+                cache : false,
+                timeout : 600000,
+                success : function(data) {
+                    let html = '<option value="">Existing Sub category List</option>';
+                    let len = data.length;
+                    for (let i = 0; i < len; i++) {
+                        html += '<option value="' + data[i].id + '">'
+                            + data[i].value
+                            + '</option>';
+                    }
+                    html += '</option>';
+                    $('#existingSubCategories').html(html);
+                },
+                error : function(e) {
+                    alert(e);
+                }
+            });
+        }
+    }
+</script>
 </html>

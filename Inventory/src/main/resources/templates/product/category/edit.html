@@ -31,7 +31,7 @@
                             <input type="hidden" th:field="*{id}">
                             <div class="form-group">
                                 <label>
-                                    <input size="50" type="text" th:field="*{category}" class="form-control border-groove"
+                                    <input size="100" type="text" th:field="*{category}" class="form-control border-groove"
                                            placeholder="Enter Category"
                                            autofocus="autofocus">
                                 </label>
@@ -40,7 +40,7 @@
                             </div>
                             <div class="form-group">
                                 <label>
-                                    <input type="text" th:field="*{subCategory}" class="form-control border-groove" placeholder="Enter SubCategory">
+                                    <input size="100" type="text" th:field="*{subCategory}" class="form-control border-groove" placeholder="Enter SubCategory">
                                 </label>
                                 <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
                                       th:errors="*{subCategory}"></span>

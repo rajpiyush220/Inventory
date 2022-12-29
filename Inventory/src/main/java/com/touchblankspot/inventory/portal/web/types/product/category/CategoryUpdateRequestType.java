@@ -1,6 +1,6 @@
 package com.touchblankspot.inventory.portal.web.types.product.category;
 
-import com.touchblankspot.common.validator.IsUpdatable;
+import com.touchblankspot.common.validator.IsUniqueInput;
 import com.touchblankspot.inventory.portal.service.CategoryService;
 import jakarta.validation.constraints.Size;
 import java.util.UUID;
@@ -13,11 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@IsUpdatable(
+@IsUniqueInput(
     service = CategoryService.class,
-    first = "category",
-    second = "subCategory",
-    id = "id",
+    fieldNames = {"category", "subCategory", "id"},
+    isUpdate = true,
     message = "Selected category and subcategory pair is already taken.")
 public class CategoryUpdateRequestType {
 
