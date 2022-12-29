@@ -18,10 +18,11 @@
             <div class="container-fluid">
                 <div class="container">
                     <div class="form-group" style="text-align:left;">
-                        <h4>Product Category List</h4>
+                        <h4 th:text="#{app.header.category.list}"></h4>
                     </div>
                     <div class="form-group" style="text-align:right;">
-                        <a th:href="@{/product/category}" class="btn btn-primary btn-sm active">Add Product</a>
+                        <a th:href="@{/product/category}" class="btn btn-primary btn-sm active"
+                           th:text="#{app.header.category.add}"></a>
                         <label for="searchType"></label>
                         <select id="searchType" name="searchType" class="form-select form-select-sm " onchange="searchTypeChanged();">
                             <option th:each="searchType : ${searchTypes}"
@@ -30,9 +31,9 @@
                                     th:selected="(${searchType.id} == ${searchType})"></option>
                         </select>
                         <label for="searchKey"></label>
-                        <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
+                        <input type="text" name="searchKey" id="searchKey" th:placeholder="#{app.common.placeholder.search.input}"
                                                               class="autocomplete" style="width: 120px;" th:value="${searchKey}">
-                        <button id="SearchButton" class="btn btn-sm btn-success" onclick="searchBySuggestion();">Search</button>
+                        <button id="SearchButton" class="btn btn-sm btn-success" onclick="searchBySuggestion();" th:text="#{app.common.button.search}"></button>
                         <label for="pageSize"></label>
                         <select class="form-select form-select-sm" onchange="submitPageSizeChange()"
                               name="pageSize" id="pageSize" title="Page Size">
@@ -40,17 +41,20 @@
                                     th:text="${index}"
                                     th:selected="(${index} == ${selectedPageSize})"></option>
                         </select>
-                        <a href="#" class="btn btn-primary btn-sm active " onclick="clearDataFilter();">Clear Data Filter</a>
+                        <a href="#" class="btn btn-primary btn-sm active " onclick="clearDataFilter();"
+                           th:text="#{app.common.button.clear.filter}"></a>
                     </div>
                     <table class="table">
                         <thead class="thead-light">
                         <tr>
                             <th scope="col" style="width: 5%;">#</th>
-                            <th scope="col" style="width: 35%;" onclick="sortChanged('category');">
-                                <span th:attr="class=${sortColumn eq 'category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>Category</th>
-                            <th scope="col" style="width: 35%;" onclick="sortChanged('sub_category');">
-                                <span th:attr="class=${sortColumn eq 'sub_category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>SubCategory</th>
-                            <th scope="col" style="width: 25%;"> Action</th>
+                            <th scope="col" style="width: 35%;" onclick="sortChanged('category');" th:text="#{app.category.list.column.cat}">
+                                <span th:attr="class=${sortColumn eq 'category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                                </th>
+                            <th scope="col" style="width: 35%;" onclick="sortChanged('sub_category');" th:text="app.category.list.column.sub_cat">
+                                <span th:attr="class=${sortColumn eq 'sub_category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                                </th>
+                            <th scope="col" style="width: 25%;" th:text="#{app.common.list.action}"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -59,8 +63,8 @@
                         </tr>
                         <tr th:each="productCategory : ${ProductCategories}">
                             <td th:text="${productCategoryStat.index+1}">#</td>
-                            <td><span th:text="${productCategory.category}"> Category </span></td>
-                            <td><span th:text="${productCategory.subCategory}"> SubCategory </span></td>
+                            <td><span th:text="${productCategory.category}"></span></td>
+                            <td><span th:text="${productCategory.subCategory}"></span></td>
                             <td>
                                 <button class="btn btn-success green-tooltip"
                                         th:attr="onclick=|viewPage('${productCategory.id}')|"
@@ -93,6 +97,7 @@
                         </tbody>
                     </table>
                     <nav th:if="${ProductCategoriesPage.totalPages > 0}">
+                        <div style="margin-bottom: 20px;">Showing <b><span th:text="${currentPageNumber}"></span></b> of <b><span th:text="${ProductCategoriesPage.totalPages }"></span></b> pages.</div>
                         <ul class="pagination">
                             <li class="page-item">
                                 <a class="page-link"
@@ -139,7 +144,6 @@
     });
 
     function setDeleteData(id){
-        console.log("Current data "+id);
         $("#deleteConfirmButton").attr('onClick', "deletePage('"+id+"');");
     }
 </script>
