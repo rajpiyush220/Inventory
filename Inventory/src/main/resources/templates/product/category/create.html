@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Category Create Page</title>
+    <title th:text="#{app.title.category.create}"></title>
     <script type="text/javascript" th:src="@{/js/category.js}"></script>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
@@ -22,7 +22,7 @@
                           th:action="@{/product/category}">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Create Product Category</h4>
+                                <h4 class="card-title" th:text="#{app.title.category.create}"></h4>
                             </div>
                         </div>
 
@@ -33,7 +33,7 @@
                         <div class="form-group" th:if="${!existingCategories.empty}">
                             <label for="existingCategories"></label>
                             <select class="form-control" id="existingCategories" name="existingCategories" onchange="getSubCategories();">
-                                <option value="">Existing category List</option>
+                                <option value="" th:text="#{app.category.text.ex.cat.list}"></option>
                                 <option th:each="existingCategory : ${existingCategories}"
                                         th:value="${existingCategory}"
                                         th:text="${existingCategory}" th:selected="(${existingCategory} eq ${selectedCategory})" />
@@ -42,7 +42,7 @@
                         <div class="form-group" th:if="${!existingCategories.empty}">
                             <label for="existingSubCategories"></label>
                             <select class="form-control" id="existingSubCategories" name="existingSubCategories">
-                                <option value="">Existing Sub category List</option>
+                                <option value="" th:text="#{app.category.text.ex.sub.cat.list}"></option>
                                 <option th:each="existingSubCategory : ${existingSubCategories}"
                                         th:value="${existingSubCategory}"
                                         th:text="${existingSubCategory}" th:selected="(${existingSubCategory} eq ${selectedSubCategory})" />
@@ -64,7 +64,7 @@
                             <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
                                   th:errors="*{subCategory}"></span>
                         </div>
-                        <button class="btn btn-lg btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-lg btn-primary" type="submit" th:text="#{app.common.button.submit}"></button>
                         <button class="btn btn-lg btn-success" type="button" onclick="clearDataFilter();"
                                 th:text="#{app.common.back.list}"
                                 th:if="${@permissionService.hasPermission('PROD_CAT_VIEW')}"></button>

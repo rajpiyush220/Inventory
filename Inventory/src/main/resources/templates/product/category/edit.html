@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="#{app.title.category.view}"></title>
+    <title th:text="#{app.header.category.update}"></title>
     <script type="text/javascript" th:src="@{/js/category.js}"></script>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
@@ -21,7 +21,7 @@
                               th:action="@{/product/category/update}">
                             <div class="card-header d-flex justify-content-between">
                                 <div class="header-title">
-                                    <h4 class="card-title" th:text="#{app.header.category.update}">Update Product Category</h4>
+                                    <h4 class="card-title" th:text="#{app.header.category.update}"></h4>
                                 </div>
                             </div>
                             <h6 style="text-align:center;">
@@ -32,23 +32,23 @@
                             <div class="form-group">
                                 <label>
                                     <input size="100" type="text" th:field="*{category}" class="form-control border-groove"
-                                           placeholder="Enter Category"
-                                           autofocus="autofocus">
+                                           th:placeholder="#{app.category.placeholder.enter.cat}" autofocus="autofocus">
                                 </label>
                                 <span class="has-error" th:if="${#fields.hasErrors('category')}"
                                       th:errors="*{category}"></span>
                             </div>
                             <div class="form-group">
                                 <label>
-                                    <input size="100" type="text" th:field="*{subCategory}" class="form-control border-groove" placeholder="Enter SubCategory">
+                                    <input size="100" type="text" th:field="*{subCategory}" class="form-control border-groove"
+                                           th:placeholder="#{app.category.placeholder.enter.sub.cat}">
                                 </label>
                                 <span class="has-error" th:if="${#fields.hasErrors('subCategory')}"
                                       th:errors="*{subCategory}"></span>
                             </div>
-                            <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{app.common.button.update}">Update</button>
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{app.common.button.update}"></button>
                             <button class="btn btn-lg btn-primary btn-block" type="button"
                                     th:attr="onclick=|viewPage('${categoryForm.id}')|"
-                                    th:text="#{app.common.button.cancel}">Cancel</button>
+                                    th:text="#{app.common.button.cancel}"></button>
                         </form>
                     </div>
                 </div>

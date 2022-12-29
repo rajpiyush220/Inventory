@@ -11,12 +11,11 @@
 <div th:replace="~{common/navbar :: myNavbar}"></div>
 <div id="layoutSidenav">
     <div th:replace="~{common/sidebar :: mySidebar}"></div>
-    <!-- Sidebar ends here -->
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid">
                 <div class="container">
-                    <h2 class="form-signin-heading"> Product Category</h2>
+                    <h2 class="form-signin-heading">Product Category</h2>
                     <div th:if="${category == null}">
                         <h4 th:text="#{app.common.no.data}">No data Present</h4>
                     </div>
