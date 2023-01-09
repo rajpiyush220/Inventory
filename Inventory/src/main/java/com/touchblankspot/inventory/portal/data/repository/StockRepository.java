@@ -1,7 +1,6 @@
 package com.touchblankspot.inventory.portal.data.repository;
 
 import com.touchblankspot.inventory.portal.data.model.Stock;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,9 +32,9 @@ public interface StockRepository extends JpaRepository<Stock, UUID> {
               from product
                 inner join category on category.id = product.category_id
                 left join product_price on product.id = product_price.product_id
-                left join stock 
-                  on 
-                    stock.product_id = product_price.product_id and 
+                left join stock
+                  on
+                    stock.product_id = product_price.product_id and
                     product_price.product_size = stock.product_size
             )R1
             where
@@ -55,9 +54,9 @@ public interface StockRepository extends JpaRepository<Stock, UUID> {
   Page<Object[]> getListData(Pageable pageable, String searchType, String searchKey);
 
   @Query(
-          nativeQuery = true,
-          value =
-                  """
+      nativeQuery = true,
+      value =
+          """
                    select
                       result
                    from
@@ -75,9 +74,9 @@ public interface StockRepository extends JpaRepository<Stock, UUID> {
                         from product
                           inner join category on category.id = product.category_id
                           left join product_price on product.id = product_price.product_id
-                          left join stock 
-                            on 
-                              stock.product_id = product_price.product_id and 
+                          left join stock
+                            on
+                              stock.product_id = product_price.product_id and
                               product_price.product_size = stock.product_size
                         where
                           (
@@ -94,5 +93,5 @@ public interface StockRepository extends JpaRepository<Stock, UUID> {
                    order by result
                 """)
   List<String> getAutoCompleteSuggestions(
-          @Param("searchType") String searchType, @Param("searchKey") String searchKey);
+      @Param("searchType") String searchType, @Param("searchKey") String searchKey);
 }

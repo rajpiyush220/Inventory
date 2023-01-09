@@ -48,14 +48,14 @@ public interface ProductPriceRepository extends JpaRepository<ProductPrice, UUID
       countQuery = "select count(*) from product_price",
       nativeQuery = true)
   Page<Object[]> getListData(
-          Pageable pageable,
-          @Param("searchType") String searchType,
-          @Param("searchKey") String searchKey);
+      Pageable pageable,
+      @Param("searchType") String searchType,
+      @Param("searchKey") String searchKey);
 
   @Query(
-          nativeQuery = true,
-          value =
-                  """
+      nativeQuery = true,
+      value =
+          """
                    select
                       result
                    from
@@ -89,5 +89,5 @@ public interface ProductPriceRepository extends JpaRepository<ProductPrice, UUID
                    order by result
                 """)
   List<String> getAutoCompleteSuggestions(
-          @Param("searchType") String searchType, @Param("searchKey") String searchKey);
+      @Param("searchType") String searchType, @Param("searchKey") String searchKey);
 }

@@ -1,7 +1,6 @@
 package com.touchblankspot.inventory.portal.data.repository;
 
 import com.touchblankspot.inventory.portal.data.model.SalesDetails;
-
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,7 @@ public interface SalesDetailsRepository extends JpaRepository<SalesDetails, UUID
       nativeQuery = true,
       value =
           """
-            select * from 
+            select * from
             (
               select
                 sales_details.id,product.name,product.short_name,product.short_description,category.category,
@@ -52,9 +51,9 @@ public interface SalesDetailsRepository extends JpaRepository<SalesDetails, UUID
   Page<Object[]> getListData(Pageable pageable, String searchType, String searchKey);
 
   @Query(
-          nativeQuery = true,
-          value =
-                  """
+      nativeQuery = true,
+      value =
+          """
                    select
                       result
                    from
@@ -95,5 +94,5 @@ public interface SalesDetailsRepository extends JpaRepository<SalesDetails, UUID
                    order by result
                 """)
   List<String> getAutoCompleteSuggestions(
-          @Param("searchType") String searchType, @Param("searchKey") String searchKey);
+      @Param("searchType") String searchType, @Param("searchKey") String searchKey);
 }

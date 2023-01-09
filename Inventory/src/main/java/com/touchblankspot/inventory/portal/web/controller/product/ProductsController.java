@@ -11,10 +11,8 @@ import com.touchblankspot.inventory.portal.web.types.mapper.ProductMapper;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementResponseType;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductUpdateRequestType;
-import com.touchblankspot.inventory.portal.web.types.product.price.validator.ProductPriceValidator;
 import com.touchblankspot.inventory.portal.web.types.product.validator.ProductUpdateValidator;
 import jakarta.validation.Valid;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -48,30 +46,30 @@ public class ProductsController extends BaseController {
   @NonNull private final ProductUpdateValidator productUpdateValidator;
 
   private static final List<SelectType> SEARCH_TYPES =
-          List.of(
-                  new SelectType("sname", "Short Name"),
-                  new SelectType("name", "Name"),
-                  new SelectType("mat", "Material"),
-                  new SelectType("cat", "Category"),
-                  new SelectType("subcat", "Sub Category"));
+      List.of(
+          new SelectType("sname", "Short Name"),
+          new SelectType("name", "Name"),
+          new SelectType("mat", "Material"),
+          new SelectType("cat", "Category"),
+          new SelectType("subcat", "Sub Category"));
 
   private static final Map<String, String> SORT_COLUMN_MAP =
-          Map.of(
-                  "sname",
-                  "shortName",
-                  "name",
-                  "name",
-                  "mat",
-                  "material",
-                  "sdes",
-                  "shortDescription",
-                  "cat",
-                  "categoryName",
-                  "subcat",
-                  "subCategory");
+      Map.of(
+          "sname",
+          "shortName",
+          "name",
+          "name",
+          "mat",
+          "material",
+          "sdes",
+          "shortDescription",
+          "cat",
+          "categoryName",
+          "subcat",
+          "subCategory");
 
   private static final List<String> SEARCH_TYPE_KEYS =
-          SEARCH_TYPES.stream().map(SelectType::id).toList();
+      SEARCH_TYPES.stream().map(SelectType::id).toList();
 
   @GetMapping("/management")
   @PreAuthorize("@permissionService.hasPermission({'PROD_CREATE'})")
@@ -119,14 +117,14 @@ public class ProductsController extends BaseController {
   @GetMapping("/management/list")
   @PreAuthorize("@permissionService.hasPermission({'PROD_VIEW'})")
   public String getAll(
-          Model model,
-          @RequestParam(value = "page", defaultValue = "1", required = false) Integer currentPage,
-          @RequestParam(value = "size", defaultValue = "0", required = false) Integer pageSize,
-          @RequestParam(value = "sortColumn", defaultValue = "sname", required = false)
+      Model model,
+      @RequestParam(value = "page", defaultValue = "1", required = false) Integer currentPage,
+      @RequestParam(value = "size", defaultValue = "0", required = false) Integer pageSize,
+      @RequestParam(value = "sortColumn", defaultValue = "sname", required = false)
           String sortColumn,
-          @RequestParam(value = "sortOrder", defaultValue = "ASC", required = false) String sortOrder,
-          @RequestParam(value = "searchKey", defaultValue = "", required = false) String searchKey,
-          @RequestParam(value = "searchType", defaultValue = "", required = false) String searchType) {
+      @RequestParam(value = "sortOrder", defaultValue = "ASC", required = false) String sortOrder,
+      @RequestParam(value = "searchKey", defaultValue = "", required = false) String searchKey,
+      @RequestParam(value = "searchType", defaultValue = "", required = false) String searchType) {
 
     pageSize = getPageSize(pageSize);
     sortOrder = sortOrder.toUpperCase();
@@ -142,19 +140,19 @@ public class ProductsController extends BaseController {
       model.addAttribute("pageNumbers", pageNumbers);
     }
     model.addAttribute("ProductPage", productPage);
-    setModelAttributes(model,
-            Map.of(
-                    "currentPageNumber", currentPage,
-                    "searchTypes", SEARCH_TYPES,
-                    "searchKey", searchKey,
-                    "searchType", searchType,
-                    "currentPageSize", pageSize,
-                    "sortColumn", sortColumn,
-                    "sortOrder", sortOrder,
-                    "selectedPageSize", pageSize,
-                    "PageSizeList", pageSizeList,
-                    "Products", responseTypeList
-            ));
+    setModelAttributes(
+        model,
+        Map.of(
+            "currentPageNumber", currentPage,
+            "searchTypes", SEARCH_TYPES,
+            "searchKey", searchKey,
+            "searchType", searchType,
+            "currentPageSize", pageSize,
+            "sortColumn", sortColumn,
+            "sortOrder", sortOrder,
+            "selectedPageSize", pageSize,
+            "PageSizeList", pageSizeList,
+            "Products", responseTypeList));
     return "product/management/show";
   }
 
@@ -194,16 +192,16 @@ public class ProductsController extends BaseController {
   @ResponseBody
   public AutoCompleteWrapper getSearchSuggestion(String searchKey, String type) {
     return new AutoCompleteWrapper(
-            SEARCH_TYPE_KEYS.stream().anyMatch(type::equalsIgnoreCase)
-                    ? productService.getAutoCompleteSuggestions(type, searchKey)
-                    : List.of());
+        SEARCH_TYPE_KEYS.stream().anyMatch(type::equalsIgnoreCase)
+            ? productService.getAutoCompleteSuggestions(type, searchKey)
+            : List.of());
   }
 
   @GetMapping("/management/view")
   @PreAuthorize("@permissionService.hasPermission({'PROD_VIEW'})")
   public String ViewProduct(String id, Model model) {
     model.addAttribute(
-            "product", productMapper.toResponse(productService.findById(UUID.fromString(id))));
+        "product", productMapper.toResponse(productService.findById(UUID.fromString(id))));
     return "product/management/view";
   }
 
@@ -211,18 +209,18 @@ public class ProductsController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_UPDATE'})")
   public String editCategory(String id, Model model) {
     model.addAttribute(
-            "productForm", productMapper.toUpdateRequest(productService.findById(UUID.fromString(id))));
+        "productForm", productMapper.toUpdateRequest(productService.findById(UUID.fromString(id))));
     return "product/management/edit";
   }
 
   @PostMapping("/management/update")
   @PreAuthorize("@permissionService.hasPermission({'PROD_UPDATE'})")
   public String updateProduct(
-          @Valid @ModelAttribute("productForm") ProductUpdateRequestType requestType,
-          BindingResult bindingResult,
-          Model model,
-          Errors errors) {
-    productUpdateValidator.validate(requestType,errors);
+      @Valid @ModelAttribute("productForm") ProductUpdateRequestType requestType,
+      BindingResult bindingResult,
+      Model model,
+      Errors errors) {
+    productUpdateValidator.validate(requestType, errors);
     model.addAttribute("productForm", requestType);
     if (!bindingResult.hasErrors() && !errors.hasErrors()) {
       try {

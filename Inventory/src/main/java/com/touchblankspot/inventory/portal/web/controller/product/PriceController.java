@@ -12,7 +12,6 @@ import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceR
 import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceResponseType;
 import com.touchblankspot.inventory.portal.web.types.product.price.validator.ProductPriceValidator;
 import jakarta.validation.Valid;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -48,37 +47,37 @@ public class PriceController extends BaseController {
   @NonNull private final ProductPriceValidator productPriceValidator;
 
   private static final List<SelectType> SEARCH_TYPES =
-          List.of(
-                  new SelectType("sname", "Short Name"),
-                  new SelectType("name", "Name"),
-                  new SelectType("shortd", "Short Des"),
-                  new SelectType("mat", "Material"),
-                  new SelectType("psize", "Product Size"),
-                  new SelectType("pprice", "Product Price"),
-                  new SelectType("disper", "Dis Per"),
-                  new SelectType("maxdisamt", "Max Disc Amt"));
+      List.of(
+          new SelectType("sname", "Short Name"),
+          new SelectType("name", "Name"),
+          new SelectType("shortd", "Short Des"),
+          new SelectType("mat", "Material"),
+          new SelectType("psize", "Product Size"),
+          new SelectType("pprice", "Product Price"),
+          new SelectType("disper", "Dis Per"),
+          new SelectType("maxdisamt", "Max Disc Amt"));
 
   private static final Map<String, String> SORT_COLUMN_MAP =
-          Map.of(
-                  "sname",
-                  "short_name",
-                  "name",
-                  "name",
-                  "shortd",
-                  "short_description",
-                  "mat",
-                  "material",
-                  "psize",
-                  "product_size",
-                  "pprice",
-                  "price",
-                  "disper",
-                  "discount_percentage",
-                  "maxdisamt",
-                  "max_discount_amount");
+      Map.of(
+          "sname",
+          "short_name",
+          "name",
+          "name",
+          "shortd",
+          "short_description",
+          "mat",
+          "material",
+          "psize",
+          "product_size",
+          "pprice",
+          "price",
+          "disper",
+          "discount_percentage",
+          "maxdisamt",
+          "max_discount_amount");
 
   private static final List<String> SEARCH_TYPE_KEYS =
-          SEARCH_TYPES.stream().map(SelectType::id).toList();
+      SEARCH_TYPES.stream().map(SelectType::id).toList();
 
   @GetMapping("/price")
   @PreAuthorize("@permissionService.hasPermission({'PROD_PRICE_CREATE'})")
@@ -142,7 +141,7 @@ public class PriceController extends BaseController {
       @RequestParam(value = "page", defaultValue = "1", required = false) Integer currentPage,
       @RequestParam(value = "size", defaultValue = "0", required = false) Integer pageSize,
       @RequestParam(value = "sortColumn", defaultValue = "sname", required = false)
-      String sortColumn,
+          String sortColumn,
       @RequestParam(value = "sortOrder", defaultValue = "ASC", required = false) String sortOrder,
       @RequestParam(value = "searchKey", defaultValue = "", required = false) String searchKey,
       @RequestParam(value = "searchType", defaultValue = "", required = false) String searchType) {
@@ -151,7 +150,8 @@ public class PriceController extends BaseController {
     sortOrder = sortOrder.toUpperCase();
     Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), SORT_COLUMN_MAP.get(sortColumn));
     Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
-    Page<Object[]> productPricePage = productPriceService.getListData(pageable, searchType, searchKey);
+    Page<Object[]> productPricePage =
+        productPriceService.getListData(pageable, searchType, searchKey);
     List<ProductPriceResponseType> responseTypeList =
         productPricePage.getContent().stream().map(ProductPriceResponseType::new).toList();
     int totalPages = productPricePage.getTotalPages();
@@ -187,8 +187,8 @@ public class PriceController extends BaseController {
   @ResponseBody
   public AutoCompleteWrapper getSearchSuggestion(String searchKey, String type) {
     return new AutoCompleteWrapper(
-            SEARCH_TYPE_KEYS.stream().anyMatch(type::equalsIgnoreCase)
-                    ? productPriceService.getAutoCompleteSuggestions(type, searchKey)
-                    : List.of());
+        SEARCH_TYPE_KEYS.stream().anyMatch(type::equalsIgnoreCase)
+            ? productPriceService.getAutoCompleteSuggestions(type, searchKey)
+            : List.of());
   }
 }

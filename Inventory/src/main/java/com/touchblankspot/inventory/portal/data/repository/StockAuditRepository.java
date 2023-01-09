@@ -1,7 +1,6 @@
 package com.touchblankspot.inventory.portal.data.repository;
 
 import com.touchblankspot.inventory.portal.data.model.StockAudit;
-
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -17,7 +16,7 @@ public interface StockAuditRepository extends JpaRepository<StockAudit, UUID> {
   @Query(
       value =
           """
-            select * from 
+            select * from
             (
             select
                 stock_audit.id,product.name,product.short_name as shortName,product.short_description as shortDescription,
@@ -44,9 +43,9 @@ public interface StockAuditRepository extends JpaRepository<StockAudit, UUID> {
   Page<Object[]> getListData(Pageable pageable, String searchType, String searchKey);
 
   @Query(
-          nativeQuery = true,
-          value =
-                  """
+      nativeQuery = true,
+      value =
+          """
                    select
                       result
                    from
@@ -71,12 +70,12 @@ public interface StockAuditRepository extends JpaRepository<StockAudit, UUID> {
                             (:searchType = 'sdes' and product.short_description like %:searchKey%) or
                             (:searchType = 'otype' and stock_audit.operation_type like %:searchKey%) or
                             (:searchType = 'qty' and stock_audit.quantity like %:searchKey%) or
-                            (:searchType = 'opt' and stock_audit.operated_by like %:searchKey%) 
+                            (:searchType = 'opt' and stock_audit.operated_by like %:searchKey%)
                           )
                       )suggestions
                    group by result
                    order by result
                 """)
   List<String> getAutoCompleteSuggestions(
-          @Param("searchType") String searchType, @Param("searchKey") String searchKey);
+      @Param("searchType") String searchType, @Param("searchKey") String searchKey);
 }

@@ -2,7 +2,6 @@ package com.touchblankspot.inventory.portal.service;
 
 import com.touchblankspot.inventory.portal.data.model.Stock;
 import com.touchblankspot.inventory.portal.data.repository.StockRepository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +24,7 @@ public class StockService {
   }
 
   public Page<Object[]> getListData(Pageable pageable, String searchType, String searchKey) {
-    return stockRepository.getListData(pageable,searchType,searchKey);
+    return stockRepository.getListData(pageable, searchType, searchKey);
   }
 
   public List<String> getAutoCompleteSuggestions(String searchType, String searchKey) {
