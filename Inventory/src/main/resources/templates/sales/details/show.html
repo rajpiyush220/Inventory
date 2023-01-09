@@ -1,36 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link href="/css/main.css" rel="stylesheet">
-    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
-    <script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/jquery.autocomplete.js}"></script>
-    <script type="text/javascript" th:src="@{/js/library/materialize.min.js}"></script>
-    <div th:replace="~{common/header :: myHeader}"></div>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
-<script th:inline="javascript">
-    function submitPageSizeChange(){
-        currentPageSize = $('#pageSize').val();
-        alert("Change page number on, yet to be developed.");
-    }
-    $(document).ready(function() {
-      $('#searchKey').devbridgeAutocomplete({
-          serviceUrl: '/product/category/search?type=category',
-          paramName: 'searchKey',
-          minChars: 1,
-      });
-    });
-
-
-</script>
 <body class="sb-nav-fixed">
+<div th:replace="~{common/header :: myHeader}"></div>
 <div th:replace="~{common/navbar :: myNavbar}"></div>
 <div id="layoutSidenav">
     <div th:replace="~{common/sidebar :: mySidebar}"></div>
@@ -43,30 +18,62 @@
                         <h4>Sales Details</h4>
                     </div>
                     <div class="form-group" style="text-align:right;">
+                        <a th:href="@{/sales/detail/create}">Add SalesDetails</a>
+                        <label for="searchType"></label>
+                        <select id="searchType" name="searchType" class="form-select form-select-sm " onchange="searchTypeChanged();">
+                            <option th:each="sType : ${searchTypes}"
+                                    th:value="${sType.id}"
+                                    th:text="${sType.value}"
+                                    th:selected="(${sType.id} == ${searchType})"></option>
+                        </select>
+                        <label for="searchKey"></label>
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
                                class="autocomplete" style="width: 120px;">
-                        <label>Select Page Size: </label>
+                        <button id="SearchButton" class="btn btn-sm btn-success" onclick="searchBySuggestion();" th:text="#{app.common.button.search}"></button>
+                        <label for="pageSize">Select Page Size: </label>
                         <select class="form-select form-select-lg" onchange="submitPageSizeChange()"
                                 name="pageSize" id="pageSize">
                             <option th:each="index : ${PageSizeList}" th:value="${index}"
                                     th:text="${index}"
                                     th:selected="(${index} == ${selectedPageSize})"></option>
                         </select>
+                        <a href="#" class="btn btn-primary btn-sm active " onclick="clearDataFilter();"
+                           th:text="#{app.common.button.clear.filter}"></a>
                     </div>
-                    <table class="table caption-top table-hover table-dark">
-                        <thead>
+                    <table class="table">
+                        <thead class="thead-light">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Sub Category</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Unit Price</th>
-                            <th scope="col">Discount Amount</th>
-                            <th scope="col">Total Sale Amount</th>
-                            <th scope="col">Payment Mode</th>
-                            <th scope="col">Transaction ID</th>
-                            <th scope="col">Operator</th>
+                            <th scope="col" onclick="sortChanged('name');">Name
+                                <span th:attr="class=${sortColumn eq 'name' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('cat');">Category
+                                <span th:attr="class=${sortColumn eq 'cat' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('subcat');">Sub Category
+                                <span th:attr="class=${sortColumn eq 'subcat' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('qty');">Quantity
+                                <span th:attr="class=${sortColumn eq 'qty' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('uprice');">Unit Price
+                                <span th:attr="class=${sortColumn eq 'uprice' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('discamt');">Dis Amount
+                                <span th:attr="class=${sortColumn eq 'discamt' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('totprice');">Amount
+                                <span th:attr="class=${sortColumn eq 'totprice' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('payMode');">Pay Mode
+                                <span th:attr="class=${sortColumn eq 'payMode' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('tranid');">Transaction ID
+                                <span th:attr="class=${sortColumn eq 'tranid' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
+                            <th scope="col" onclick="sortChanged('opt');">Operator
+                                <span th:attr="class=${sortColumn eq 'opt' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
+                            </th>
                             <th scope="col">Sold At</th>
                         </tr>
                         </thead>
@@ -121,6 +128,23 @@
         <div th:replace="~{common/footer :: myFooter}"></div>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/js/sales_details.js}"></script>
+<script th:inline="javascript">
+    let currentPageNumber = [[${currentPageNumber}]];
+    let sortOrder = [[${sortOrder}]];
+    let sortColumn = [[${sortColumn}]];
+    let searchType =  [[${searchType}]];
+    let searchKey =  [[${searchKey}]];
+    let currentPageSize = [[${currentPageSize}]];
 
+    $(document).ready(function() {
+        $('#searchKey').devbridgeAutocomplete({
+            serviceUrl: '/sales/suggestions/search',
+            paramName: 'searchKey',
+            params: {type:$('#searchType').val()},
+            minChars: 1,
+        });
+    });
+</script>
 </body>
 </html>

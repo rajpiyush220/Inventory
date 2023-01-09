@@ -15,6 +15,7 @@ import com.touchblankspot.inventory.portal.service.StockAuditService;
 import com.touchblankspot.inventory.portal.service.StockService;
 import com.touchblankspot.inventory.portal.web.annotations.SalesController;
 import com.touchblankspot.inventory.portal.web.controller.BaseController;
+import com.touchblankspot.inventory.portal.web.types.AutoCompleteWrapper;
 import com.touchblankspot.inventory.portal.web.types.SelectType;
 import com.touchblankspot.inventory.portal.web.types.mapper.SalesDetailMapper;
 import com.touchblankspot.inventory.portal.web.types.sales.SalesDetailRequestType;
@@ -23,10 +24,7 @@ import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.OffsetDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.NonNull;
@@ -35,6 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
@@ -66,6 +67,30 @@ public class SalesDetailsController extends BaseController {
   @NonNull private final CategoryService categoryService;
 
   @NonNull private final SalesDetailMapper salesDetailMapper;
+
+  private static final List<SelectType> SALES_SEARCH_TYPES =
+      List.of(
+          new SelectType("name", "Name"),
+          new SelectType("cat", "Category"),
+          new SelectType("qty", "Quantity"),
+          new SelectType("uprice", "Unit Price"),
+          new SelectType("totprice", "Total Price"),
+          new SelectType("payMode", "Pay Mode"),
+          new SelectType("tranid", "Transaction Id"),
+          new SelectType("opt", "Operator"));
+
+  private static final Map<String, String> SALES_SORT_COLUMN_MAP =
+      Map.of(
+          "name", "name",
+          "cat", "category",
+          "totprice", "total_price",
+          "qty", "quantity",
+          "uprice", "unit_price",
+          "payMode", "payment_mode",
+          "tranid", "transaction_id",
+          "opt", "sold_by");
+  private static final List<String> SALES_SEARCH_TYPE_KEYS =
+      SALES_SEARCH_TYPES.stream().map(SelectType::id).toList();
 
   @GetMapping("/detail/create")
   @PreAuthorize("@permissionService.hasPermission({'SALES_CREATE'})")
@@ -219,26 +244,54 @@ public class SalesDetailsController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'SALES_VIEW'})")
   public String getAll(
       Model model,
-      @RequestParam(value = "page", defaultValue = "0") Integer page,
-      @RequestParam(value = "size", defaultValue = "0") Integer size) {
-    int currentPage = page > 0 ? page : 1;
-    int pageSize = size > 0 ? size : pageSizeList.get(0);
+      @RequestParam(value = "page", defaultValue = "1", required = false) Integer currentPage,
+      @RequestParam(value = "size", defaultValue = "0", required = false) Integer pageSize,
+      @RequestParam(value = "sortColumn", defaultValue = "name", required = false)
+          String sortColumn,
+      @RequestParam(value = "sortOrder", defaultValue = "ASC", required = false) String sortOrder,
+      @RequestParam(value = "searchKey", defaultValue = "", required = false) String searchKey,
+      @RequestParam(value = "searchType", defaultValue = "", required = false) String searchType) {
+    pageSize = getPageSize(pageSize);
+    sortOrder = sortOrder.toUpperCase();
+    Sort sort =
+        Sort.by(Sort.Direction.fromString(sortOrder), SALES_SORT_COLUMN_MAP.get(sortColumn));
+    Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
 
-    Page<Object[]> productPage =
-        salesDetailsService.getListData(PageRequest.of(currentPage - 1, pageSize));
+    Page<Object[]> salesDetailPage =
+        salesDetailsService.getListData(pageable, searchType, searchKey);
     List<SalesDetailResponseType> responseTypeList =
-        productPage.getContent().stream().map(SalesDetailResponseType::new).toList();
-    int totalPages = productPage.getTotalPages();
+        salesDetailPage.getContent().stream().map(SalesDetailResponseType::new).toList();
+    int totalPages = salesDetailPage.getTotalPages();
     if (totalPages > 0) {
       List<Integer> pageNumbers =
           IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
       model.addAttribute("pageNumbers", pageNumbers);
     }
-    model.addAttribute("SalePage", productPage);
+    model.addAttribute("SalePage", salesDetailPage);
     model.addAttribute("SaleDetails", responseTypeList);
-    model.addAttribute("currentPageNumber", currentPage);
-    model.addAttribute("PageSizeList", pageSizeList);
-    model.addAttribute("selectedPageSize", pageSizeList.get(0));
+    setModelAttributes(
+        model,
+        Map.of(
+            "PageSizeList",
+            pageSizeList,
+            "currentPageNumber",
+            currentPage,
+            "Stocks",
+            responseTypeList,
+            "selectedPageSize",
+            pageSize,
+            "sortOrder",
+            sortOrder,
+            "sortColumn",
+            sortColumn,
+            "currentPageSize",
+            pageSize,
+            "searchType",
+            searchType,
+            "searchKey",
+            searchKey,
+            "searchTypes",
+            SALES_SEARCH_TYPES));
     return "sales/details/show";
   }
 
@@ -246,6 +299,16 @@ public class SalesDetailsController extends BaseController {
   @ResponseBody
   public ResponseEntity<List<String>> getProductSize(@RequestParam UUID productId) {
     return ResponseEntity.ok(productPriceService.getProductSize(productId));
+  }
+
+  @GetMapping(value = "/suggestions/search", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("@permissionService.hasPermission({'SALES_VIEW'})")
+  @ResponseBody
+  public AutoCompleteWrapper getStockSearchSuggestion(String searchKey, String type) {
+    return new AutoCompleteWrapper(
+        SALES_SEARCH_TYPE_KEYS.stream().anyMatch(type::equalsIgnoreCase)
+            ? salesDetailsService.getAutoCompleteSuggestions(type, searchKey)
+            : List.of());
   }
 
   @GetMapping(value = "/detail/price", produces = "application/json", consumes = "application/json")

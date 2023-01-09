@@ -23,10 +23,10 @@
                         <a th:href="@{/product/management}">Add Product</a>
                         <label for="searchType"></label>
                         <select id="searchType" name="searchType" class="form-select form-select-sm " onchange="searchTypeChanged();">
-                            <option th:each="searchType : ${searchTypes}"
-                                    th:value="${searchType.id}"
-                                    th:text="${searchType.value}"
-                                    th:selected="(${searchType.id} == ${searchType})"></option>
+                            <option th:each="sType : ${searchTypes}"
+                                    th:value="${sType.id}"
+                                    th:text="${sType.value}"
+                                    th:selected="(${sType.id} == ${searchType})"></option>
                         </select>
                         <label for="searchKey"></label>
                         <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
