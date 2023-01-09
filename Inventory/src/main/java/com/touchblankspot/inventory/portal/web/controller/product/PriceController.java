@@ -5,16 +5,15 @@ import com.touchblankspot.inventory.portal.service.ProductPriceService;
 import com.touchblankspot.inventory.portal.service.ProductService;
 import com.touchblankspot.inventory.portal.web.annotations.ProductController;
 import com.touchblankspot.inventory.portal.web.controller.BaseController;
+import com.touchblankspot.inventory.portal.web.types.AutoCompleteWrapper;
 import com.touchblankspot.inventory.portal.web.types.SelectType;
 import com.touchblankspot.inventory.portal.web.types.mapper.ProductPriceMapper;
 import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceResponseType;
 import com.touchblankspot.inventory.portal.web.types.product.price.validator.ProductPriceValidator;
 import jakarta.validation.Valid;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.NonNull;
@@ -23,15 +22,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @ProductController
 @Slf4j
@@ -47,6 +46,39 @@ public class PriceController extends BaseController {
   @NonNull private final ProductPriceMapper productPriceMapper;
 
   @NonNull private final ProductPriceValidator productPriceValidator;
+
+  private static final List<SelectType> SEARCH_TYPES =
+          List.of(
+                  new SelectType("sname", "Short Name"),
+                  new SelectType("name", "Name"),
+                  new SelectType("shortd", "Short Des"),
+                  new SelectType("mat", "Material"),
+                  new SelectType("psize", "Product Size"),
+                  new SelectType("pprice", "Product Price"),
+                  new SelectType("disper", "Dis Per"),
+                  new SelectType("maxdisamt", "Max Disc Amt"));
+
+  private static final Map<String, String> SORT_COLUMN_MAP =
+          Map.of(
+                  "sname",
+                  "short_name",
+                  "name",
+                  "name",
+                  "shortd",
+                  "short_description",
+                  "mat",
+                  "material",
+                  "psize",
+                  "product_size",
+                  "pprice",
+                  "price",
+                  "disper",
+                  "discount_percentage",
+                  "maxdisamt",
+                  "max_discount_amount");
+
+  private static final List<String> SEARCH_TYPE_KEYS =
+          SEARCH_TYPES.stream().map(SelectType::id).toList();
 
   @GetMapping("/price")
   @PreAuthorize("@permissionService.hasPermission({'PROD_PRICE_CREATE'})")
@@ -107,13 +139,19 @@ public class PriceController extends BaseController {
   @PreAuthorize("@permissionService.hasPermission({'PROD_PRICE_VIEW'})")
   public String getAll(
       Model model,
-      @RequestParam("page") Optional<Integer> page,
-      @RequestParam("size") Optional<Integer> size) {
-    int currentPage = page.orElse(1);
-    int pageSize = size.orElse(pageSizeList.get(0));
+      @RequestParam(value = "page", defaultValue = "1", required = false) Integer currentPage,
+      @RequestParam(value = "size", defaultValue = "0", required = false) Integer pageSize,
+      @RequestParam(value = "sortColumn", defaultValue = "sname", required = false)
+      String sortColumn,
+      @RequestParam(value = "sortOrder", defaultValue = "ASC", required = false) String sortOrder,
+      @RequestParam(value = "searchKey", defaultValue = "", required = false) String searchKey,
+      @RequestParam(value = "searchType", defaultValue = "", required = false) String searchType) {
 
-    Page<Object[]> productPricePage =
-        productPriceService.getListData(PageRequest.of(currentPage - 1, pageSize));
+    pageSize = pageSize > 0 ? pageSize : pageSizeList.get(0);
+    sortOrder = sortOrder.toUpperCase();
+    Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), SORT_COLUMN_MAP.get(sortColumn));
+    Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
+    Page<Object[]> productPricePage = productPriceService.getListData(pageable, searchType, searchKey);
     List<ProductPriceResponseType> responseTypeList =
         productPricePage.getContent().stream().map(ProductPriceResponseType::new).toList();
     int totalPages = productPricePage.getTotalPages();
@@ -126,7 +164,13 @@ public class PriceController extends BaseController {
     model.addAttribute("ProductPrices", responseTypeList);
     model.addAttribute("currentPageNumber", currentPage);
     model.addAttribute("PageSizeList", pageSizeList);
-    model.addAttribute("selectedPageSize", pageSizeList.get(0));
+    model.addAttribute("selectedPageSize", pageSize);
+    model.addAttribute("sortOrder", sortOrder);
+    model.addAttribute("sortColumn", sortColumn);
+    model.addAttribute("currentPageSize", pageSize);
+    model.addAttribute("searchType", searchType);
+    model.addAttribute("searchKey", searchKey);
+    model.addAttribute("searchTypes", SEARCH_TYPES);
     return "product/price/show";
   }
 
@@ -136,5 +180,15 @@ public class PriceController extends BaseController {
     productPriceService.deleteProduct(UUID.fromString(id));
     log.warn("Product with id {} deleted successfully.", id);
     return "redirect:/product/prices";
+  }
+
+  @GetMapping(value = "/price/suggestions/search", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("@permissionService.hasPermission({'PROD_PRICE_VIEW'})")
+  @ResponseBody
+  public AutoCompleteWrapper getSearchSuggestion(String searchKey, String type) {
+    return new AutoCompleteWrapper(
+            SEARCH_TYPE_KEYS.stream().anyMatch(type::equalsIgnoreCase)
+                    ? productPriceService.getAutoCompleteSuggestions(type, searchKey)
+                    : List.of());
   }
 }
