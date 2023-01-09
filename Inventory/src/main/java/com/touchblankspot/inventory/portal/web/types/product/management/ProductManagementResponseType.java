@@ -34,7 +34,7 @@ public class ProductManagementResponseType {
     this.shortName = objects[1].toString();
     this.name = objects[2].toString();
     this.shortDescription = objects[3].toString();
-    this.material = objects[5].toString();
+    this.material = objects[4].toString();
     this.categoryName = objects[5].toString();
     this.subCategory = objects[6].toString();
   }

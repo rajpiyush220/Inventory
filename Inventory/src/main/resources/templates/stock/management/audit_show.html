@@ -24,13 +24,13 @@
                         <a th:href="@{/stock/management}">Add Stock</a>
                         <label for="searchType"></label>
                         <select id="searchType" name="searchType" class="form-select form-select-sm " onchange="searchTypeChanged();">
-                            <option th:each="searchType : ${searchTypes}"
-                                    th:value="${searchType.id}"
-                                    th:text="${searchType.value}"
-                                    th:selected="(${searchType.id} == ${searchType})"></option>
+                            <option th:each="sType : ${searchTypes}"
+                                    th:value="${sType.id}"
+                                    th:text="${sType.value}"
+                                    th:selected="(${sType.id} eq ${searchType})"></option>
                         </select>
                         <label for="searchKey"></label>
-                        <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
+                        <input type="text" name="searchKey" id="searchKey" th:value="${searchKey}" placeholder="Search Text"
                                class="autocomplete" style="width: 120px;">
                         <button id="SearchButton" class="btn btn-sm btn-success" onclick="searchBySuggestion();" th:text="#{app.common.button.search}"></button>
                         <label>Select Page Size: </label>

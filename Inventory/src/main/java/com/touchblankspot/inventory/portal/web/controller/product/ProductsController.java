@@ -128,7 +128,7 @@ public class ProductsController extends BaseController {
           @RequestParam(value = "searchKey", defaultValue = "", required = false) String searchKey,
           @RequestParam(value = "searchType", defaultValue = "", required = false) String searchType) {
 
-    pageSize = pageSize > 0 ? pageSize : pageSizeList.get(0);
+    pageSize = getPageSize(pageSize);
     sortOrder = sortOrder.toUpperCase();
     Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), SORT_COLUMN_MAP.get(sortColumn));
     Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
@@ -142,16 +142,19 @@ public class ProductsController extends BaseController {
       model.addAttribute("pageNumbers", pageNumbers);
     }
     model.addAttribute("ProductPage", productPage);
-    model.addAttribute("Products", responseTypeList);
-    model.addAttribute("currentPageNumber", currentPage);
-    model.addAttribute("PageSizeList", pageSizeList);
-    model.addAttribute("selectedPageSize", pageSize);
-    model.addAttribute("sortOrder", sortOrder);
-    model.addAttribute("sortColumn", sortColumn);
-    model.addAttribute("currentPageSize", pageSize);
-    model.addAttribute("searchType", searchType);
-    model.addAttribute("searchKey", searchKey);
-    model.addAttribute("searchTypes", SEARCH_TYPES);
+    setModelAttributes(model,
+            Map.of(
+                    "currentPageNumber", currentPage,
+                    "searchTypes", SEARCH_TYPES,
+                    "searchKey", searchKey,
+                    "searchType", searchType,
+                    "currentPageSize", pageSize,
+                    "sortColumn", sortColumn,
+                    "sortOrder", sortOrder,
+                    "selectedPageSize", pageSize,
+                    "PageSizeList", pageSizeList,
+                    "Products", responseTypeList
+            ));
     return "product/management/show";
   }
 
