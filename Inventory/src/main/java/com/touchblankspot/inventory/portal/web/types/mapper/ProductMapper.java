@@ -3,7 +3,7 @@ package com.touchblankspot.inventory.portal.web.types.mapper;
 import com.touchblankspot.inventory.portal.data.model.Product;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementResponseType;
-import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementUpdateRequestType;
+import com.touchblankspot.inventory.portal.web.types.product.management.ProductUpdateRequestType;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,5 +21,5 @@ public interface ProductMapper {
   @Mapping(target = "subCategory", source = "category.subCategory")
   ProductManagementResponseType toResponse(Product product);
 
-  ProductManagementUpdateRequestType toUpdateRequest(Product product);
+  ProductUpdateRequestType toUpdateRequest(Product product);
 }

@@ -10,7 +10,9 @@ import com.touchblankspot.inventory.portal.web.types.SelectType;
 import com.touchblankspot.inventory.portal.web.types.mapper.ProductMapper;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementResponseType;
-import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementUpdateRequestType;
+import com.touchblankspot.inventory.portal.web.types.product.management.ProductUpdateRequestType;
+import com.touchblankspot.inventory.portal.web.types.product.price.validator.ProductPriceValidator;
+import com.touchblankspot.inventory.portal.web.types.product.validator.ProductUpdateValidator;
 import jakarta.validation.Valid;
 
 import java.util.*;
@@ -30,6 +32,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 @ProductController
@@ -41,6 +44,8 @@ public class ProductsController extends BaseController {
 
   @NonNull private final ProductService productService;
   @NonNull private final ProductMapper productMapper;
+
+  @NonNull private final ProductUpdateValidator productUpdateValidator;
 
   private static final List<SelectType> SEARCH_TYPES =
           List.of(
@@ -210,11 +215,13 @@ public class ProductsController extends BaseController {
   @PostMapping("/management/update")
   @PreAuthorize("@permissionService.hasPermission({'PROD_UPDATE'})")
   public String updateProduct(
-          @Valid @ModelAttribute("productForm") ProductManagementUpdateRequestType requestType,
+          @Valid @ModelAttribute("productForm") ProductUpdateRequestType requestType,
           BindingResult bindingResult,
-          Model model) {
+          Model model,
+          Errors errors) {
+    productUpdateValidator.validate(requestType,errors);
     model.addAttribute("productForm", requestType);
-    if (!bindingResult.hasErrors()) {
+    if (!bindingResult.hasErrors() && !errors.hasErrors()) {
       try {
         productService.updateProduct(requestType);
         log.warn("Product with id {} updated successfully.", requestType.getId());
