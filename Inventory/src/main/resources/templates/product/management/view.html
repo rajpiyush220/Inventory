@@ -1,39 +1,71 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link href="/css/main.css" rel="stylesheet">
-    <link th:href="@{/css/library/bootstrap.min.css}" rel="stylesheet"/>
-    <div th:replace="~{common/header :: myHeader}"></div>
+    <title th:text="#{app.title.category.view}"></title>
+    <script type="text/javascript" th:src="@{/js/category.js}"></script>
 </head>
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
-<script th:inline="javascript">
-</script>
 <body class="sb-nav-fixed">
+<div th:replace="~{common/header :: myHeader}"></div>
 <div th:replace="~{common/navbar :: myNavbar}"></div>
 <div id="layoutSidenav">
     <div th:replace="~{common/sidebar :: mySidebar}"></div>
-    <!-- Sidebar ends here -->
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid">
                 <div class="container">
-                    <h2 class="form-signin-heading"> Product Category</h2>
-                    <div th:if="${category == null}">
-                        <h4>No data Present</h4>
+                    <h2 class="form-signin-heading">Product</h2>
+                    <div th:if="${product == null}">
+                        <h4 th:text="#{app.common.no.data}"></h4>
                     </div>
-                    <div th:if="${category != null}">
-                        <div class="form-group">
-                            <label> Category : </label>
-                            <span th:text="${category.category}"></span>
-                        </div>
-                        <div class="form-group">
-                            <label> Sub Category : </label>
-                            <span th:text="${category.subCategory}"></span>
-                        </div>
-                        <div class="form-group">
-                            <label> product Size : </label>
-                            <span th:text="${category.productSize}"></span>
+                    <div class="table-responsive-sm" th:if="${product != null}">
+                        <table class="table table-bordered" style="width: 50%;">
+                            <tbody>
+                            <tr>
+                                <th scope="row"><label> Name </label></th>
+                                <td><span th:text="${product.name}"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label> Short Name </label></th>
+                                <td><span th:text="${product.shortName}"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label>Short Description </label></th>
+                                <td><span th:text="${product.shortDescription}"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label> Description </label></th>
+                                <td><span th:text="${product.description}"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label> Material </label></th>
+                                <td><span th:text="${product.material}"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label>Category </label></th>
+                                <td><span th:text="${product.categoryName}"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label> Sub Category </label></th>
+                                <td><span th:text="${product.subCategory}"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="form-group" style="text-align: center; width: 50%;">
+                            <button class="btn btn-sm btn-success" onclick="clearDataFilter();"
+                                    th:text="#{app.common.back.list}"
+                                    th:if="${@permissionService.hasPermission('PROD_VIEW')}"></button>
+                            <button class="btn btn-sm btn-success disabled" disabled="disabled"
+                                    th:text="#{app.common.back.list}"
+                                    th:unless="${@permissionService.hasPermission('PROD_VIEW')}"></button>
+                            <button class="btn btn-sm btn-success"
+                                    th:if="${@permissionService.hasPermission('PROD_UPDATE')}"
+                                    th:text="#{app.common.button.edit}"
+                                    th:attr="onclick=|editPage('${product.id}')|"></button>
+                            <button class="btn btn-sm btn-success disabled" disabled="disabled"
+                                    th:unless="${@permissionService.hasPermission('PROD_UPDATE')}"
+                                    th:text="#{app.common.button.edit}"></button>
                         </div>
                     </div>
                 </div>
@@ -42,11 +74,6 @@
         <div th:replace="~{common/footer :: myFooter}"></div>
     </div>
 </div>
-<script type="text/javascript" th:src="@{/js/library/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/popper.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/jquery.dataTables.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/library/dataTables.bootstrap4.min.js}"></script>
 </body>
+<script type="text/javascript" th:src="@{/js/product.js}"></script>
 </html>

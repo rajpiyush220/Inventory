@@ -4,6 +4,8 @@ import com.touchblankspot.common.data.model.embedded.Mutable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.util.UUID;
+
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,4 +38,7 @@ public class Product extends Mutable {
 
   @Column(name = "category_id")
   private UUID categoryId;
+
+  @Transient
+  private Category category;
 }

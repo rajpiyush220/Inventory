@@ -17,14 +17,14 @@ public class ProductManagementRequestType {
   @Size(min = 2, max = 50, message = "Product short name must be between 2 and 50 character.")
   @UniqueField(
       service = ProductService.class,
-      fieldName = "shortName",
+          fieldName = "shortName",
       message = "Selected product shortName is already taken.")
   private String shortName;
 
   @Size(min = 2, max = 50, message = "Product name must be between 2 and 50 character.")
   @UniqueField(
       service = ProductService.class,
-      fieldName = "name",
+          fieldName = "name",
       message = "Selected product name is already taken.")
   private String name;
 
