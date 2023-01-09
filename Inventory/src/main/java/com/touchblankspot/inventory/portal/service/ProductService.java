@@ -3,7 +3,7 @@ package com.touchblankspot.inventory.portal.service;
 import com.touchblankspot.common.validator.FieldValueExists;
 import com.touchblankspot.inventory.portal.data.model.Product;
 import com.touchblankspot.inventory.portal.data.repository.ProductRepository;
-import com.touchblankspot.inventory.portal.web.types.product.management.ProductManagementUpdateRequestType;
+import com.touchblankspot.inventory.portal.web.types.product.management.ProductUpdateRequestType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +77,7 @@ public class ProductService implements FieldValueExists {
         }
     }
 
-    public void updateProduct(ProductManagementUpdateRequestType requestType) {
+    public void updateProduct(ProductUpdateRequestType requestType) {
         Product product = findById(requestType.getId());
         product.setName(requestType.getName());
         product.setShortName(requestType.getShortName());

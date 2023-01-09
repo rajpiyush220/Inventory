@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductManagementUpdateRequestType {
+public class ProductUpdateRequestType {
     private UUID id;
 
     @Size(min = 2, max = 50, message = "Product short name must be between 2 and 50 character.")
