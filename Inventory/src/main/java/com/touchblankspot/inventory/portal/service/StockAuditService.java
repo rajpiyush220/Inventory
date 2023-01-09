@@ -10,17 +10,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class StockAuditService {
-  @NonNull private final StockAuditRepository stockAuditRepository;
+    @NonNull
+    private final StockAuditRepository stockAuditRepository;
 
-  public StockAudit save(StockAudit stockAudit) {
-    return stockAuditRepository.save(stockAudit);
-  }
+    public StockAudit save(StockAudit stockAudit) {
+        return stockAuditRepository.save(stockAudit);
+    }
 
-  public Page<Object[]> getListData(Pageable pageable) {
-    return stockAuditRepository.getListData(pageable);
-  }
+    public Page<Object[]> getListData(Pageable pageable, String searchType, String searchKey) {
+        return stockAuditRepository.getListData(pageable, searchType, searchKey);
+    }
+
+    public List<String> getAutoCompleteSuggestions(String searchType, String searchKey) {
+        return stockAuditRepository.getAutoCompleteSuggestions(searchType, searchKey);
+    }
 }
