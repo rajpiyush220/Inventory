@@ -21,8 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
   Product findByIdAndIsDeleted(UUID id, Boolean isDeleted);
 
   @Query(
-          value =
-                  """
+      value =
+          """
                   select
                   *
                   from
@@ -43,17 +43,17 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
                       product.is_deleted = false
                     )R1
                   """,
-          countQuery = "select count(*) from product where is_deleted = false",
-          nativeQuery = true)
+      countQuery = "select count(*) from product where is_deleted = false",
+      nativeQuery = true)
   Page<Object[]> getListData(
-          Pageable pageable,
-          @Param("searchType") String searchType,
-          @Param("searchKey") String searchKey);
+      Pageable pageable,
+      @Param("searchType") String searchType,
+      @Param("searchKey") String searchKey);
 
   @Query(
-          nativeQuery = true,
-          value =
-                  """
+      nativeQuery = true,
+      value =
+          """
                    select
                       result
                    from
@@ -82,5 +82,5 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
                    order by result
                 """)
   List<String> getAutoCompleteSuggestions(
-          @Param("searchType") String searchType, @Param("searchKey") String searchKey);
+      @Param("searchType") String searchType, @Param("searchKey") String searchKey);
 }
