@@ -1,10 +1,9 @@
 package com.touchblankspot.inventory.portal.web.types.product.management;
 
 import com.touchblankspot.inventory.portal.web.util.CommonUtil;
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
