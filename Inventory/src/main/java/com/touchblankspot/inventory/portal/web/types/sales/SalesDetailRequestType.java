@@ -1,5 +1,6 @@
 package com.touchblankspot.inventory.portal.web.types.sales;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,6 +26,7 @@ public class SalesDetailRequestType {
   private String unitPrice;
 
   @NotNull(message = "Product Quantity must be entered.")
+  @Min(value = 1, message = "Quantity Should be 1 or more")
   private Double quantity;
 
   @NotNull(message = "Payment Mode must be selected")
