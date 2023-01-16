@@ -26,9 +26,28 @@ public class SalesDetailsService {
     return salesDetailsRepository.getListData(pageable, searchDate);
   }
 
-  List<SalesDetailResponseType> getSalesDetailsByDate(String searchDate) {
-    return salesDetailsRepository.getSalesDetailsByDate(searchDate).stream()
+  public List<SalesDetailResponseType> getSalesDetailsByDate(String reportDate) {
+    return salesDetailsRepository.getSalesDetailsByDate(reportDate).stream()
         .map(SalesDetailResponseType::new)
+        .toList();
+  }
+
+  public List<List<String>> getSalesDetailsReportDateByDate(String reportDate) {
+    return getSalesDetailsByDate(reportDate).stream()
+        .map(
+            data ->
+                List.of(
+                    data.getName(),
+                    data.getProductCategory(),
+                    data.getSubCategory(),
+                    data.getQuantity(),
+                    data.getUnitPrice(),
+                    data.getTotalPrice(),
+                    data.getDiscountAmount(),
+                    data.getPaymentMode(),
+                    data.getTransactionId(),
+                    data.getOperatorName(),
+                    data.getSoldAt()))
         .toList();
   }
 }
