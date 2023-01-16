@@ -23,6 +23,9 @@ public class ExcelGenerator {
   public void generateExcel(
       List<String> headers, List<List<String>> datas, String fileName, OutputStream outputStream)
       throws IOException {
+    if (!headers.isEmpty() && !datas.isEmpty() && headers.size() != datas.get(0).size()) {
+      throw new IllegalArgumentException("Column count for header and data should be same");
+    }
     workbook = new XSSFWorkbook();
     writeHeader(headers, fileName);
     writeData(datas);
