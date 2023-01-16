@@ -19,16 +19,7 @@
                     </div>
                     <div class="form-group" style="text-align:right;">
                         <a th:href="@{/sales/detail/create}">Add SalesDetails</a>
-                        <label for="searchType"></label>
-                        <select id="searchType" name="searchType" class="form-select form-select-sm " onchange="searchTypeChanged();">
-                            <option th:each="sType : ${searchTypes}"
-                                    th:value="${sType.id}"
-                                    th:text="${sType.value}"
-                                    th:selected="(${sType.id} == ${searchType})"></option>
-                        </select>
-                        <label for="searchKey"></label>
-                        <input type="text" name="searchKey" id="searchKey" placeholder="Search Text"
-                               class="autocomplete" style="width: 120px;">
+                        <input class="datepicker" id="dateSelect" name="dateSelect" th:placeholder="DD-MM-YYYY">
                         <button id="SearchButton" class="btn btn-sm btn-success" onclick="searchBySuggestion();" th:text="#{app.common.button.search}"></button>
                         <label for="pageSize">Select Page Size: </label>
                         <select class="form-select form-select-lg" onchange="submitPageSizeChange()"
@@ -98,26 +89,25 @@
                         </tbody>
                     </table>
                     <nav th:if="${SalePage.totalPages > 0}">
+                        <div style="margin-bottom: 20px;">Showing <b><span th:text="${currentPageNumber}"></span></b> of <b><span th:text="${SalePage.totalPages}"></span></b> pages.</div>
                         <ul class="pagination">
                             <li class="page-item">
                                 <a class="page-link"
-                                   th:href="@{/sales/details(size=${SalePage.size}, page=${currentPageNumber-1})}"
+                                   th:attr="onclick=${currentPageNumber > 1 ? 'paginationClicked(-1,-1)' : '' }"
                                    aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
                                 </a>
                             </li>
                             <span th:each="pageNumber : ${pageNumbers}">
-                                <li class="page-item"><a class="page-link"
-                                                         th:href="@{/sales/details(size=${SalePage.size}, page=${pageNumber})}"
-                                                         th:text="${pageNumber}">1</a></li>
+                                <li class="page-item">
+                                    <a th:attr="onclick=|paginationClicked(0,'${pageNumber}')|,class=${pageNumber eq  currentPageNumber? 'page-link current' : 'page-link'}"
+                                       th:text="${pageNumber}">1</a></li>
                             </span>
-                            <li class="page-item" th:if="${currentPageNumber < SalePage.totalPages}">
+                            <li class="page-item">
                                 <a class="page-link"
-                                   th:href="@{/sales/details(size=${SalePage.size}, page=${currentPageNumber+1})}"
+                                   th:attr="onclick=${SalePage.totalPages > currentPageNumber ? 'paginationClicked(1,1)' : '' }"
                                    aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
                                 </a>
                             </li>
                         </ul>
@@ -133,18 +123,8 @@
     let currentPageNumber = [[${currentPageNumber}]];
     let sortOrder = [[${sortOrder}]];
     let sortColumn = [[${sortColumn}]];
-    let searchType =  [[${searchType}]];
-    let searchKey =  [[${searchKey}]];
     let currentPageSize = [[${currentPageSize}]];
-
-    $(document).ready(function() {
-        $('#searchKey').devbridgeAutocomplete({
-            serviceUrl: '/sales/suggestions/search',
-            paramName: 'searchKey',
-            params: {type:$('#searchType').val()},
-            minChars: 1,
-        });
-    });
+    let searchDate = [[${searchDate}]]
 </script>
 </body>
 </html>
