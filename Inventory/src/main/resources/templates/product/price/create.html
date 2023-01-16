@@ -8,7 +8,7 @@
 <form id="logoutForm" method="POST" th:action="@{/logout}">
 </form>
 <script th:inline="javascript">
-	function setTwoNumberDecimal(event) {
+	function setTwoNumberDecimal() {
         $('#price').val(parseFloat($('#price').val()).toFixed(2));
     }
     function getSubCategories(){

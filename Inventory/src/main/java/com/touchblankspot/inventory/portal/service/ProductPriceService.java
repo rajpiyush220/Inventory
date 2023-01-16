@@ -2,6 +2,7 @@ package com.touchblankspot.inventory.portal.service;
 
 import com.touchblankspot.inventory.portal.data.model.ProductPrice;
 import com.touchblankspot.inventory.portal.data.repository.ProductPriceRepository;
+import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceUpdateType;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @Slf4j
@@ -56,7 +58,31 @@ public class ProductPriceService {
     return productPriceRepository.getAutoCompleteSuggestions(searchType, searchKey);
   }
 
+  public Boolean updatePrice(ProductPriceUpdateType requestType) {
+    Optional<ProductPrice> optionalProductPrice =
+        productPriceRepository.findById(requestType.getId());
+    if (optionalProductPrice.isPresent()) {
+      ProductPrice productPrice = optionalProductPrice.get();
+      productPrice.setPrice(new BigDecimal(requestType.getPrice()));
+      productPrice.setDiscountPercentage(requestType.getDiscountPercentage());
+      if (!ObjectUtils.isEmpty(requestType.getMaxDiscountAmount())) {
+        productPrice.setMaxDiscountAmount(Long.valueOf(requestType.getMaxDiscountAmount()));
+      }
+      save(productPrice);
+      return true;
+    }
+    return false;
+  }
+
+  public ProductPrice findById(UUID id) {
+    return productPriceRepository.findById(id).orElse(null);
+  }
+
   public void deleteProduct(UUID id) {
     productPriceRepository.deleteById(id);
+  }
+
+  public Object[] getPriceViewData(UUID id) {
+    return productPriceRepository.getPriceViewData(id);
   }
 }
