@@ -1,8 +1,10 @@
 spring:
+  config:
+    import: F:\TouchBlankspot\Abhishek\repo\secret.yaml
   datasource:
-    username: ${spring.datasource.db.user:root}
-    url: jdbc:mysql://${spring.datasource.db.host:localhost}:3306/${spring.datasource.default_schema:99mall_inventory}?createDatabaseIfNotExist=true
-    password: ${spring.datasource.db.password:Pikr@1991}
+    username: ${spring.datasource.db.user}
+    url: jdbc:mysql://${spring.datasource.db.host}:${spring.datasource.db.port}/${spring.datasource.default_schema}?createDatabaseIfNotExist=true
+    password: ${spring.datasource.db.password}
   jpa:
     open-in-view: false
     show_sql: false
@@ -11,17 +13,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: validate
-  mail:
-    properties:
-      mail:
-        smtp:
-          starttls:
-            enable: 'true'
-          auth: 'true'
-    host: smtp-relay.sendinblue.com
-    username: touchblankspot@gmail.com
-    password: 
-    port: '587'
   thymeleaf:
     cache: false
     mode: HTML
@@ -37,14 +28,6 @@ spring:
     use-code-as-default-message: true
 server:
   port: 8086
-encryption:
-  remember_me:
-    key: 3fZVNzasApraF509fhHT
-    token:
-      validity: 3600
-  attribute:
-    key: KdqZ01i0U7WF2J4OQqVjVCUIOCVrPoXh
-    algorithm: AES
 password:
   reset:
     token:
@@ -55,8 +38,6 @@ application:
     admin: touchblankspot@gmail.com
   pagination:
     pageSizeList: 10,15,20,25
-  file:
-    tempLocation: F:\TouchBlankspot\Abhishek\repo\Inventory\Inventory\temp
 management:
   health:
     mail:
