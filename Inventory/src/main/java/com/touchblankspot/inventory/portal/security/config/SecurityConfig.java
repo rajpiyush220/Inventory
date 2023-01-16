@@ -28,10 +28,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class SecurityConfig {
 
-  @Value("${encryption.remember_me.key:3fZVNzasApraF509fhHT}")
+  @Value("${encryption.remember_me.key}")
   private String rememberMeKey;
 
-  @Value("${encryption.remember_me.token.validity:86400}")
+  @Value("${encryption.remember_me.token.validity}")
   private Integer rememberMeTokenValidity;
 
   @NonNull private final CustomUserDetailsService userDetailsService;
