@@ -2,6 +2,7 @@ package com.touchblankspot.inventory.portal.mail.template.service;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,6 @@ public class FreeMarkerTemplateService {
   private String sender;
 
   @NonNull private final Configuration configuration;
-
-  @NonNull private final JavaMailSender mailSender;
 
   public String getEmailContent(String templateName, Map<String, Object> dataMap)
       throws IOException, TemplateException {
@@ -42,6 +41,21 @@ public class FreeMarkerTemplateService {
       message.setFrom(sender);
       message.setSubject(dataMap.get("subject").toString());
       message.setText(getEmailContent(templateName, dataMap), true);
+    };
+  }
+
+  public MimeMessagePreparator constructEmailContentWithAttachment(
+      Map<String, Object> dataMap, String templateName) {
+    String fileToAttach = dataMap.get("file_path").toString();
+    String fileName = dataMap.get("file_name").toString();
+    return mimeMessage -> {
+      MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+      message.setTo(dataMap.get("email").toString());
+      message.setFrom(sender);
+      message.setSubject(dataMap.get("subject").toString());
+      message.setText(getEmailContent(templateName, dataMap), true);
+      FileSystemResource file = new FileSystemResource(new File(fileToAttach));
+      message.addAttachment(fileName, file);
     };
   }
 }

@@ -7,15 +7,9 @@ import com.touchblankspot.inventory.portal.data.model.SalesDetails;
 import com.touchblankspot.inventory.portal.data.model.Stock;
 import com.touchblankspot.inventory.portal.data.model.StockAudit;
 import com.touchblankspot.inventory.portal.security.service.SecurityService;
-import com.touchblankspot.inventory.portal.service.CategoryService;
-import com.touchblankspot.inventory.portal.service.ProductPriceService;
-import com.touchblankspot.inventory.portal.service.ProductService;
-import com.touchblankspot.inventory.portal.service.SalesDetailsService;
-import com.touchblankspot.inventory.portal.service.StockAuditService;
-import com.touchblankspot.inventory.portal.service.StockService;
+import com.touchblankspot.inventory.portal.service.*;
 import com.touchblankspot.inventory.portal.web.annotations.SalesController;
 import com.touchblankspot.inventory.portal.web.controller.BaseController;
-import com.touchblankspot.inventory.portal.web.types.AutoCompleteWrapper;
 import com.touchblankspot.inventory.portal.web.types.SelectType;
 import com.touchblankspot.inventory.portal.web.types.mapper.SalesDetailMapper;
 import com.touchblankspot.inventory.portal.web.types.sales.SalesDetailRequestType;
@@ -35,17 +29,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @SalesController
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
@@ -68,16 +57,7 @@ public class SalesDetailsController extends BaseController {
 
   @NonNull private final SalesDetailMapper salesDetailMapper;
 
-  private static final List<SelectType> SALES_SEARCH_TYPES =
-      List.of(
-          new SelectType("name", "Name"),
-          new SelectType("cat", "Category"),
-          new SelectType("qty", "Quantity"),
-          new SelectType("uprice", "Unit Price"),
-          new SelectType("totprice", "Total Price"),
-          new SelectType("payMode", "Pay Mode"),
-          new SelectType("tranid", "Transaction Id"),
-          new SelectType("opt", "Operator"));
+  @NonNull private final ReportService reportService;
 
   private static final Map<String, String> SALES_SORT_COLUMN_MAP =
       Map.of(
@@ -89,8 +69,6 @@ public class SalesDetailsController extends BaseController {
           "payMode", "payment_mode",
           "tranid", "transaction_id",
           "opt", "sold_by");
-  private static final List<String> SALES_SEARCH_TYPE_KEYS =
-      SALES_SEARCH_TYPES.stream().map(SelectType::id).toList();
 
   @GetMapping("/detail/create")
   @PreAuthorize("@permissionService.hasPermission({'SALES_CREATE'})")
@@ -249,16 +227,14 @@ public class SalesDetailsController extends BaseController {
       @RequestParam(value = "sortColumn", defaultValue = "name", required = false)
           String sortColumn,
       @RequestParam(value = "sortOrder", defaultValue = "ASC", required = false) String sortOrder,
-      @RequestParam(value = "searchKey", defaultValue = "", required = false) String searchKey,
-      @RequestParam(value = "searchType", defaultValue = "", required = false) String searchType) {
+      @RequestParam(value = "searchDate", defaultValue = "", required = false) String searchDate) {
     pageSize = getPageSize(pageSize);
     sortOrder = sortOrder.toUpperCase();
     Sort sort =
         Sort.by(Sort.Direction.fromString(sortOrder), SALES_SORT_COLUMN_MAP.get(sortColumn));
     Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
 
-    Page<Object[]> salesDetailPage =
-        salesDetailsService.getListData(pageable, searchType, searchKey);
+    Page<Object[]> salesDetailPage = salesDetailsService.getListData(pageable, searchDate);
     List<SalesDetailResponseType> responseTypeList =
         salesDetailPage.getContent().stream().map(SalesDetailResponseType::new).toList();
     int totalPages = salesDetailPage.getTotalPages();
@@ -286,12 +262,8 @@ public class SalesDetailsController extends BaseController {
             sortColumn,
             "currentPageSize",
             pageSize,
-            "searchType",
-            searchType,
-            "searchKey",
-            searchKey,
-            "searchTypes",
-            SALES_SEARCH_TYPES));
+            "searchDate",
+            searchDate));
     return "sales/details/show";
   }
 
@@ -301,20 +273,15 @@ public class SalesDetailsController extends BaseController {
     return ResponseEntity.ok(productPriceService.getProductSize(productId));
   }
 
-  @GetMapping(value = "/suggestions/search", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("@permissionService.hasPermission({'SALES_VIEW'})")
-  @ResponseBody
-  public AutoCompleteWrapper getStockSearchSuggestion(String searchKey, String type) {
-    return new AutoCompleteWrapper(
-        SALES_SEARCH_TYPE_KEYS.stream().anyMatch(type::equalsIgnoreCase)
-            ? salesDetailsService.getAutoCompleteSuggestions(type, searchKey)
-            : List.of());
-  }
-
   @GetMapping(value = "/detail/price", produces = "application/json", consumes = "application/json")
   @ResponseBody
   public ResponseEntity<String> getProductPrice(
       @RequestParam UUID productId, @RequestParam String size) {
     return ResponseEntity.ok(productPriceService.getProductPrice(productId, size).toString());
+  }
+
+  @GetMapping(value = "/report/generate/{reportDate}")
+  public String generateDailyReport(@PathVariable("reportDate") String reportDate) {
+    return reportService.generateDailySalesDetailsReport(reportDate);
   }
 }
