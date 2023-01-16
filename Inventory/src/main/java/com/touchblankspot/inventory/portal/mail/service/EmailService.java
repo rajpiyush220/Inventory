@@ -27,4 +27,10 @@ public class EmailService {
         freeMarkerTemplateService.constructEmailContent(
             dataMap, "email/resetPasswordLinkEmail.ftlh"));
   }
+
+  public void sendDailySalesReportEmail(Map<String, Object> dataMap) {
+    mailSender.send(
+        freeMarkerTemplateService.constructEmailContentWithAttachment(
+            dataMap, "email/dailysalesreport.ftlh"));
+  }
 }

@@ -7,12 +7,7 @@ import com.touchblankspot.inventory.portal.data.model.SalesDetails;
 import com.touchblankspot.inventory.portal.data.model.Stock;
 import com.touchblankspot.inventory.portal.data.model.StockAudit;
 import com.touchblankspot.inventory.portal.security.service.SecurityService;
-import com.touchblankspot.inventory.portal.service.CategoryService;
-import com.touchblankspot.inventory.portal.service.ProductPriceService;
-import com.touchblankspot.inventory.portal.service.ProductService;
-import com.touchblankspot.inventory.portal.service.SalesDetailsService;
-import com.touchblankspot.inventory.portal.service.StockAuditService;
-import com.touchblankspot.inventory.portal.service.StockService;
+import com.touchblankspot.inventory.portal.service.*;
 import com.touchblankspot.inventory.portal.web.annotations.SalesController;
 import com.touchblankspot.inventory.portal.web.controller.BaseController;
 import com.touchblankspot.inventory.portal.web.types.SelectType;
@@ -39,11 +34,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @SalesController
 @RequiredArgsConstructor(onConstructor = @__({@Autowired}))
@@ -65,6 +56,8 @@ public class SalesDetailsController extends BaseController {
   @NonNull private final CategoryService categoryService;
 
   @NonNull private final SalesDetailMapper salesDetailMapper;
+
+  @NonNull private final ReportService reportService;
 
   private static final Map<String, String> SALES_SORT_COLUMN_MAP =
       Map.of(
@@ -285,5 +278,10 @@ public class SalesDetailsController extends BaseController {
   public ResponseEntity<String> getProductPrice(
       @RequestParam UUID productId, @RequestParam String size) {
     return ResponseEntity.ok(productPriceService.getProductPrice(productId, size).toString());
+  }
+
+  @GetMapping(value = "/report/generate/{reportDate}")
+  public String generateDailyReport(@PathVariable("reportDate") String reportDate) {
+    return reportService.generateDailySalesDetailsReport(reportDate);
   }
 }

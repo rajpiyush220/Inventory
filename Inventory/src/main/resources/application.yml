@@ -52,8 +52,11 @@ password:
 application:
   email:
     sender: touchblankspot@gmail.com
+    admin: touchblankspot@gmail.com
   pagination:
     pageSizeList: 10,15,20,25
+  file:
+    tempLocation: F:\TouchBlankspot\Abhishek\repo\Inventory\Inventory\temp
 management:
   health:
     mail:
