@@ -90,4 +90,18 @@ public interface ProductPriceRepository extends JpaRepository<ProductPrice, UUID
                 """)
   List<String> getAutoCompleteSuggestions(
       @Param("searchType") String searchType, @Param("searchKey") String searchKey);
+
+  @Query(
+      nativeQuery = true,
+      value =
+          """
+        select
+            product_price.id as id,category.category,category.sub_category,product.name,product_price.product_size,
+            product_price.price,product_price.discount_percentage,coalesce(product_price.max_discount_amount,'')
+        from
+            product_price inner join product on product.id = product_price.product_id
+            inner join category on category.id = product.category_id
+        where product_price.id = :id group by product_price.id limit 1
+      """)
+  Object[] getPriceViewData(@Param("id") UUID id);
 }

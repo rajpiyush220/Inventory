@@ -10,6 +10,7 @@ import com.touchblankspot.inventory.portal.web.types.SelectType;
 import com.touchblankspot.inventory.portal.web.types.mapper.ProductPriceMapper;
 import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceRequestType;
 import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceResponseType;
+import com.touchblankspot.inventory.portal.web.types.product.price.ProductPriceUpdateType;
 import com.touchblankspot.inventory.portal.web.types.product.price.validator.ProductPriceValidator;
 import jakarta.validation.Valid;
 import java.util.*;
@@ -172,6 +173,41 @@ public class PriceController extends BaseController {
     model.addAttribute("searchKey", searchKey);
     model.addAttribute("searchTypes", SEARCH_TYPES);
     return "product/price/show";
+  }
+
+  @GetMapping("/price/edit")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_PRICE_UPDATE'})")
+  public String editPrice(String id, Model model) {
+    model.addAttribute(
+        "managementForm",
+        new ProductPriceUpdateType(productPriceService.getPriceViewData(UUID.fromString(id))));
+    return "product/price/edit";
+  }
+
+  @PostMapping("/price/update")
+  @PreAuthorize("@permissionService.hasPermission({'PROD_PRICE_UPDATE'})")
+  public String updatePrice(
+      @Valid @ModelAttribute("managementForm") ProductPriceUpdateType requestType,
+      BindingResult bindingResult,
+      Model model) {
+    model.addAttribute("managementForm", requestType);
+    if (!bindingResult.hasErrors()) {
+      try {
+        if (productPriceService.updatePrice(requestType)) {
+          model.addAttribute("successMessage", "Product Price updated successfully.");
+        } else {
+          model.addAttribute(
+              "errorMessage", "No Product Price available with selected id " + requestType.getId());
+        }
+      } catch (Exception ex) {
+        log.error("Unable to update Product Price", ex);
+        model.addAttribute(
+            "errorMessage", "Unable to updated Product Price. please contact administrator");
+      }
+      model.addAttribute("success");
+      log.warn("Product with id {} updated successfully.", requestType.getId());
+    }
+    return "product/price/edit";
   }
 
   @GetMapping("/price/delete")

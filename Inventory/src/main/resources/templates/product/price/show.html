@@ -58,16 +58,16 @@
                             <th scope="col" onclick="sortChanged('mat');">Material
                                 <span th:attr="class=${sortColumn eq 'mat' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
                             </th>
-                            <th scope="col" onclick="sortChanged('psize');">Product Size
+                            <th scope="col" onclick="sortChanged('psize');">Size
                                 <span th:attr="class=${sortColumn eq 'psize' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
                             </th>
-                            <th scope="col" onclick="sortChanged('pprice');">Product Price
+                            <th scope="col" onclick="sortChanged('pprice');">Price
                                 <span th:attr="class=${sortColumn eq 'pprice' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
                             </th>
                             <th scope="col" onclick="sortChanged('disper');">Dis Per
                                 <span th:attr="class=${sortColumn eq 'disper' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
                             </th>
-                            <th scope="col" onclick="sortChanged('maxdisamt');">Max Dis Amt
+                            <th scope="col" onclick="sortChanged('maxdisamt');">Dis Amt
                                 <span th:attr="class=${sortColumn eq 'maxdisamt' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
                             </th>
                             <th scope="col"> Action</th>
@@ -88,6 +88,13 @@
                             <td><span th:text="${productPrice.discountPercentage}"></span></td>
                             <td><span th:text="${productPrice.maxDiscountAmount}"></span></td>
                             <td>
+                                <button th:attr="onclick=|editPage('${productPrice.id}')|" th:text="#{app.common.button.edit}"
+                                        class="btn btn-warning yellow-tooltip"
+                                        th:if="${@permissionService.hasPermission('PROD_PRICE_UPDATE')}"
+                                        data-toggle="tooltip" data-placement="top"></button>
+                                <button class="btn btn-warning disabled"  disabled="disabled" th:text="#{app.common.button.edit}"
+                                        th:unless="${@permissionService.hasPermission('PROD_PRICE_UPDATE')}"></button>
+
                                 <a  href="#"
                                     class="btn btn-danger red-tooltip"
                                     th:attr="onclick=|setDeleteData('${productPrice.id}')|"
