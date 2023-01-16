@@ -2,6 +2,7 @@ package com.touchblankspot.inventory.portal.service;
 
 import com.touchblankspot.inventory.portal.data.model.SalesDetails;
 import com.touchblankspot.inventory.portal.data.repository.SalesDetailsRepository;
+import com.touchblankspot.inventory.portal.web.types.sales.SalesDetailResponseType;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,13 @@ public class SalesDetailsService {
     return salesDetailsRepository.save(salesDetails);
   }
 
-  public Page<Object[]> getListData(Pageable pageable, String searchType, String searchKey) {
-    return salesDetailsRepository.getListData(pageable, searchType, searchKey);
+  public Page<Object[]> getListData(Pageable pageable, String searchDate) {
+    return salesDetailsRepository.getListData(pageable, searchDate);
   }
 
-  public List<String> getAutoCompleteSuggestions(String searchType, String searchKey) {
-    return salesDetailsRepository.getAutoCompleteSuggestions(searchType, searchKey);
+  List<SalesDetailResponseType> getSalesDetailsByDate(String searchDate) {
+    return salesDetailsRepository.getSalesDetailsByDate(searchDate).stream()
+        .map(SalesDetailResponseType::new)
+        .toList();
   }
 }
