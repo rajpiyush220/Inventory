@@ -14,7 +14,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
 @Data
-@NoArgsConstructor // required for hibernate but shouldn't be used otherwise
+@NoArgsConstructor
 @MappedSuperclass
 public class Immutable {
   @Id private UUID id = UUID.randomUUID();
@@ -27,7 +27,5 @@ public class Immutable {
   @Column(nullable = false, updatable = false)
   @CreatedDate
   @JsonIgnore
-  private OffsetDateTime created =
-      OffsetDateTime.now()
-          .truncatedTo(ChronoUnit.MICROS); // To match with column definition datetime(6)
+  private OffsetDateTime created = OffsetDateTime.now().truncatedTo(ChronoUnit.MICROS);
 }

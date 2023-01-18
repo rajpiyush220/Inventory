@@ -28,7 +28,6 @@ public class ScheduledTasks {
     tokenPurgeWorkerService.purgeExpired();
   }
 
-  // this will execute at everyday 1 am
   @Scheduled(cron = "0 1 * * * ?}")
   public void executeDailySalesReportJob() {
     LocalDate reportExecutionDate = LocalDate.now().minusDays(1);
