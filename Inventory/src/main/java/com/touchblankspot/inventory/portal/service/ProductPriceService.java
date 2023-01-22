@@ -63,7 +63,7 @@ public class ProductPriceService {
         productPriceRepository.findById(requestType.getId());
     if (optionalProductPrice.isPresent()) {
       ProductPrice productPrice = optionalProductPrice.get();
-      productPrice.setPrice(new BigDecimal(requestType.getPrice()));
+      productPrice.setPrice(BigDecimal.valueOf(requestType.getPrice()));
       productPrice.setDiscountPercentage(requestType.getDiscountPercentage());
       if (!ObjectUtils.isEmpty(requestType.getMaxDiscountAmount())) {
         productPrice.setMaxDiscountAmount(Long.valueOf(requestType.getMaxDiscountAmount()));
@@ -72,10 +72,6 @@ public class ProductPriceService {
       return true;
     }
     return false;
-  }
-
-  public ProductPrice findById(UUID id) {
-    return productPriceRepository.findById(id).orElse(null);
   }
 
   public void deleteProduct(UUID id) {

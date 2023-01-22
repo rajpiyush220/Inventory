@@ -21,7 +21,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends Mutable {
-
   @Column(name = "first_name", nullable = false)
   private String firstName;
 
@@ -29,7 +28,6 @@ public class User extends Mutable {
   private String lastName;
 
   @Column(name = "username", unique = true, nullable = false)
-  // @Convert(converter = AttributeEncryptor.class)
   private String userName;
 
   @Column(name = "password")

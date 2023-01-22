@@ -1,6 +1,6 @@
 spring:
   config:
-    import: F:\TouchBlankspot\Abhishek\repo\secret.yaml
+    import: optional:F:\TouchBlankspot\Abhishek\repo\secret.yaml,optional:/workspace/app/config/secret.yaml
   datasource:
     username: ${spring.datasource.db.user}
     url: jdbc:mysql://${spring.datasource.db.host}:${spring.datasource.db.port}/${spring.datasource.default_schema}?createDatabaseIfNotExist=true
@@ -17,9 +17,7 @@ spring:
     cache: false
     mode: HTML
     encoding: UTF-8
-    prefix: file:src/main/resources/templates/
     resources:
-      static-locations: file:src/main/resources/static/
       cache:
         period: 0
   messages:

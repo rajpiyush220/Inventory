@@ -168,7 +168,6 @@ public class StockManagementController extends BaseController {
     try {
       Stock stock = null;
       if (requestType.getCurrentStock() > 0) {
-        // update existing stock
         stock =
             stockService
                 .findByProductIdAndProductSize(

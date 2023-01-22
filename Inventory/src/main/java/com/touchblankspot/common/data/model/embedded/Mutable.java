@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor // required for hibernate but shouldn't be used otherwise
+@NoArgsConstructor
 @MappedSuperclass
 @Getter
 @Setter

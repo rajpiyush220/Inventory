@@ -51,7 +51,7 @@
                             <th scope="col" style="width: 35%;" onclick="sortChanged('category');" th:text="#{app.category.list.column.cat}">
                                 <span th:attr="class=${sortColumn eq 'category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
                                 </th>
-                            <th scope="col" style="width: 35%;" onclick="sortChanged('sub_category');" th:text="app.category.list.column.sub_cat">
+                            <th scope="col" style="width: 35%;" onclick="sortChanged('sub_category');" th:text="#{app.category.list.column.sub_cat}">
                                 <span th:attr="class=${sortColumn eq 'sub_category' ? (sortOrder eq 'ASC' ? 'bi bi-sort-up-alt' : 'bi bi-sort-down-alt' ) : ''}"></span>
                                 </th>
                             <th scope="col" style="width: 25%;" th:text="#{app.common.list.action}"></th>

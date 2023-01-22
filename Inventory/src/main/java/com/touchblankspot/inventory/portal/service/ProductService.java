@@ -27,7 +27,6 @@ public class ProductService implements FieldValueExists {
   @Override
   public boolean fieldValueExists(Object value, String fieldName)
       throws UnsupportedOperationException {
-    // Ignoring check if value is empty or its not matching min length criteria
     if (ObjectUtils.isEmpty(value) || value.toString().length() < 2) {
       return false;
     }

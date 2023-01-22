@@ -183,10 +183,8 @@ public class SalesDetailsController extends BaseController {
               BigDecimal.valueOf(requestType.getQuantity()).setScale(2, RoundingMode.DOWN)));
       salesDetails = salesDetailsService.save(salesDetails);
 
-      // create stock audit and reduce quantity from stock
       Stock stock;
       if (requestType.getCurrentStock() > 0) {
-        // update existing stock
         stock =
             stockService
                 .findByProductIdAndProductSize(requestType.getProductId(), requestType.getSize())

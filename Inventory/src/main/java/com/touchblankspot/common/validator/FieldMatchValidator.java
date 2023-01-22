@@ -6,7 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 
 @Slf4j
-public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
+public class FieldMatchValidator
+    implements ConstraintValidator<com.touchblankspot.common.validator.FieldMatch, Object> {
   private String firstFieldName;
   private String secondFieldName;
   private String message;

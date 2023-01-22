@@ -17,9 +17,7 @@ public class Versioned {
 
   @Version @ReadOnlyProperty private Long version;
 
-  private OffsetDateTime created =
-      OffsetDateTime.now()
-          .truncatedTo(ChronoUnit.MICROS); // To match with column definition datetime(6)
+  private OffsetDateTime created = OffsetDateTime.now().truncatedTo(ChronoUnit.MICROS);
 
   private OffsetDateTime updated = created;
 
