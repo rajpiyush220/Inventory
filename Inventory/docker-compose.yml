@@ -4,11 +4,11 @@ services:
   inventory:
     container_name: inventory
     build: .
+    image: inventory
     ports:
       - "8086:8086"
-    networks:
-      - inventory_network
-
-networks:
-  inventory_network:
-    driver: bridge
+    #networks:
+    #  - inventory_network
+#networks:
+#  inventory_network:
+#    external: true
