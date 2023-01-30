@@ -1,6 +1,6 @@
 spring:
   config:
-    import: optional:F:\TouchBlankspot\Abhishek\repo\secret.yaml,optional:/workspace/app/config/secret.yaml
+    import: /workspace/app/config/secret.yaml
   datasource:
     username: ${spring.datasource.db.user}
     url: jdbc:mysql://${spring.datasource.db.host}:${spring.datasource.db.port}/${spring.datasource.default_schema}?createDatabaseIfNotExist=true

@@ -1,3 +1,4 @@
+#!/bin/sh
 rm -rf build/libs
 ./gradlew clean assemble
 docker-compose build
