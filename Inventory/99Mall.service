@@ -1,0 +1,16 @@
+[Unit]
+Description=99Mall Inventory system
+Requires=network.target
+
+[Service]
+Type=simple
+User=piyush
+WorkingDirectory=/home/piyush/Inventory/Inventory
+ExecStart=/bin/bash ./docker-execute.sh
+
+TimeoutSec=30
+RestartSec=15s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
