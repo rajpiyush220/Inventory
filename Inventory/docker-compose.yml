@@ -3,8 +3,7 @@ version: '3.3'
 services:
   inventory:
     container_name: inventory
-    build: .
-    image: inventory
+    image: devtouchblankspot/99mall_inventory
     restart: always
     ports:
       - "8086:8086"
